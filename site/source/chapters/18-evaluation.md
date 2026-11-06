@@ -22,7 +22,7 @@
 
 这节沿数据流定位错误，避免一个总分掩盖不同失败。
 
-<svg viewBox="0 0 740 170" role="img" aria-label="问答从问题经检索证据到回答再分层评分"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="45" width="100" height="60" rx="8"/><path d="M110 75 H145"/><rect x="145" y="45" width="125" height="60" rx="8"/><path d="M270 75 H305"/><rect x="305" y="45" width="125" height="60" rx="8"/><path d="M430 75 H465"/><rect x="465" y="45" width="125" height="60" rx="8"/><path d="M590 75 H625"/><rect x="625" y="45" width="105" height="60" rx="8"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="60" y="80">问题</text><text x="208" y="80">检索资料</text><text x="368" y="80">实际证据</text><text x="528" y="80">候选回答</text><text x="678" y="80">分层评分</text><text x="370" y="145">脚本用预写主张检验证据；可选模型实验才产生新回答</text></g></svg>
+![问答从问题经检索证据到回答再分层评分](../assets/diagrams/18-evaluation-1.svg)
 
 若问备份保留期却只取到timeout，首先是检索失败；若拿到backup仍回答“保留30天”，是回答偏离证据；若说“保留7天，因此每周必须删除全部备份”，前半有依据，后半新增了制度。引用了正确资料ID，也不能使额外主张自动正确。
 

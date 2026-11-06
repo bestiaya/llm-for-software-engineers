@@ -17,7 +17,7 @@
 
 为什么不只缓存最后一层？每一层的新token都要读**该层**旧token的K/V；上一层与下一层的投影参数和表示不同，不能拿一层缓存冒充所有层。
 
-<svg viewBox="0 0 700 170" role="img" aria-label="新token查询读取每层的旧键值和新键值"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="30" width="300" height="65" rx="8"/><rect x="340" y="30" width="130" height="65" rx="8"/><path d="M310 63 H340 M470 63 H510"/><rect x="510" y="30" width="180" height="65" rx="8"/></g><g fill="currentColor" text-anchor="middle" font-size="17"><text x="160" y="68">旧缓存：K/V(A,B,C)</text><text x="405" y="68">加入K/V(D)</text><text x="600" y="68">Q(D)读取四项</text><text x="350" y="140">每一层都有自己的K/V；旧Q不必用于新token的查询</text></g></svg>
+![新token查询读取每层的旧键值和新键值](../assets/diagrams/17-inference-1.svg)
 
 ## 2. 手算缓存为何可以等价
 

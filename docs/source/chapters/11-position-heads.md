@@ -59,7 +59,7 @@ W_O = [[1,0,0,0],
 
 按数学中的行向量右乘，位置0得到 `[11,22,10,20]`：第一项是 `1×1+2×0+10×1+20×0=11`，第二项是 `2+20=22`，其余两项是10和20。它混合不同头的通道，但仍只处理当前这一行。
 
-<svg viewBox="0 0 700 170" role="img" aria-label="两个头沿特征轴拼接后做输出投影"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="55" width="120" height="55" rx="8"/><path d="M130 70 L200 35 M130 95 L200 130"/><rect x="200" y="10" width="130" height="45" rx="8"/><rect x="200" y="110" width="130" height="45" rx="8"/><path d="M330 33 L395 70 M330 133 L395 95"/><rect x="395" y="55" width="160" height="55" rx="8"/><path d="M555 83 H590"/><rect x="590" y="55" width="100" height="55" rx="8"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="70" y="87">每位置4维</text><text x="265" y="39">头1：2维</text><text x="265" y="139">头2：2维</text><text x="475" y="87">拼成4维</text><text x="640" y="87">输出投影</text></g></svg>
+![两个头沿特征轴拼接后做输出投影](../assets/diagrams/11-position-heads-1.svg)
 
 完整模型为4头、总宽32，所以每头8维。Q、K、V通常从 `[B,T,32]` 投影后重排成 `[B,4,T,8]`。每头算出的注意力权重是 `[B,4,T,T]`，聚合后为 `[B,4,T,8]`；转置和拼接回 `[B,T,32]`，再做32到32的输出投影。`32÷4=8` 是接口约束，不是经验偏好；若改成宽30、头4，此实现应拒绝。
 

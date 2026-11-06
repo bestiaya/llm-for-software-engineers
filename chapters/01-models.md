@@ -48,13 +48,7 @@ predict(prefix, parameters) → 下一个token的概率数组
 
 这节把训练与推理的接口画开，带走“有答案供比较”和“没有未来答案”这一关键差别。
 
-<svg viewBox="0 0 760 235" role="img" aria-label="训练修改参数，推理读取参数" xmlns="http://www.w3.org/2000/svg">
-<rect x="5" y="5" width="750" height="225" rx="14" fill="#f0f5ff"/>
-<g fill="#172b4d" font-size="17" font-family="sans-serif">
-<text x="25" y="40">训练：前文 + 真实下一项</text><text x="290" y="40">→ 预测 → 比较损失</text><text x="540" y="40">→ 更新参数</text>
-<path d="M610 60 V92 H340 V60" fill="none" stroke="#246bce" stroke-width="3"/><text x="375" y="84">下一轮使用新参数</text>
-<text x="25" y="148">推理：已知前文</text><text x="245" y="148">→ 固定参数计算</text><text x="485" y="148">→ 分布 → 选下一项</text>
-<text x="25" y="202">此处“固定”指这次常规生成不执行参数更新。</text></g></svg>
+![训练修改参数，推理读取参数](../assets/diagrams/01-models-1.svg)
 
 | 对象 | 在小程序中是什么 | 通常何时变化 |
 |---|---|---|

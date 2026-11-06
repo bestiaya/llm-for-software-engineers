@@ -85,8 +85,7 @@ W2=[[0.1,0.2],[0.3,−0.1],[−0.2,0.4]]，b2=[0,0.1,−0.1]
 
 这节把训练写成状态变化，带走每次更新使用哪一次前向的梯度。
 
-<svg viewBox="0 0 740 195" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="训练循环清梯度前向反向更新与验证">
-<rect width="740" height="195" rx="14" fill="#eef8f3"/><g font-family="sans-serif" font-size="17" fill="#224a39"><text x="20" y="40">取训练批 → 清旧梯度 → 前向分数 → 计算CE</text><text x="20" y="90">↑ 下一步                 ↓ backward：保存本批梯度</text><text x="20" y="140">← optimizer.step：修改参数 ← 梯度</text><text x="20" y="177">定期验证只计算分数和损失；不反向，不更新参数。</text></g></svg>
+![训练循环清梯度前向反向更新与验证](../assets/diagrams/07-training-1.svg)
 
 ```python
 import torch

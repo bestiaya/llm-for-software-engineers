@@ -24,7 +24,7 @@ def main():
         if not f.exists():errors.append(f'missing chapter {name}');continue
         s=f.read_text();chapters.append(name)
         if s.count('<details')<1 or (s.count('<details')<3 and s.count('<li>')<3):errors.append(f'{name}: missing folded answers for three exercises')
-        if '<svg' not in s:errors.append(f'{name}: no inline diagram')
+        if '<svg' not in s and not re.search(r'!\[[^\]]*\]\(\.\./assets/[^)]+\.svg\)',s):errors.append(f'{name}: no diagram')
         if not re.search(r'^## ',s,re.M):errors.append(f'{name}: no sections')
         if any(x in s for x in ['/Users/','TODO','待补充正文']):errors.append(f'{name}: private path or unfinished text')
     parsed={p:HTML(p.read_text()) for p in (ROOT/'site').glob('*.html')}

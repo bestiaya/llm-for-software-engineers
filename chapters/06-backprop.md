@@ -39,8 +39,7 @@ L = −ln(p_B) ≈ 0.551445
 
 `a`读“诶”，是非线性之前的数；`h`读“艾尺”，是隐藏输出；`u`读“优”，是隐藏输出到B的连接权重。w、b、u是参数，a、h、z、p是这次前向的中间结果。`ReLU(a)=max(0,a)`，max读“取较大者”，例如a=-1时输出0，a=2时输出2。
 
-<svg viewBox="0 0 750 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="单隐藏神经元的前向与反向变化率">
-<rect width="750" height="210" rx="13" fill="#eff4ff"/><g font-size="17" font-family="sans-serif" fill="#20375c"><text x="20" y="45">x=2 → ×w,+b → a=1 → ReLU → h=1 → ×u → zB=1 → L</text><path d="M690 75 H120" stroke="#a75227" stroke-width="3" fill="none"/><text x="180" y="110">反向：从L出发，逐段乘局部变化率</text><text x="30" y="155">局部：da/dw=2，dh/da=1，dzB/dh=1</text><text x="30" y="190">从末端传回：dL/dzB≈−0.423883</text></g></svg>
+![单隐藏神经元的前向与反向变化率](../assets/diagrams/06-backprop-1.svg)
 
 ## 3. 链式法则是变化量的接力
 

@@ -55,7 +55,7 @@
 <p>输入换了，输出会换，但参数未必换。训练则会换参数，保存后影响未来很多输入。工程上可以把参数看成与程序一起版本管理的数据文件；它们并不是编译生成的机器指令，也不是一条条可直接读出的业务规则。</p>
 <h2 id="3">3. 两条数据流，别画成一条</h2>
 <p>这节把训练与推理的接口画开，带走“有答案供比较”和“没有未来答案”这一关键差别。</p>
-<p><div class="figure"><svg viewBox="0 0 760 235" role="img" aria-label="训练修改参数，推理读取参数" xmlns="http://www.w3.org/2000/svg">
+<p><div class="figure"><svg viewBox="0 0 760 235" role="img" aria-label="训练修改参数，推理读取参数" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="white"/>
 <rect x="5" y="5" width="750" height="225" rx="14" fill="#f0f5ff"/>
 <g fill="#172b4d" font-size="17" font-family="sans-serif">
 <text x="25" y="40">训练：前文 + 真实下一项</text><text x="290" y="40">→ 预测 → 比较损失</text><text x="540" y="40">→ 更新参数</text>

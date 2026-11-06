@@ -186,7 +186,7 @@ V = X × WV = 2X
 <p><strong>本例 Q 和 K 数值相同，是我们选择参数的结果，不是注意力的定义。</strong> 真实训练中可以学习出不同的 WQ、WK、WV。本章只使用给定值，不能据此声称模型已经知道“超时导致重试”。</p>
 <h3 id="_2">看一条计算路径</h3>
 <p>这张图沿位置 0 的查询展示两条分工：Q/K 产生权重，V 根据权重参加汇总。</p>
-<p><div class="figure"><svg viewBox="0 0 760 335" role="img" aria-labelledby="flow-title flow-desc" xmlns="http://www.w3.org/2000/svg">
+<p><div class="figure"><svg viewBox="0 0 760 335" role="img" aria-labelledby="flow-title flow-desc" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="white"/>
 <title id="flow-title">位置0如何通过Q和K产生权重，再汇总V</title>
 <desc id="flow-desc">位置0的查询与三个键分别点积，缩放后得到三个分数，softmax生成三个权重。三个值向量绕过匹配步骤，按这些权重汇总为二维输出。</desc>
 <defs><marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#45627c"/></marker></defs>
@@ -298,7 +298,7 @@ o0 ≈ [1.6044,1.1978]
 <p>“因果”在这里指这个<strong>信息可见方向的约束</strong>，不表示证明了日志片段之间的因果关系。位置 i 可以看自己和之前的位置，不能看位置编号大于 i 的位置；例如位置 1 可以看 0 和 1，不能看 2。</p>
 <h3 id="_5">哪一行可以看哪一列</h3>
 <p>这张图把查询位置画成行、信息来源画成列；每行只会汇总标为“可见”的列。</p>
-<p><div class="figure"><svg viewBox="0 0 680 340" role="img" aria-labelledby="mask-title mask-desc" xmlns="http://www.w3.org/2000/svg">
+<p><div class="figure"><svg viewBox="0 0 680 340" role="img" aria-labelledby="mask-title mask-desc" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="white"/>
 <title id="mask-title">三个位置的因果可见矩阵</title>
 <desc id="mask-desc">查询位置0只能访问位置0；查询位置1能访问位置0和1；查询位置2能访问全部三个位置。被挡住的分数在softmax前设为负无穷，因此权重为零。</desc>
 <g font-family="sans-serif" font-size="17" fill="#193149" text-anchor="middle">

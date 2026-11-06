@@ -73,8 +73,7 @@ P(b|a) = [c(a,b)+α] / [N(a)+αV]
 
 这节用文件接口解释数据分工，带走“先分组，再拟合，再评价”。
 
-<svg viewBox="0 0 740 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="分组数据后训练拟合计数，验证选平滑，测试最终报告">
-<rect width="740" height="190" rx="14" fill="#eff8f5"/><g fill="#193b35" font-family="sans-serif" font-size="17"><text x="20" y="35">原始独立文本组 → 先分成三份</text><text x="25" y="85">训练：建词表/计数</text><text x="270" y="85">验证：比较α</text><text x="505" y="85">测试：冻结后验收</text><path d="M130 103 V135 H375 V103" stroke="#147e60" stroke-width="3" fill="none"/><text x="35" y="166">选择阶段可返回调整；测试结果不再用于选择同一版方案。</text></g></svg>
+![分组数据后训练拟合计数，验证选平滑，测试最终报告](../assets/diagrams/03-counting-1.svg)
 
 词表若不是像本例预先规定，应只从训练数据拟合；未见token可以映射到预留的未知项。不能一边读测试文本一边扩大词表，再说这是完全未见数据。也别随机拆高度重叠的窗口，使同一原文的几乎相同片段落入训练与测试。
 

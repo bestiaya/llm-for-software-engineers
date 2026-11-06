@@ -75,7 +75,7 @@ xM=[0×1+1×4+0×7,
 概率≈[0.211942,0.211942,0.576117]
 </code></pre>
 <p><code>E</code>读“嵌入表”，英文embedding，指可训练的向量查表；<code>h</code>读“艾尺”，是当前输入的内部表示；<code>U</code>读“优”，是输出权重；<code>b</code>是输出偏置。公式 <code>h=E[input_id]</code>、<code>z=hU+b</code> 分别对应查表与线性输出层。形状为 <code>E:[3,2]</code>、<code>h:[1,2]</code>、<code>U:[2,3]</code>、<code>z:[1,3]</code>。</p>
-<p><div class="figure"><svg viewBox="0 0 730 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="token索引到嵌入向量再到候选分数">
+<p><div class="figure"><svg viewBox="0 0 730 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="token索引到嵌入向量再到候选分数"><rect width="100%" height="100%" fill="white"/>
 <rect width="730" height="170" rx="14" fill="#f2f2ff"/><g font-family="sans-serif" font-size="18" fill="#29245c"><text x="20" y="45">ID=1(B)</text><text x="170" y="45">→ 查E</text><text x="300" y="45">h=[0,1]</text><text x="450" y="45">→ 乘U、加b</text><text x="620" y="45">z</text><text x="20" y="105">E：三行，每行两维</text><text x="300" y="105">U：两行三列</text><text x="540" y="105">→ softmax</text><text x="20" y="145">ID选择行；向量参与算术；输出最后一维仍覆盖整个词表。</text></g></svg></div></p>
 <p>E和U都可训练，不是只训练最后一层。偏置b也是参数，但不是矩阵：它不乘输入，对每个样本加同一组候选基础分。完整decoder后面采用无偏置词表头，本章带偏置的局部例只是帮助辨别两类参数，不要把配置直接拼过去。</p>
 <p>查到同一个B，h也相同；这个最小模型仍只看一个token。嵌入本身不会凭空看到更早的文本，必须另设计上下文计算。</p>

@@ -18,6 +18,13 @@ def title_of(source):
     return re.search(r'^# (.+)',source,re.M).group(1)
 
 def convert(source):
+    # Markdown SVG images render on GitHub; inline the same files for offline HTML.
+    def inline_diagram(match):
+        target=(ROOT/'chapters'/match.group(2)).resolve()
+        if not target.is_relative_to(ROOT/'assets') or target.suffix!='.svg':
+            raise ValueError('diagram path must stay inside assets/')
+        return target.read_text()
+    source=re.sub(r'!\[([^\]]*)\]\((\.\./assets/[^)]+\.svg)\)',inline_diagram,source)
     md=markdown.Markdown(extensions=['extra','toc'],extension_configs={'toc':{'toc_depth':'2-3'}})
     body=md.convert(source)
     body=re.sub(r'<h1[^>]*>.*?</h1>','',body,count=1,flags=re.S)
@@ -69,7 +76,7 @@ def main():
     (out/'index.html').write_text(shell('课程路线',hero+'<div class="book-home">'+intro+'<div class="book-grid">'+cards+'</div><footer>内容与实验随版本维护。材料完成和测试通过，不代表读者已经掌握。<br><a href="https://github.com/bestiaya/llm-for-software-engineers">GitHub源代码与勘误</a></footer></div>',css,NAV_JS))
     # Package sources needed by links inside the offline site; omit checkpoints/caches.
     dst=out/'source';dst.mkdir(exist_ok=True)
-    for folder in ['chapters','labs','llm_course','reports','data']:
+    for folder in ['chapters','labs','llm_course','reports','data','assets']:
         src=ROOT/folder
         if src.exists():shutil.copytree(src,dst/folder,dirs_exist_ok=True,ignore=shutil.ignore_patterns('__pycache__','*.pyc','*.pt','IMPLEMENTATION.md'))
     (out/'.nojekyll').touch()

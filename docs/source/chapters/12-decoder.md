@@ -8,7 +8,7 @@
 
 多头注意力负责跨位置读取信息，但“读回来一个向量”还不等于完成预测：我们还要保留原输入、控制计算尺度、做逐位置的非线性变换，再映射到词表。
 
-<svg viewBox="0 0 760 240" role="img" aria-label="Pre-LN decoder数据流和两条残差支路"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M25 80 H735"/><rect x="65" y="55" width="85" height="50"/><rect x="180" y="55" width="130" height="50"/><circle cx="355" cy="80" r="20"/><rect x="405" y="55" width="85" height="50"/><rect x="520" y="55" width="85" height="50"/><circle cx="650" cy="80" r="20"/><path d="M35 80 V20 H355 V60 M375 80 V145 H650 V100 M25 200 H735"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="108" y="85">LN</text><text x="245" y="85">因果多头</text><text x="355" y="86">+</text><text x="448" y="85">LN</text><text x="563" y="85">FFN</text><text x="650" y="86">+</text><text x="200" y="14">原输入直接相加</text><text x="510" y="139">注意力后的向量直接相加</text><text x="380" y="193">输入嵌入 → 重复上方块 → 最终LN → 词表投影 → softmax</text><text x="380" y="230">上方是一块；下方是整网路线</text></g></svg>
+![Pre-LN decoder数据流和两条残差支路](../assets/diagrams/12-decoder-1.svg)
 
 本课代码使用 Pre-LN，即“先层归一化，再进子层”。以一行向量为单位写：`u=x+Attention(LN(x))`，再算 `y=u+FFN(LN(u))`。`x` 是块输入，`u` 是第一次相加的结果，`y` 是块输出；括号说明先执行哪个函数。注意力需要同时看整段合法前缀，FFN与LN则逐行处理。
 

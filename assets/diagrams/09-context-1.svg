@@ -1,0 +1,2 @@
+<svg viewBox="0 0 740 185" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="固定窗口截断前文并按位置拼接"><rect width="100%" height="100%" fill="white"/>
+<rect width="740" height="185" rx="12" fill="#fff5ee"/><g font-family="sans-serif" font-size="18" fill="#5c3520"><text x="20" y="40">请求 / 成功 / 记录 / 日志 / 后</text><rect x="170" y="60" width="310" height="40" fill="#ffdfba"/><text x="185" y="87">窗口K=3：记录 / 日志 / 后</text><text x="20" y="140">“成功”已在窗口外，即使全文在文件里，也没进入本次预测。</text><text x="20" y="173">进入窗口的token仍按槽位拼接；槽位不同，乘的权重可以不同。</text></g></svg>

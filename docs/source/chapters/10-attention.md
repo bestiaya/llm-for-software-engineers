@@ -130,26 +130,7 @@ V = X × WV = 2X
 
 这张图沿位置 0 的查询展示两条分工：Q/K 产生权重，V 根据权重参加汇总。
 
-<svg viewBox="0 0 760 335" role="img" aria-labelledby="flow-title flow-desc" xmlns="http://www.w3.org/2000/svg">
-<title id="flow-title">位置0如何通过Q和K产生权重，再汇总V</title>
-<desc id="flow-desc">位置0的查询与三个键分别点积，缩放后得到三个分数，softmax生成三个权重。三个值向量绕过匹配步骤，按这些权重汇总为二维输出。</desc>
-<defs><marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#45627c"/></marker></defs>
-<g font-family="sans-serif" font-size="16" fill="#193149">
-<rect x="15" y="32" width="155" height="61" rx="9" fill="#e9efff" stroke="#6983b5"/>
-<text x="30" y="57">当前查询 q0</text><text x="30" y="80">[1,0]</text>
-<rect x="15" y="120" width="155" height="112" rx="9" fill="#e9efff" stroke="#6983b5"/>
-<text x="30" y="148">三个候选键</text><text x="30" y="174">k0=[1,0]</text><text x="30" y="198">k1=[0,1]</text><text x="30" y="222">k2=[1,1]</text>
-<rect x="226" y="72" width="153" height="112" rx="9" fill="#fff3df" stroke="#b99044"/>
-<text x="242" y="103">逐个点积</text><text x="242" y="131">再除以 √2</text><text x="242" y="160">三个匹配分数</text>
-<rect x="433" y="72" width="140" height="112" rx="9" fill="#fff3df" stroke="#b99044"/>
-<text x="450" y="103">softmax</text><text x="450" y="132">三个位置权重</text><text x="450" y="161">加起来等于1</text>
-<rect x="226" y="256" width="347" height="55" rx="9" fill="#eaf5ed" stroke="#548264"/>
-<text x="244" y="280">三个值 v0=[2,0]，v1=[0,2]</text><text x="244" y="301">v2=[2,2]：实际参与汇总的内容</text>
-<rect x="630" y="143" width="115" height="112" rx="9" fill="#eaf5ed" stroke="#548264"/>
-<text x="644" y="173">按权重汇总</text><text x="644" y="201">输出两个数</text><text x="644" y="224">[1.6044,</text><text x="644" y="244"> 1.1978]</text>
-</g>
-<g fill="none" stroke="#45627c" stroke-width="2" marker-end="url(#flow-arrow)"><path d="M170 63L226 100"/><path d="M170 172L226 150"/><path d="M379 128L433 128"/><path d="M573 128L612 128L645 143"/><path d="M573 283L689 283L689 250"/></g>
-</svg>
+![位置0如何通过Q和K产生权重，再汇总V](../assets/diagrams/10-attention-1.svg)
 
 图中 V 不参与这一层的匹配打分，但它仍来自输入；改变某个位置的输入，可能同时改变该位置的 K 和 V。
 
@@ -260,25 +241,7 @@ o0 ≈ [1.6044,1.1978]
 
 这张图把查询位置画成行、信息来源画成列；每行只会汇总标为“可见”的列。
 
-<svg viewBox="0 0 680 340" role="img" aria-labelledby="mask-title mask-desc" xmlns="http://www.w3.org/2000/svg">
-<title id="mask-title">三个位置的因果可见矩阵</title>
-<desc id="mask-desc">查询位置0只能访问位置0；查询位置1能访问位置0和1；查询位置2能访问全部三个位置。被挡住的分数在softmax前设为负无穷，因此权重为零。</desc>
-<g font-family="sans-serif" font-size="17" fill="#193149" text-anchor="middle">
-<text x="385" y="27">信息来源：键和值的位置（列）</text>
-<text x="248" y="66">位置0</text><text x="378" y="66">位置1</text><text x="508" y="66">位置2</text>
-<text x="90" y="121">查询位置0</text><text x="90" y="191">查询位置1</text><text x="90" y="261">查询位置2</text>
-<rect x="188" y="87" width="120" height="58" rx="6" fill="#d9efdf"/><text x="248" y="122">可见</text>
-<rect x="318" y="87" width="120" height="58" rx="6" fill="#f1e3e4"/><text x="378" y="122">遮住</text>
-<rect x="448" y="87" width="120" height="58" rx="6" fill="#f1e3e4"/><text x="508" y="122">遮住</text>
-<rect x="188" y="157" width="120" height="58" rx="6" fill="#d9efdf"/><text x="248" y="192">可见</text>
-<rect x="318" y="157" width="120" height="58" rx="6" fill="#d9efdf"/><text x="378" y="192">可见</text>
-<rect x="448" y="157" width="120" height="58" rx="6" fill="#f1e3e4"/><text x="508" y="192">遮住</text>
-<rect x="188" y="227" width="120" height="58" rx="6" fill="#d9efdf"/><text x="248" y="262">可见</text>
-<rect x="318" y="227" width="120" height="58" rx="6" fill="#d9efdf"/><text x="378" y="262">可见</text>
-<rect x="448" y="227" width="120" height="58" rx="6" fill="#d9efdf"/><text x="508" y="262">可见</text>
-<text x="353" y="318">遮住 → 分数设为 −∞ → softmax 后权重为 0</text>
-</g>
-</svg>
+![三个位置的因果可见矩阵](../assets/diagrams/10-attention-2.svg)
 
 图中的下三角来自“允许看自己和之前的位置”。位置 0 的输入仍然是真正可见的当前输入；语言模型用当前位置的表示预测下一位置，不是要求位置 0 在完全没有输入时预测自己。
 

@@ -47,7 +47,7 @@ EOS在本实现是要预测的真实目标。未知字符映射到UNK，是词�
 
 生成时没有未来真答案。若提示是A，模型分布为 `B:0.6,D:0.4`，贪心选择B；下一步用AB。若通过采样选了D，下一步就必须用AD，不能偷偷改回AB。生成中的某次选择改变后续条件，整段路径可能走向训练中很少见的前文。
 
-<svg viewBox="0 0 720 190" role="img" aria-label="训练使用真实前文而生成使用自己已选前文"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="20" width="700" height="60" rx="8"/><rect x="10" y="110" width="700" height="60" rx="8"/></g><g fill="currentColor" font-size="18"><text x="25" y="56">训练：A → 预测B；真实AB → 预测C；真实ABC → 预测EOS</text><text x="25" y="146">生成：A → 选择D；实际AD → 选择E；实际ADE → 再预测</text></g></svg>
+![训练使用真实前文而生成使用自己已选前文](../assets/diagrams/13-next-token-1.svg)
 
 因果遮罩让训练中的每一行都只看合法前缀，因此多行能在一次矩阵计算中完成；每个位置对应的真实输入预先已知。生成的下一次输入则依赖这次选中的token，所以通常必须等待这一步结束。并行训练不等于让第一行偷看第三行。
 

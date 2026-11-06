@@ -73,7 +73,7 @@ B (A x) = [0.2,0.4,0,0]
 
 公式是 `新输出 = W x + (α/r) B A x`。`r`读“秩参数”，是中间宽度，这里为1；`α`读“阿尔法”，是缩放系数，这里为1；W冻结，A和B训练。矩阵乘法的顺序由右向左，先Ax再乘B。此处改用列向量明确配合形状，不能直接拿前章行向量的数组照抄。
 
-<svg viewBox="0 0 650 175" role="img" aria-label="冻结基础矩阵和可训练低秩支路相加"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M30 85 L140 35 H425 L535 85 M30 85 L140 135 H425 L535 85 H620"/><rect x="200" y="10" width="150" height="50"/><rect x="160" y="110" width="100" height="50"/><rect x="320" y="110" width="100" height="50"/></g><g fill="currentColor" text-anchor="middle" font-size="17"><text x="275" y="41">W：冻结</text><text x="210" y="141">A：训练</text><text x="370" y="141">B：训练</text><text x="540" y="78">相加</text></g></svg>
+![冻结基础矩阵和可训练低秩支路相加](../assets/diagrams/16-post-training-1.svg)
 
 上面的实验命令还会训练一个独立LoRALinear层，检查基础权重未变、A/B变化；随课一次实跑中，这三项检查均符合预期。它的损失用局部数值目标，不是语言SFT；LoRA是参数更新方式，SFT是数据与目标组织方式，两者可以组合但不是同义词。小矩阵下省一半参数不表示整个大模型总显存必定省一半：优化器状态、激活、缓存仍占空间。
 

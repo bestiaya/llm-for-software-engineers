@@ -18,7 +18,7 @@
 
 实现先按原始字符顺序以80%/10%/10%划分训练、验证、测试，再只用训练区建立字符词表。假设独立教学文本恰有1000字符，那么前800训练，接着100验证，最后100测试；真实长度和取整结果看当次报告。窗口不能从训练区尾巴伸进验证区开头。
 
-<svg viewBox="0 0 720 145" role="img" aria-label="连续文本分为80百分比训练及各10百分比验证和测试"><g stroke="currentColor" stroke-width="2"><rect x="10" y="30" width="560" height="55" fill="none"/><rect x="570" y="30" width="70" height="55" fill="none"/><rect x="640" y="30" width="70" height="55" fill="none"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="290" y="64">前80%：训练与拟合词表</text><text x="605" y="64">验证</text><text x="675" y="64">测试</text><text x="360" y="123">每个分区独立切窗口；不把边界两侧拼成一条样本</text></g></svg>
+![连续文本分为80百分比训练及各10百分比验证和测试](../assets/diagrams/15-real-text-1.svg)
 
 训练区没出现过的字符在其他分区映射到UNK。假设训练字符集是 `{a,b,空格}`，验证文本是 `ab!`，它会变成 `[id(a),id(b),UNK]`，不能为了降低未知率回头把 `!` 加到训练词表。报告应该让读者看见未知字符的数量或局限；UNK损失好看也不表示模型区分了原来的所有稀有字符。
 

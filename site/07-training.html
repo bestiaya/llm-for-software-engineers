@@ -99,7 +99,7 @@ W2=[[0.1,0.2],[0.3,−0.1],[−0.2,0.4]]，b2=[0,0.1,−0.1]
 <p>在数学行向量约定里，线性层写<code>h=xW+b</code>；<code>nn.Linear(2,3)</code>保存的<code>.weight</code>形状却是<code>[3,2]</code>，<code>.bias</code>为<code>[3]</code>。用数学W复现时，应把它的转置复制进<code>.weight</code>。例如输入<code>[2,1]</code>，权重存储的第一行为<code>[0.5,-1]</code>，第一输出是<code>2×0.5+1×(-1)+b₀</code>。这与第02章相同，不是库换了一套数学。</p>
 <h2 id="4">4. 循环的顺序为什么如此固定</h2>
 <p>这节把训练写成状态变化，带走每次更新使用哪一次前向的梯度。</p>
-<p><div class="figure"><svg viewBox="0 0 740 195" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="训练循环清梯度前向反向更新与验证">
+<p><div class="figure"><svg viewBox="0 0 740 195" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="训练循环清梯度前向反向更新与验证"><rect width="100%" height="100%" fill="white"/>
 <rect width="740" height="195" rx="14" fill="#eef8f3"/><g font-family="sans-serif" font-size="17" fill="#224a39"><text x="20" y="40">取训练批 → 清旧梯度 → 前向分数 → 计算CE</text><text x="20" y="90">↑ 下一步                 ↓ backward：保存本批梯度</text><text x="20" y="140">← optimizer.step：修改参数 ← 梯度</text><text x="20" y="177">定期验证只计算分数和损失；不反向，不更新参数。</text></g></svg></div></p>
 <pre><code class="language-python">import torch
 import torch.nn.functional as F

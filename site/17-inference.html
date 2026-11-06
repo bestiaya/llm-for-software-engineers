@@ -48,7 +48,7 @@
 </tbody>
 </table></div>
 <p>为什么不只缓存最后一层？每一层的新token都要读<strong>该层</strong>旧token的K/V；上一层与下一层的投影参数和表示不同，不能拿一层缓存冒充所有层。</p>
-<p><div class="figure"><svg viewBox="0 0 700 170" role="img" aria-label="新token查询读取每层的旧键值和新键值"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="30" width="300" height="65" rx="8"/><rect x="340" y="30" width="130" height="65" rx="8"/><path d="M310 63 H340 M470 63 H510"/><rect x="510" y="30" width="180" height="65" rx="8"/></g><g fill="currentColor" text-anchor="middle" font-size="17"><text x="160" y="68">旧缓存：K/V(A,B,C)</text><text x="405" y="68">加入K/V(D)</text><text x="600" y="68">Q(D)读取四项</text><text x="350" y="140">每一层都有自己的K/V；旧Q不必用于新token的查询</text></g></svg></div></p>
+<p><div class="figure"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 170" role="img" aria-label="新token查询读取每层的旧键值和新键值"><rect width="100%" height="100%" fill="white"/><g fill="none" stroke="#193149" stroke-width="2"><rect x="10" y="30" width="300" height="65" rx="8"/><rect x="340" y="30" width="130" height="65" rx="8"/><path d="M310 63 H340 M470 63 H510"/><rect x="510" y="30" width="180" height="65" rx="8"/></g><g fill="#193149" text-anchor="middle" font-size="17"><text x="160" y="68">旧缓存：K/V(A,B,C)</text><text x="405" y="68">加入K/V(D)</text><text x="600" y="68">Q(D)读取四项</text><text x="350" y="140">每一层都有自己的K/V；旧Q不必用于新token的查询</text></g></svg></div></p>
 <h2 id="2">2. 手算缓存为何可以等价</h2>
 <p>这节用一维局部例核对“缓存”和“重算”用了完全相同的数。</p>
 <p>设旧两个键为 <code>[1,0]</code>，对应值 <code>[2,4]</code>；新token的查询是1、新键为1、新值为6。这里每头键宽1，所以缩放除以sqrt(1)仍为1。新行的分数是 <code>[1,0,1]</code>，指数为 <code>[e,1,e]</code>，e约2.71828，总和约6.43656。权重约 <code>[0.422319,0.155362,0.422319]</code>，加权值为：</p>

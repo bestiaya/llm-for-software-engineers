@@ -39,8 +39,7 @@ BPE读字母“比、皮、伊”，英文Byte Pair Encoding。本节实现以�
 
 每一轮都对**已经合并后的序列重新计数**。例如第一轮的`lo,w`在初始字符序列中根本不是一对；必须先生成lo才能在第二轮数到它。第三轮时`e,r`、`e,w`、`n,e`都为2，按字典序选`e,r`；合并后重新数，第四轮选`e,w`。
 
-<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="字符BPE逐轮合并low与er">
-<rect width="720" height="200" rx="12" fill="#f1f5ff"/><g font-family="sans-serif" font-size="19" fill="#263d62"><text x="25" y="38">l / o / w / e / r</text><text x="300" y="38">初始：5个字符token</text><text x="25" y="83">lo / w / e / r</text><text x="300" y="83">第一轮l+o，5→4</text><text x="25" y="128">low / e / r</text><text x="300" y="128">第二轮lo+w，4→3</text><text x="25" y="173">low / er</text><text x="300" y="173">第三轮e+r，3→2</text></g></svg>
+![字符BPE逐轮合并low与er](../assets/diagrams/08-tokenization-1.svg)
 
 合并只换分段，不凭空删字符。`low/er`重新拼接仍是`lower`。学习规则靠训练集的片段频率，神经网络训练靠预测损失调整浮点参数；BPE合并计数不是梯度下降。
 
