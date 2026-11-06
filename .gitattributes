@@ -1,0 +1,6 @@
+* text=auto eol=lf
+data/sources/alice-original.txt -text -diff
+site/source/data/sources/alice-original.txt -text -diff
+docs/source/data/sources/alice-original.txt -text -diff
+# Preserve third-party license layout verbatim; omit it from code whitespace diffs.
+**/PROJECT-GUTENBERG-LICENSE.txt -diff

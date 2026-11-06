@@ -1,0 +1,121 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>06｜隐藏层、链式法则与反向传播 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="06-backprop"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 06 / 18</div><h1>06｜隐藏层、链式法则与反向传播</h1><a href="index.html">课程路线</a> · <a href="source/chapters/06-backprop.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 为什么在两张矩阵之间插入非线性</a></li>
+<li><a href="#2">2. 把一个隐藏单元前向算到底</a></li>
+<li><a href="#3">3. 链式法则是变化量的接力</a></li>
+<li><a href="#4">4. 分叉、共享与零梯度</a></li>
+<li><a href="#5">5. 自己核对反向传播</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>前向传播保存每一步算出的中间值；反向传播把损失的变化率沿原计算路径传回参数。多条路径汇入同一个参数时，贡献要相加。</strong> 隐藏层不是藏起来的知识库，而是输入到输出之间的一层计算。</p>
+<p>前置：<a href="04-parameters.html">第04章的嵌入与输出层</a>、<a href="05-gradients.html">第05章的局部梯度</a>。本章只手推一个小隐藏单元，不手推整个Transformer。</p>
+<h2 id="1">1. 为什么在两张矩阵之间插入非线性</h2>
+<p>这节说明隐藏层增加了什么，带走“只连续相乘，不自动增加表达形式”。</p>
+<p>如果先乘2、再乘3，输入x最后得到6x；两层线性计算等于一层。矩阵也一样：先乘一张表再乘另一张表，仍可合成一个线性映射。加偏置后仍可合成一个“乘加”映射，因此仅仅堆很多线性层不够。</p>
+<p>插入一个分段函数就不同。ReLU读“瑞路”，中文常称修正线性单元，规则是“负数改成0，正数原样保留”。例子：</p>
+<pre><code class="language-text">输入x       -1    0    1    2
+先算2x−1    -3   -1    1    3
+过ReLU       0    0    1    3
+</code></pre>
+<p>不存在一条直线能同时通过这四个输出点：x=-1到0时输出不变，x=1到2时输出增加2。非线性让隐藏层能组合出不同区域的不同响应，不保证它一定学到有用规律。</p>
+<p>固定窗口文本模型可以把前两个token的嵌入按位置拼接，再经过隐藏层，最后输出下一token的分数。MLP读“多层感知机”，在这里指这种由线性层和非线性组成的网络；它的输入窗口大小在设计时固定，不是任意长记忆。</p>
+<h2 id="2">2. 把一个隐藏单元前向算到底</h2>
+<p>这节建立能手推的计算图，带走每一个中间量的来历。</p>
+<p>为了让反向链短到可核，本节用一个已经给定的输入特征x=2，它可理解为查表后取出的一项。它不是把token ID当连续大小。可训练数为输入权重w=0.5、隐藏偏置b=0、输出权重u=1。三个候选中只让B分数接到这个单元，A/C分数固定0。</p>
+<pre><code class="language-text">a = w×x+b = 0.5×2+0 = 1
+h = ReLU(a) = 1
+z_B = u×h = 1×1 = 1
+z = [0,1,0]
+p_B = e/(1+e+1) ≈ 0.576117
+L = −ln(p_B) ≈ 0.551445
+</code></pre>
+<p><code>a</code>读“诶”，是非线性之前的数；<code>h</code>读“艾尺”，是隐藏输出；<code>u</code>读“优”，是隐藏输出到B的连接权重。w、b、u是参数，a、h、z、p是这次前向的中间结果。<code>ReLU(a)=max(0,a)</code>，max读“取较大者”，例如a=-1时输出0，a=2时输出2。</p>
+<p><div class="figure"><svg viewBox="0 0 750 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="单隐藏神经元的前向与反向变化率">
+<rect width="750" height="210" rx="13" fill="#eff4ff"/><g font-size="17" font-family="sans-serif" fill="#20375c"><text x="20" y="45">x=2 → ×w,+b → a=1 → ReLU → h=1 → ×u → zB=1 → L</text><path d="M690 75 H120" stroke="#a75227" stroke-width="3" fill="none"/><text x="180" y="110">反向：从L出发，逐段乘局部变化率</text><text x="30" y="155">局部：da/dw=2，dh/da=1，dzB/dh=1</text><text x="30" y="190">从末端传回：dL/dzB≈−0.423883</text></g></svg></div></p>
+<h2 id="3">3. 链式法则是变化量的接力</h2>
+<p>这节把每一段变化率相乘，带走反向传播没有凭空改写数学。</p>
+<p>先不看符号：w增加0.001，会使a约增加 <code>2×0.001=0.002</code>；a在正数区，所以h也增加0.002；u=1，zB也增加0.002；末端损失对zB的变化率约−0.423883，因此损失约变化 <code>−0.423883×0.002=−0.000847766</code>。除以w的变化0.001，得到约−0.847766。</p>
+<p>符号 <code>∂L/∂w</code>读“损失对w的偏导”。链式法则写成：</p>
+<pre><code class="language-text">∂L/∂w = (∂L/∂zB)×(∂zB/∂h)×(∂h/∂a)×(∂a/∂w)
+       ≈ (-0.423883)×1×1×2 = -0.847766
+</code></pre>
+<p>各段含义与数字如下：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>段</th>
+<th>为什么是这个变化率</th>
+<th style="text-align: right;">数字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>损失←zB</td>
+<td>第05章推导的pB−1</td>
+<td style="text-align: right;">−0.423883</td>
+</tr>
+<tr>
+<td>zB←h</td>
+<td>zB=u×h，u固定</td>
+<td style="text-align: right;">u=1</td>
+</tr>
+<tr>
+<td>h←a</td>
+<td>a&gt;0时ReLU原样通过</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>a←w</td>
+<td>a=w×x+b，x固定</td>
+<td style="text-align: right;">x=2</td>
+</tr>
+</tbody>
+</table></div>
+<p>另两项也要算：对u的梯度是 <code>(pB−1)×h≈−0.423883</code>；对b的梯度是 <code>(pB−1)×u×1≈−0.423883</code>，因为a随b增加一单位也增加一单位。偏置并不会因“没乘输入”而没有梯度。</p>
+<p>学习率0.1，所有梯度从<strong>同一旧状态</strong>计算，再同时更新：</p>
+<pre><code class="language-text">w_new≈0.584777，b_new≈0.042388，u_new≈1.042388
+新a≈0.584777×2+0.042388≈1.211942
+新zB≈1.042388×1.211942≈1.263314
+新pB≈0.63880，新损失≈0.44816
+</code></pre>
+<p>这是一个单样本局部例的预期算术；它没有训练词向量或完整网络，也不能用来宣称语言能力。若先改u再用新u算w梯度，算的是另一套更新规则，无法和这次同时更新对照。</p>
+<h2 id="4">4. 分叉、共享与零梯度</h2>
+<p>这节处理真实网络多于一条路径的情况，带走“复用同一参数时梯度累加”。</p>
+<p>假设同一个权重r在两条路径出现，输出 <code>s=r×2+r×3</code>。r=1时s=5，r增加0.01，两路分别增加0.02和0.03，合计0.05，所以s对r的变化率是5。不能只保留最后一路的3。文本模型同一token在很多位置出现，共享嵌入行的梯度也要汇总这些位置的贡献，再按所用损失均值缩放。</p>
+<p>ReLU的另一侧则会切断局部变化。把w改成−0.5、b仍为0，a=−1、h=0、zB=0；在小幅扰动还不穿过0时，h始终为0，因此w的梯度为0。梯度为0不代表整个任务已经最好，只表示沿当前这条局部路径推不动。a=0恰是折点，普通导数不存在；框架约定一个值（PyTorch取0），数值检查应避开这个点。</p>
+<p>实际decoder可以用更平滑的GELU激活；本章选ReLU是为了手算分段变化率，不能把这个教学单元当成后续模型的完整配置。</p>
+<h2 id="5">5. 自己核对反向传播</h2>
+<p>这节给出不依赖自动求导的核查方法，带走数值结果必须同一个函数同一个状态比较。</p>
+<pre><code class="language-python">import math
+
+def loss(w):
+    h = max(0.0, w * 2.0)  # 固定b=0、u=1
+    return math.log(2.0 + math.exp(h)) - h
+
+eps = 0.0001
+numeric = (loss(0.5 + eps) - loss(0.5 - eps)) / (2 * eps)
+print(numeric)  # 预期约 -0.847766
+</code></pre>
+<p>它只检查w这一项，b、u都固定。也可以运行 <code>python3 labs/foundations.py</code> 查看另一函数的链式检查：脚本使用L=(wx+b)²、x=2、w=3、b=1，预期对w的导数是28。它与本章ReLU/交叉熵的−0.847766是不同例子，不能直接对照数值；要复现本章数字，请运行上面这段代码。有限差分不是第二种学习目标，而是确认同一目标的导数是否正确。</p>
+<p>故障例：前向把h算成1，反向却读取已更新后的h；或者把一次独立扰动永久留在参数中，下一项核对就不在同一个起点。先保存原始状态，每次恢复后只动一个参数。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li>仍在原始状态，若输入特征x从2改成1，w=0.5、b=0、u=1，a和pB是多少？w梯度还等于原来吗？</li>
+</ol>
+<details><summary>展开答案</summary><p>a=h=zB=0.5；pB=e^0.5/(2+e^0.5)≈0.451863。w梯度=(pB−1)×u×1×x≈−0.548137。前向值和局部乘数都变了，不能沿用旧梯度。</p></details>
+
+<ol>
+<li>同一参数r出现在 <code>s=4r−r</code> 两路，s对r的导数是多少？</li>
+</ol>
+<details><summary>展开答案</summary><p>第一路贡献4，第二路贡献−1，合计3。分叉反向贡献相加；不能把两路的4与−1相乘。</p></details>
+
+<ol>
+<li>a=-1时ReLU输出0，w梯度为0，能说损失已最小吗？</li>
+</ol>
+<details><summary>展开答案</summary><p>不能。本例三个分数全0，B概率1/3，仍有损失ln3。只是ReLU在当前负半轴的局部导数为0，使该路径传不到w；其他参数、数据或初始化仍可能改变结果。</p></details>
+
+<p>下一章：<a href="07-training.html">用PyTorch保存计算图并完成训练循环</a>。</p><div class="chapter-links"><a href="05-gradients.html">← 上一章</a><a href="07-training.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

@@ -1,0 +1,15 @@
+{
+  "source": "Alice's Adventures in Wonderland",
+  "author": "Lewis Carroll (1832-1898)",
+  "publication_year": 1865,
+  "source_url": "https://www.gutenberg.org/cache/epub/11/pg11.txt",
+  "catalog_url": "https://www.gutenberg.org/ebooks/11",
+  "retrieved_date": "2026-11-06",
+  "catalog_rights": "Public domain in the USA",
+  "original_sha256": "01b38ea4c710a84bc18d0bd41271a5a1a92b94e97b2812f4dece97d4a694725e",
+  "prepared_sha256": "93d669b42c033b246b1a959dd0c0c09d723162ea67c2afb753c5e28b1b2e6564",
+  "characters": 144016,
+  "preparation": "UTF-8 BOM removed; CRLF to LF; extract body between START/END, omit title and contents before first chapter; no synthetic text",
+  "source_copy": "sources/alice-original.txt",
+  "license_copy": "sources/PROJECT-GUTENBERG-LICENSE.txt"
+}

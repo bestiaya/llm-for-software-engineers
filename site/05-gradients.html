@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>05｜梯度：怎样知道一个参数应该往哪边改 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="05-gradients"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 05 / 18</div><h1>05｜梯度：怎样知道一个参数应该往哪边改</h1><a href="index.html">课程路线</a> · <a href="source/chapters/05-gradients.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 先做一个不用微积分的实验</a></li>
+<li><a href="#2">2. 从变化率到导数、梯度</a></li>
+<li><a href="#3">3. 为什么会出现“概率减去标签”</a></li>
+<li><a href="#4">4. 完成一步，再多走一步</a></li>
+<li><a href="#5">5. 为什么不靠遍历尝试所有参数</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>梯度测量参数小幅增加时，损失会怎样变化；梯度下降沿相反方向走一小步，再重新计算。它提供局部方向，不保证每步都改善所有样本。</strong> 本章会亲手完成一次更新，最后得到可核对的新概率和损失。</p>
+<p>前置：<a href="03-counting.html">第03章的交叉熵</a>、<a href="04-parameters.html">第04章的参数分数</a>。本章先直接更新一个输入行的三个分数，相当于训练一张分数表的一行；它们不是任意深层模型中可直接独立改动的最终输出。</p>
+<h2 id="1">1. 先做一个不用微积分的实验</h2>
+<p>这节用“稍微拧一下参数”观察损失，带走梯度正负号的实际意义。</p>
+<p>词表A/B/C，真实下一项为B，下标1。起始分数 <code>[0,0,0]</code>，概率各1/3，真实项损失 <code>−ln(1/3)=ln3≈1.098612</code>。</p>
+<p>只改变B分数，其余两项固定0：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th style="text-align: right;">B分数</th>
+<th style="text-align: right;">真实B概率</th>
+<th style="text-align: right;">损失（近似）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">−0.01</td>
+<td style="text-align: right;">0.331115</td>
+<td style="text-align: right;">1.105290</td>
+</tr>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">1.098612</td>
+</tr>
+<tr>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">0.335559</td>
+<td style="text-align: right;">1.091957</td>
+</tr>
+</tbody>
+</table></div>
+<p>往正方向改0.01，损失降低约0.006656；往负方向改，损失反而升高。用两侧结果估计“每改一单位，损失改多少”：</p>
+<pre><code class="language-text">(1.091957−1.105290)/(0.01−(-0.01))
+≈ −0.013333/0.02 ≈ −0.6667
+</code></pre>
+<p>这个负数告诉我们：在这个位置增加B分数能降低损失。换测A，得到约+0.3333：增加错误候选A的分数，会抢走真实B的概率，从而使损失升高。</p>
+<p>这种方法叫有限差分。<code>ε</code>读“艾普西隆”，是很小的扰动量；<code>θ</code>读“西塔”，代表正在测的参数；<code>L</code>是损失。一般写作：</p>
+<pre><code class="language-text">局部变化率 ≈ [L(θ+ε)−L(θ−ε)]/(2ε)
+</code></pre>
+<p>每次只动一个数，其余都固定。ε太大测的是较大范围的平均趋势，太小又可能被浮点舍入淹没；在双精度小例中可试0.01、0.001、0.0001，看估计是否稳定。</p>
+<h2 id="2">2. 从变化率到导数、梯度</h2>
+<p>这节给上面的实验命名，带走梯度是每个可调数各自的变化率集合。</p>
+<p>当扰动越来越小时，若变化率趋向确定值，就叫导数。多个参数时，每次固定其他参数所得的导数叫偏导。<code>∂L/∂z_B</code>读“L对z下标B的偏导”，含义是B分数局部变化一单位时损失的变化率。不要把分数值0和梯度−2/3混为一谈：前者是当前位置，后者是当地坡度。</p>
+<p>把三个偏导排成向量，得到对分数的梯度。符号 <code>∇</code>读“纳布拉”，表示梯度；本例 <code>∇z L=[1/3,−2/3,1/3]</code>。下节解释为什么有这个精确值，有限差分已经给了独立的数值动机。</p>
+<h2 id="3">3. 为什么会出现“概率减去标签”</h2>
+<p>这节从损失的指数形式推导梯度，不要求你凭记忆接受结果。</p>
+<p>看不懂求导细节可先跳到第4节，记住结论即可；但请至少核对第1节的有限差分。</p>
+<p>真实项为B时，softmax概率为 <code>e^(z_B)/(e^(z_A)+e^(z_B)+e^(z_C))</code>。把它代入负对数损失，用对数把除法变成相减：</p>
+<pre><code class="language-text">S = e^(z_A)+e^(z_B)+e^(z_C)
+L = −ln(e^(z_B)/S) = −z_B+ln(S)
+</code></pre>
+<p><code>S</code>读“艾斯”，是三个指数的和。求导只需三个局部规则：变量自身的变化率是1，<code>e^u</code>对u的变化率是<code>e^u</code>，<code>ln S</code>对S的变化率是<code>1/S</code>。例如指数在0附近，从 <code>e⁰=1</code>到<code>e^0.001≈1.0010005</code>，变化率约1；对数在S=3附近，<code>(ln3.003−ln3)/0.003≈0.333167</code>，接近1/3。嵌套计算把相邻变化率相乘，<a href="06-backprop.html">第06章</a>会展开这个链式法则。</p>
+<ul>
+<li>调A分数：第一项−z_B不变；S的变化率为<code>e^(z_A)</code>；所以L的变化率为 <code>(1/S)×e^(z_A)=p_A</code>。</li>
+<li>调B分数：第一项变化率−1；第二项贡献<code>p_B</code>；合计<code>p_B−1</code>。</li>
+<li>调C分数：与A一样，得到<code>p_C</code>。</li>
+</ul>
+<p>把标签写成独热向量 <code>y=[0,1,0]</code>，三个式子可合并为 <code>∂L/∂zⱼ=pⱼ−yⱼ</code>，读“每一项的分数梯度等于该项概率减去该项独热标签”。p和y都覆盖整个词表，y不是ID数字1本身。起点p各为1/3，便得到 <code>[1/3,−2/3,1/3]</code>。</p>
+<h2 id="4">4. 完成一步，再多走一步</h2>
+<p>这节真正修改参数并复算，带走学习率控制步长、梯度每步重算。</p>
+<p><code>η</code>读“伊塔”，表示学习率，是人设置的正数。<code>θ_new=θ_old−η×梯度</code>读“新参数等于旧参数减去学习率乘梯度”。本例η=0.3：</p>
+<pre><code class="language-text">新A分数 = 0−0.3×(1/3)  = −0.1
+新B分数 = 0−0.3×(-2/3) =  0.2
+新C分数 = 0−0.3×(1/3)  = −0.1
+指数 ≈ [0.904837,1.221403,0.904837]
+指数和 ≈ 3.031078
+新概率 ≈ [0.298520,0.402960,0.298520]
+新损失 ≈ −ln0.402960 ≈ 0.908918
+</code></pre>
+<p>损失由1.098612降到0.908918。第二步不能继续用旧梯度：新梯度约 <code>[0.298520,−0.597040,0.298520]</code>；再次乘0.3更新，分数约 <code>[-0.189556,0.379112,-0.189556]</code>，B概率约0.4689，损失约0.7573。以同一目标继续重复，B会越来越有优势；但训练语料还有别的前文和真实下一项，不能只对这一条无限调。</p>
+<p><div class="figure"><svg viewBox="0 0 730 175" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="参数更新前向与反向流程">
+<rect width="730" height="175" rx="14" fill="#fff6e9"/><g fill="#533713" font-family="sans-serif" font-size="17"><text x="20" y="40">分数[0,0,0] → softmax → B概率1/3 → CE=1.0986</text><text x="20" y="88">梯度[1/3,-2/3,1/3] → 乘0.3 → 从旧分数减去</text><text x="20" y="137">分数[-0.1,0.2,-0.1] → B概率0.4030 → CE=0.9089</text></g></svg></div></p>
+<h2 id="5">5. 为什么不靠遍历尝试所有参数</h2>
+<p>这节说明数值梯度适合检查、解析反向适合训练，并指出局部方法的失败边界。</p>
+<p>若有100万个参数，两侧差分需要约200万次损失计算才能测完一轮，代价很大。解析反向传播利用计算结构一次性取得很多参数的梯度；有限差分留下来核对小模型的导数是否写对。</p>
+<p>学习率太大并不安全。只看一个局部函数 <code>L=(θ−1)²</code>：θ=0时损失1、梯度−2；η=2使新θ=4，损失变9。η=0.1则新θ=0.2，损失0.64。平方例只用来说明步长，不替换本章语言模型的CE目标。</p>
+<p>在课程根目录运行：</p>
+<pre><code class="language-bash">python3 labs/foundations.py --json
+</code></pre>
+<p>核对有限差分和解析梯度，以及第一步CE。这里列出的值是预期数学值；别拿这一个局部更新的下降当成完整训练或保留集改善。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li>起点不变，学习率改为0.6，新分数是多少？为什么B向上、A/C向下？</li>
+</ol>
+<details><summary>展开答案</summary><p>[-0.2,0.4,-0.2]。减去梯度：B梯度负，因此增加；A/C梯度正，因此降低。方向来自损失对分数的变化，不来自ID大小。</p></details>
+
+<ol>
+<li>某候选原分数0.7，损失对它的偏导是−0.4，学习率0.05，新分数多少？梯度为负是否意味着分数必须为负？</li>
+</ol>
+<details><summary>展开答案</summary><p>0.7−0.05×(-0.4)=0.72。分数是位置，梯度是变化趋势，两者正负没有这样的对应关系。</p></details>
+
+<ol>
+<li>数值梯度与解析梯度不一致，能直接调大学习率解决吗？先查什么？</li>
+</ol>
+<details><summary>展开答案</summary><p>不能。先固定相同输入/参数/目标与损失聚合口径，每次只扰动一个参数，检查扰动后恢复原值，换几个合理ε；再查解析推导和轴。学习率不参与导数的定义。</p></details>
+
+<p>下一章：<a href="06-backprop.html">隐藏层与链式法则</a>。</p><div class="chapter-links"><a href="04-parameters.html">← 上一章</a><a href="06-backprop.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

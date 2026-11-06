@@ -1,0 +1,123 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>01｜模型、参数、训练：一次回答从哪里来 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="01-models"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 01 / 18</div><h1>01｜模型、参数、训练：一次回答从哪里来</h1><a href="index.html">课程路线</a> · <a href="source/chapters/01-models.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 从一个补全文本的小程序开始</a></li>
+<li><a href="#2">2. 规则和学习，区别在数从哪里来</a></li>
+<li><a href="#3">3. 两条数据流，别画成一条</a></li>
+<li><a href="#4">4. 把模型放回产品中</a></li>
+<li><a href="#5">5. 纸上追踪与故障定位</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>模型把输入变成预测；训练修改参数；推理使用参数。聊天产品还需要把模型接到消息、资料和工具上。</strong> 先分清这三件事，后面看到一个矩阵或一次 API 调用时，才知道它在流程的哪个位置。</p>
+<p>本章不要求机器学习知识，只要求能读懂变量、数组和函数调用。学完请能画出两条不同的数据流，并指出哪一步会改变参数。</p>
+<h2 id="1">1. 从一个补全文本的小程序开始</h2>
+<p>这节用一次下一项预测，说明我们究竟要模型输出什么。</p>
+<p>假设输入是 <code>服务 超时</code>，候选下一项只有 <code>重试、成功、停止</code>。这里每个词暂当一个事先切好的记号，叫 token，读作“托肯”。真实文本怎样切分留到<a href="08-tokenization.html">第08章</a>。人为给一个预测分布：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>候选下一项</th>
+<th style="text-align: right;">模型给出的概率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>重试</td>
+<td style="text-align: right;">0.6</td>
+</tr>
+<tr>
+<td>成功</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td>停止</td>
+<td style="text-align: right;">0.1</td>
+</tr>
+</tbody>
+</table></div>
+<p>三个数相加是 <code>0.6+0.3+0.1=1</code>。若选最高概率，得到“重试”；若按概率抽样，也可能得到“成功”。概率是本次预测的数，<strong>不是已核验的事实正确率</strong>。即使“重试”概率为0.6，也不能据此判断实际系统应该重试。</p>
+<p>模型的接口可以先写成：</p>
+<pre><code class="language-text">predict(prefix, parameters) → 下一个token的概率数组
+</code></pre>
+<p><code>prefix</code> 是已经看见的前文，<code>parameters</code> 是模型保存的一组数。一次预测不是一次完整回答：把选中的“重试”接到前文，再调用一次，才能继续写。程序还需要停止条件，例如结束记号或最大生成长度。</p>
+<h2 id="2">2. 规则和学习，区别在数从哪里来</h2>
+<p>这节区分人为指定的行为与从数据调整的行为，不把模型当成神秘服务。</p>
+<p>规则程序可以写 <code>if 最后一个词 == 超时: return 重试</code>。它清楚、便宜，也可能正好够用。学习模型则保留可调整的数，用历史例子决定这些数应怎样变化。两者都是计算程序，差别不在“有没有代码”，而在行为的哪些部分由数据调整。</p>
+<p>给一个最小计算，暂不要求它就是完整语言模型。输入 <code>x=2</code>，参数 <code>w=0.5</code>、<code>b=-0.2</code>，输出分数是：</p>
+<pre><code class="language-text">0.5×2−0.2 = 1−0.2 = 0.8
+把w改为0.6：0.6×2−0.2 = 1.0
+把输入改为3、保持原参数：0.5×3−0.2 = 1.3
+</code></pre>
+<p><code>x</code> 读“艾克斯”，是本次输入；<code>w</code> 读“达不溜”，是输入的权重；<code>b</code> 读“比”，是额外加的偏置；<code>z</code> 读“泽德”，是原始分数。一般写作 <code>z=w×x+b</code>。上面的0.8不是概率，怎样把多个分数变成概率见<a href="02-math.html">第02章</a>。</p>
+<p>输入换了，输出会换，但参数未必换。训练则会换参数，保存后影响未来很多输入。工程上可以把参数看成与程序一起版本管理的数据文件；它们并不是编译生成的机器指令，也不是一条条可直接读出的业务规则。</p>
+<h2 id="3">3. 两条数据流，别画成一条</h2>
+<p>这节把训练与推理的接口画开，带走“有答案供比较”和“没有未来答案”这一关键差别。</p>
+<p><div class="figure"><svg viewBox="0 0 760 235" role="img" aria-label="训练修改参数，推理读取参数" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="750" height="225" rx="14" fill="#f0f5ff"/>
+<g fill="#172b4d" font-size="17" font-family="sans-serif">
+<text x="25" y="40">训练：前文 + 真实下一项</text><text x="290" y="40">→ 预测 → 比较损失</text><text x="540" y="40">→ 更新参数</text>
+<path d="M610 60 V92 H340 V60" fill="none" stroke="#246bce" stroke-width="3"/><text x="375" y="84">下一轮使用新参数</text>
+<text x="25" y="148">推理：已知前文</text><text x="245" y="148">→ 固定参数计算</text><text x="485" y="148">→ 分布 → 选下一项</text>
+<text x="25" y="202">此处“固定”指这次常规生成不执行参数更新。</text></g></svg></div></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>在小程序中是什么</th>
+<th>通常何时变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>参数</td>
+<td>权重、偏置、词向量表</td>
+<td>训练更新时</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>当前前文</td>
+<td>每次请求、每步生成</td>
+</tr>
+<tr>
+<td>中间结果</td>
+<td>分数、概率</td>
+<td>每次计算</td>
+</tr>
+<tr>
+<td>超参数</td>
+<td>学习率、层数、窗口长度</td>
+<td>实验设计时由人选择</td>
+</tr>
+</tbody>
+</table></div>
+<p>训练时，可以从已有文本 <code>A B C</code> 构造 <code>A→B</code>、<code>A B→C</code>；因为原文已在手，目标是已知的。推理时只拿到 <code>A</code>，必须先预测B才能继续。模型不能看到真实未来再假装预测。训练的罚分叫“损失”，<a href="03-counting.html">第03章</a>会用实际概率计算；怎样据此更新数值见<a href="05-gradients.html">第05章</a>。</p>
+<h2 id="4">4. 把模型放回产品中</h2>
+<p>这节说明模型的技术位置，以及一次回答还依赖哪些环节。</p>
+<p>AI是人工智能领域，机器学习是从数据改善行为的一类方法；深度学习主要用深层神经网络学习表示。Transformer是一种神经网络架构，许多大语言模型采用它。LLM是大语言模型这个类别，GenAI指生成内容的方向；AI不等于LLM，机器学习也不等于神经网络。</p>
+<p>技术关系可读成这些带含义的边：<code>深度学习—属于→机器学习</code>，<code>语言模型—可采用→Transformer</code>，<code>聊天产品—使用→语言模型</code>。不要据此把“产品”和“架构”画成同一层的竞争选项。</p>
+<p>分析任务还应另问五件事：输出要什么；手里能用哪些数据；训练依据从哪来；怎样评价且有什么约束；最终系统怎样接入。以补全例子作答：输出下一token分布；只用已知前文；训练目标来自原文下一项；看保留数据的预测损失和资源约束；最后再决定界面与调用方式。这五问不是模型家族的包含链。</p>
+<p>聊天产品可能在调用前取回资料，调用后检查引用，或申请工具执行。检索出的资料是本次输入；默认不会因放入上下文就永久写进参数。对话越长，也不意味着权重越大。</p>
+<h2 id="5">5. 纸上追踪与故障定位</h2>
+<p>这节让你实际检查状态变化，避免用“模型学到了”解释所有变化。</p>
+<p>拿纸写三列：参数、输入、输出。先填 <code>w=0.5,b=-0.2,x=2,z=0.8</code>。第二行仅把输入改为3，输出1.3；第三行固定输入3，把w改为0.6，输出1.6。圈出真正修改参数的那一行。这个练习不运行训练，也不能证明参数是从数据学出的。</p>
+<p>失败例：把验证文档加入提示后答对一个问题，就宣称“训练成功”。实际只改变了输入；更可能是答案证据进入了可见上下文。另一失败是只记住训练文本，在新文本上仍差；这必须靠分开的数据检查，不能靠看一条流畅回答排除。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li>参数不变，输入从2变成4，原例分数是多少？这算训练吗？</li>
+</ol>
+<details><summary>展开答案</summary><p>0.5×4−0.2=1.8。只是重新计算输出，没有修改w、b，不算参数训练。</p></details>
+
+<ol>
+<li>从文本 <code>A B C D</code> 训练下一项预测，输入 <code>A B</code> 时，目标是B还是C？为什么？</li>
+</ol>
+<details><summary>展开答案</summary><p>是C。B已经在输入中；让模型复制B容易得到好看的结果，却没有训练“预测下一项”这个任务。</p></details>
+
+<ol>
+<li>产品先搜索文档，再让模型回答，答案改善能证明模型权重改变了吗？应检查什么？</li>
+</ol>
+<details><summary>展开答案</summary><p>不能。先检查参数文件版本是否变化、是否执行更新步骤；同时记录本次可见文档。输入证据变化和参数变化是两条不同原因。</p></details>
+
+<p>下一章：<a href="02-math.html">用向量、矩阵和softmax把一次预测算清楚</a>。</p><div class="chapter-links"><a href="index.html">← 课程首页</a><a href="02-math.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

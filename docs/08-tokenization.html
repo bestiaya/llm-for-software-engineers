@@ -1,0 +1,137 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>08｜字符、子词与BPE：文本怎样变成ID · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="08-tokenization"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 08 / 18</div><h1>08｜字符、子词与BPE：文本怎样变成ID</h1><a href="index.html">课程路线</a> · <a href="source/chapters/08-tokenization.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 为什么模型不直接读取字符串</a></li>
+<li><a href="#2-bpe">2. BPE怎样逐轮合并</a></li>
+<li><a href="#3">3. 新文本不能再偷偷学习规则</a></li>
+<li><a href="#4">4. 运行并检查空白没有消失</a></li>
+<li><a href="#5">5. 切分选择会改变怎样的比较</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>token是分词器产生的序列单位，ID只是词表索引。字符切分容易检查，子词切分能缩短常见片段；切分规则和词表必须与模型一起固定。</strong> token不是天然等于一个字、一个词或固定字节数。</p>
+<p>前置：<a href="04-parameters.html">第04章的查表</a>。学完请能手工执行两轮合并，说明编码与解码边界，并找出数据泄漏和空格丢失的故障。</p>
+<h2 id="1">1. 为什么模型不直接读取字符串</h2>
+<p>这节把文本接口接到数值模型，带走分词器决定序列长度和词表含义。</p>
+<p>模型的嵌入表需要整数索引。<code>服务超时</code>可以逐字符切成<code>服/务/超/时</code>，也可以切成<code>服务/超时</code>；前者4个token，后者2个。模型结构都可以处理整数序列，但词表、嵌入行与训练目标不同，不能直接互换。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>优点</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>字符</td>
+<td>实现直观，中文字符边界可见</td>
+<td>序列较长；未见字符仍需策略</td>
+</tr>
+<tr>
+<td>完整词</td>
+<td>常见完整词较短</td>
+<td>新词、拼写变化需要回退</td>
+</tr>
+<tr>
+<td>子词</td>
+<td>常见片段合并，稀有片段拆开</td>
+<td>需要固定规则和词表；并非自然语义单位</td>
+</tr>
+</tbody>
+</table></div>
+<p>本课程CPU训练主线使用字符级：从训练文本收集字符，排序后编号；ID 0预留UNK未知项、ID 1预留EOS结束项，字符从2开始。假设训练字符只有A/B/C，映射为A→2、B→3、C→4，则<code>AB</code>加结束项得到<code>[2,3,1]</code>。数字3不代表B“比A大1个单位”，只用来查表。</p>
+<p>UNK把不同未知字符合并成同一项，解码后无法恢复原字符。这是明确的信息损失。EOS不是普通字面文本“EOS”的三个字母；它是程序预留的特殊token。课程没有PAD填充token，不能把0误当PAD。</p>
+<h2 id="2-bpe">2. BPE怎样逐轮合并</h2>
+<p>这节从相邻字符计数执行BPE，带走“学习合并规则”和“训练神经网络”是两件事。</p>
+<p>BPE读字母“比、皮、伊”，英文Byte Pair Encoding。本节实现以字符起步，只演示相邻片段合并的核心思想，不是完整字节级生产分词器。</p>
+<p>训练文本固定两组：<code>low low lower</code>、<code>new newer low</code>。空格作为独立token保留，<strong>任何包含空白的相邻对都不参与合并</strong>；两组之间也不计相邻对。初始每个字符一项。</p>
+<p>先数能合并的相邻对：<code>l,o</code>出现4次，<code>o,w</code>也4次；<code>e,w</code>2次，<code>n,e</code>2次，<code>e,r</code>2次，<code>w,e</code>2次。并列最高时按“token字符串对的字典序”选最小项，因此第一轮选<code>l,o</code>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>轮次</th>
+<th>被选相邻对</th>
+<th style="text-align: right;">当前计数</th>
+<th>合并后的新片段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>l + o</td>
+<td style="text-align: right;">4</td>
+<td>lo</td>
+</tr>
+<tr>
+<td>2</td>
+<td>lo + w</td>
+<td style="text-align: right;">4</td>
+<td>low</td>
+</tr>
+<tr>
+<td>3</td>
+<td>e + r</td>
+<td style="text-align: right;">2</td>
+<td>er</td>
+</tr>
+<tr>
+<td>4</td>
+<td>e + w</td>
+<td style="text-align: right;">2</td>
+<td>ew</td>
+</tr>
+</tbody>
+</table></div>
+<p>每一轮都对<strong>已经合并后的序列重新计数</strong>。例如第一轮的<code>lo,w</code>在初始字符序列中根本不是一对；必须先生成lo才能在第二轮数到它。第三轮时<code>e,r</code>、<code>e,w</code>、<code>n,e</code>都为2，按字典序选<code>e,r</code>；合并后重新数，第四轮选<code>e,w</code>。</p>
+<p><div class="figure"><svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="字符BPE逐轮合并low与er">
+<rect width="720" height="200" rx="12" fill="#f1f5ff"/><g font-family="sans-serif" font-size="19" fill="#263d62"><text x="25" y="38">l / o / w / e / r</text><text x="300" y="38">初始：5个字符token</text><text x="25" y="83">lo / w / e / r</text><text x="300" y="83">第一轮l+o，5→4</text><text x="25" y="128">low / e / r</text><text x="300" y="128">第二轮lo+w，4→3</text><text x="25" y="173">low / er</text><text x="300" y="173">第三轮e+r，3→2</text></g></svg></div></p>
+<p>合并只换分段，不凭空删字符。<code>low/er</code>重新拼接仍是<code>lower</code>。学习规则靠训练集的片段频率，神经网络训练靠预测损失调整浮点参数；BPE合并计数不是梯度下降。</p>
+<h2 id="3">3. 新文本不能再偷偷学习规则</h2>
+<p>这节在固定规则下编码未见文本，带走编码顺序与未知字符的处理边界。</p>
+<p>新文本<code>lowest new</code>先切字符，再依次应用四条已学规则：</p>
+<pre><code class="language-text">初始：l/o/w/e/s/t/空格/n/e/w        10项
+l+o：lo/w/e/s/t/空格/n/e/w          9项
+lo+w：low/e/s/t/空格/n/e/w          8项
+e+r：没有匹配，保持8项
+e+w：low/e/s/t/空格/n/ew            7项
+</code></pre>
+<p>这里s、t没有出现在训练字符中。演示程序仍把它们作为字符字符串返回，因此它展示的是<strong>切分</strong>，并没有证明存在可供模型查表的s/t ID。要真正输入固定词表的网络，还必须规定UNK回退或完整字节覆盖等策略。本课程字符训练器采用前者；不能拿本章字符串演示冒充无限覆盖的生产编码器。</p>
+<p>合并规则有顺序。如果在训练时用一种并列选择方式，加载时换另一种，可能得到不同token序列。保存tokenizer需要至少固定初始单位、文本规范化、空白策略、词表、特殊ID和合并序列；仅保存“最终词表大小”不够。</p>
+<h2 id="4">4. 运行并检查空白没有消失</h2>
+<p>这节执行确定性实验，带走可复核的合并轨迹。</p>
+<p>在课程根目录运行：</p>
+<pre><code class="language-bash">python3 labs/tokenization.py
+</code></pre>
+<p>本次实际运行得到四轮<code>l+o(4)、lo+w(4)、e+r(2)、e+w(2)</code>；测试token为<code>["low","e","s","t"," ","n","ew"]</code>。两个训练组输出长度分别为6和8，总14项；原字符总数是13+13=26，序列缩短12项。这个数只描述当前文本和规则，不能推成所有语言的压缩比例。</p>
+<p>检查源码<code>encode</code>时，注意它按学习到的合并顺序应用规则。可在交互Python中试：</p>
+<pre><code class="language-python">from labs.tokenization import learn_bpe, encode
+merges, _, _ = learn_bpe(['low low lower', 'new newer low'])
+pieces = encode('low  new', merges)
+print(pieces)
+print(''.join(pieces) == 'low  new')
+</code></pre>
+<p>预期拼接比较为True，中间两个空格都保留。若你先用不带参数的字符串<code>.split()</code>再用单个空格拼回去，多空格与换行可能被改掉。对代码、日志、Markdown，这种改动可能改变含义。</p>
+<h2 id="5">5. 切分选择会改变怎样的比较</h2>
+<p>这节说明不同token口径不能直接比CE，带走分母需要一起报告。</p>
+<p>假设同一段文字，字符方案有10个预测目标，总负对数概率20，则CE=2；子词方案有5个目标，总负对数概率15，则CE=3。按token均值会说2小于3，但token定义已变，不能直接据此判字符模型更好。跨分词器比较要选择一致文本单位或明确换算方法；本课程模型与计数基线用同一词表、同一目标窗口比较。</p>
+<p>真实tokenizer还可能处理Unicode规范化、预切分、字节回退、特殊记号识别；本实验没有实现这些环节。不要用它估算某商业模型的计费token数，也不要假定所有中文词都被完整合并。模型与tokenizer版本要成套匹配。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li>在<code>a b</code>中，若本章规则只允许非空白合并，能把整段合成一个token吗？</li>
+</ol>
+<details><summary>展开答案</summary><p>不能。a与b之间没有直接相邻关系，包含空格的对又被排除。应保留a、空格、b；不能为得到短序列删除空白。</p></details>
+
+<ol>
+<li>合并表依次为(a,b)、(ab,c)，新文本<code>abc ab</code>如何切分？</li>
+</ol>
+<details><summary>展开答案</summary><p>字符起点a/b/c/空格/a/b；第一轮ab/c/空格/ab；第二轮abc/空格/ab，共3项。规则只应用，不从新文本重新统计或新增合并。</p></details>
+
+<ol>
+<li>字符模型词表没有Ω，程序切分出字符串Ω，是否表示模型一定可以处理它？</li>
+</ol>
+<details><summary>展开答案</summary><p>不表示。字符串片段还需映射到固定ID。课程训练器会映射UNK并失去原字符信息；只有明确实现相应覆盖/回退的tokenizer才能保证另一种行为。</p></details>
+
+<p>下一章：<a href="09-context.html">固定窗口与平均为什么仍然不够</a>。</p><div class="chapter-links"><a href="07-training.html">← 上一章</a><a href="09-context.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

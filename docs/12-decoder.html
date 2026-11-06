@@ -1,0 +1,102 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>12｜完整 decoder：从向量到下一字符概率 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="12-decoder"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 12 / 18</div><h1>12｜完整 decoder：从向量到下一字符概率</h1><a href="index.html">课程路线</a> · <a href="source/chapters/12-decoder.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 先认清完整路线</a></li>
+<li><a href="#2-ln-epsilon">2. LN为什么要有 epsilon</a></li>
+<li><a href="#3-ffn">3. 残差与FFN各做什么</a></li>
+<li><a href="#4">4. 最后怎样变成概率</a></li>
+<li><a href="#5">5. 在代码里沿路线走一次</a></li>
+<li><a href="#6">6. 换数小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p>本章把注意力放进一条完整计算路径，解释每个部件为什么存在，并把最后的向量变成词表概率。前置是<a href="11-position-heads.html">位置与多头</a>以及<a href="06-backprop.html">隐藏层与反向传播</a>。这里的 decoder 是只读合法前缀的文本预测网络，不包含翻译模型里的交叉注意力。</p>
+<h2 id="1">1. 先认清完整路线</h2>
+<p>这节先给全图，后面的计算都能在图中找到位置。</p>
+<p>多头注意力负责跨位置读取信息，但“读回来一个向量”还不等于完成预测：我们还要保留原输入、控制计算尺度、做逐位置的非线性变换，再映射到词表。</p>
+<p><div class="figure"><svg viewBox="0 0 760 240" role="img" aria-label="Pre-LN decoder数据流和两条残差支路"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M25 80 H735"/><rect x="65" y="55" width="85" height="50"/><rect x="180" y="55" width="130" height="50"/><circle cx="355" cy="80" r="20"/><rect x="405" y="55" width="85" height="50"/><rect x="520" y="55" width="85" height="50"/><circle cx="650" cy="80" r="20"/><path d="M35 80 V20 H355 V60 M375 80 V145 H650 V100 M25 200 H735"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="108" y="85">LN</text><text x="245" y="85">因果多头</text><text x="355" y="86">+</text><text x="448" y="85">LN</text><text x="563" y="85">FFN</text><text x="650" y="86">+</text><text x="200" y="14">原输入直接相加</text><text x="510" y="139">注意力后的向量直接相加</text><text x="380" y="193">输入嵌入 → 重复上方块 → 最终LN → 词表投影 → softmax</text><text x="380" y="230">上方是一块；下方是整网路线</text></g></svg></div></p>
+<p>本课代码使用 Pre-LN，即“先层归一化，再进子层”。以一行向量为单位写：<code>u=x+Attention(LN(x))</code>，再算 <code>y=u+FFN(LN(u))</code>。<code>x</code> 是块输入，<code>u</code> 是第一次相加的结果，<code>y</code> 是块输出；括号说明先执行哪个函数。注意力需要同时看整段合法前缀，FFN与LN则逐行处理。</p>
+<p>这里不推导整块反向传播。难点看不懂可先记住：<strong>每块两次残差相加，块宽度始终不变；输出头才把特征维变成词表维。</strong></p>
+<h2 id="2-ln-epsilon">2. LN为什么要有 epsilon</h2>
+<p>这节手算一行的层归一化，分清特征统计与跨样本统计。</p>
+<p>假设某行是 <code>[1,3]</code>。先取均值 <code>(1+3)/2=2</code>；减均值得到 <code>[-1,1]</code>；平方后平均是 <code>(1+1)/2=1</code>，这就是本例采用的方差。取平方根得到尺度1，再除以这个尺度，就得到 <code>[-1,1]</code>。这使子层接收到的各行尺度更可控，但不保证每次训练一定稳定。</p>
+<p>实际还要在方差里加一个小正数。用 <code>ε=0.00001</code>，<code>ε</code> 读“艾普西隆”，代表防止除零的小量，结果约为 <code>[-0.999995,0.999995]</code>。一般规则是：</p>
+<pre><code class="language-text">LN(x)_j = γ_j × (x_j - μ) / sqrt(σ² + ε) + β_j
+</code></pre>
+<p><code>j</code> 是特征下标；<code>μ</code> 读“缪”，是一行各特征的均值；<code>σ²</code> 读“西格玛平方”，是各特征偏差平方的平均；<code>sqrt</code> 表示平方根；<code>γ</code> 读“伽马”，是可训练缩放；<code>β</code> 读“贝塔”，是可训练偏移。若 <code>γ=[2,0.5]</code>、<code>β=[0,1]</code>，上面的结果进一步变成约 <code>[-1.99999,1.4999975]</code>。</p>
+<p>为什么不能删掉 ε？看 <code>[0.001,0.001]</code>：均值也是0.001，两个偏差都为0，方差为0；没有 ε 就会算 <code>0/0</code>。有 ε 则归一化结果为 <code>[0,0]</code>。再看 <code>[0,0.00002]</code>，均值0.00001，方差0.0000000001；加 ε 后分母约0.00316229，结果约 <code>[-0.00316226,0.00316226]</code>，不是强行变成 <code>[-1,1]</code>。小方差时 ε 实际影响数值，不能把它说成永远可以忽略。</p>
+<p>LN沿每个 token 的特征轴算，不混合不同位置。因此改未来行不会通过这个LN影响过去行；若误写成整段时间轴一起求均值，就可能破坏因果性。</p>
+<h2 id="3-ffn">3. 残差与FFN各做什么</h2>
+<p>这节算完一个局部数值路径，知道残差和非线性不是同一件事。</p>
+<p>先把注意力分支的输出视作已经算好的 <code>[0.5,-0.5]</code>，块输入为 <code>[1,3]</code>，第一次残差得到 <code>u=[1.5,2.5]</code>。这不是“选择原输入或新结果”，而是逐项相加。分支可以学修正量，原向量保留一条直接到后面的路径；它不等于保存原始字符串，也不保证信息不丢失。</p>
+<p>为方便手算，<strong>下面独立局部例用ReLU，实际实验用GELU</strong>。暂把 ε 当作极小量近似，<code>LN(u)≈[-1,1]</code>。设第一层映射：</p>
+<pre><code class="language-text">[-1,1] × [[1,-1],[1,1]] + [1,0] = [1,2]
+ReLU([1,2]) = [1,2]
+[1,2] × [[1,0],[0,0.5]] + [0,0] = [1,1]
+第二次残差：[1.5,2.5]+[1,1]=[2.5,3.5]
+</code></pre>
+<p>ReLU读“瑞鲁”，逐项取“该数与0中的较大者”，例如 <code>[-2,0,3]</code> 变 <code>[0,0,3]</code>。若中间不插非线性，多次线性映射仍可合成一次线性映射，表达方式受限。GELU是另一个平滑的非线性函数，不等于ReLU；手算例没有冒充代码trace。</p>
+<p>FFN读“前馈网络”，在这里就是每行独立的两层映射与非线性。所有位置共享同一组参数，却不彼此读取。实际每行 <code>32→128→32</code>，中间128维提供更宽的变换空间，回到32维才能与残差相加。注意力混合位置，FFN混合该位置的特征，两者职责不同。</p>
+<h2 id="4">4. 最后怎样变成概率</h2>
+<p>这节把词表投影和softmax接上，区分特征数与候选token数。</p>
+<p>设最后归一化后的一行向量是 <code>[1,-1]</code>，演示词表只有A、B、C。取数学行向量右乘的输出矩阵：</p>
+<pre><code class="language-text">W_vocab = [[1,0,-1],
+           [0,0, 0]]
+logits = [1,-1] × W_vocab = [1,0,-1]
+</code></pre>
+<p><code>logits</code> 是未归一化分数，不是概率。指数约为 <code>[2.7183,1,0.3679]</code>，总和约4.0862，因此概率约 <code>[0.6652,0.2447,0.0900]</code>。三个分数对应三个候选 token，不是输入里的三个位置。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>完整模型形状</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>token与位置相加</td>
+<td><code>[B,T,32]</code></td>
+<td>每个位置的输入表示</td>
+</tr>
+<tr>
+<td>2个decoder块</td>
+<td><code>[B,T,32]</code></td>
+<td>读过合法前缀的表示</td>
+</tr>
+<tr>
+<td>最终LN</td>
+<td><code>[B,T,32]</code></td>
+<td>进入输出头前的表示</td>
+</tr>
+<tr>
+<td>词表头</td>
+<td><code>[B,T,V]</code></td>
+<td>V是训练集拟合出的词表大小</td>
+</tr>
+<tr>
+<td>softmax</td>
+<td><code>[B,T,V]</code></td>
+<td>各位置预测下一token的分布</td>
+</tr>
+</tbody>
+</table></div>
+<p>实际词表头无偏置，且不与输入嵌入共享参数。PyTorch的 <code>Linear</code> 把权重存成 <code>[输出维,输入维]</code>，所以存储矩阵是上面数学矩阵的转置。若直接照着数学数组填框架权重而不转置，就会把接口弄反。训练时交叉熵函数可直接接收logits，内部处理稳定的归一化计算，无需先手动softmax再喂进去。</p>
+<h2 id="5">5. 在代码里沿路线走一次</h2>
+<p>这节给可执行入口，再用检查问题约束阅读，而不是凭模型名称猜内部结构。</p>
+<pre><code class="language-bash">python3 -m llm_course.experiments
+python3 -m unittest discover -s tests -v
+</code></pre>
+<p>实验检查因果边界和缓存一致性；测试通过不表示每个结构选择都最好。打开 <code>llm_course/model.py</code>，逐项找：嵌入、位置表、两个Pre-LN块、GELU、最终LN、词表头。记录模型配置是否为宽32、4头、2层、上下文64、dropout0；命令行改过配置时，以自己报告中的配置为准。</p>
+<p>故障定位：若残差两边分别是32维与128维，相加在形状上就错了；若全网logits已含未来信息，最终softmax不会替你修复；若初始化模型能输出完整句子，也不能由一句话断言它训练过。</p>
+<h2 id="6">6. 换数小测</h2>
+<p>这节检查能否把计算和接口说清。</p>
+<ol>
+<li><code>[2,2]</code> 做LN，<code>γ=[1,1]</code>、<code>β=[0,0]</code>、ε为正，结果多少？</li>
+<li>输入 <code>[2,-1]</code>，分支结果 <code>[-0.5,0.25]</code>，残差相加结果多少？若分支是3维能直接相加吗？</li>
+<li>词表大小7、特征宽32，一条长5的序列得到什么形状的logits？最后一行有几个候选分数？</li>
+</ol>
+<details><summary>展开完整答案</summary><ol><li><p>均值2，偏差均为0，方差0，除以sqrt(ε)后仍为0，因此得到[0,0]。不能删ε后说结果仍然有定义。</p></li><li><p>逐项相加得到[1.5,-0.75]。3维分支不能直接与2维输入相加，需先设计投影使宽度一致；本课FFN第二层就是回到残差宽度。</p></li><li><p>包含批轴时为[1,5,7]，最后一行7个候选分数。32是内部表示宽度，不是输出候选数；最后一行用于预测当前前缀之后的下一token。</p></li></ol></details>
+
+<p>原始阅读：<a href="https://arxiv.org/abs/1607.06450">Layer Normalization</a>、<a href="https://arxiv.org/abs/1706.03762">Transformer论文</a>。下一章：<a href="13-next-token.html">标签怎样移位，生成怎样推进</a>。</p><div class="chapter-links"><a href="11-position-heads.html">← 上一章</a><a href="13-next-token.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

@@ -1,0 +1,113 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>02｜向量、矩阵与概率：先把一次计算看懂 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="02-math"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 02 / 18</div><h1>02｜向量、矩阵与概率：先把一次计算看懂</h1><a href="index.html">课程路线</a> · <a href="source/chapters/02-math.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 为什么不用一个数代表所有信息</a></li>
+<li><a href="#2">2. 多个候选一起算，就是矩阵运算</a></li>
+<li><a href="#3">3. 从“分数”到“概率”缺哪一步</a></li>
+<li><a href="#4">4. 条件概率中的竖线是什么意思</a></li>
+<li><a href="#5">5. 用标准库检查你的手算</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>向量是一组有顺序的数，矩阵是按行列组织的数；形状决定能怎样计算。softmax把一组原始分数变成总和为1的概率。</strong> 你不必先学完整线性代数，但要能检查每个轴是什么。</p>
+<p>前置：<a href="01-models.html">第01章</a>的输入、参数和输出。本章用手设数字，只解释计算，不声称这些数经过训练。阅读目标是拿笔完成一次矩阵乘法，区分“概率归一化”和“取最大值”。</p>
+<h2 id="1">1. 为什么不用一个数代表所有信息</h2>
+<p>这节把数组的工程直觉接到向量上，带走“同一位置始终表示同一类信息”。</p>
+<p>暂把前文表示为两项数 <code>[2,1]</code>。我们不解释它们已学出了什么语义，仅约定这是两个输入特征。候选下一项A的两个权重是 <code>[0.5,-1]</code>，于是：</p>
+<pre><code class="language-text">输入第一项×第一项权重 = 2×0.5 = 1
+输入第二项×第二项权重 = 1×(-1) = -1
+把两项相加 = 1+(-1) = 0
+</code></pre>
+<p>这叫点积。<code>x</code>读“艾克斯”，表示输入向量；<code>w</code>读“达不溜”，表示同长度的权重向量；下标1、2读“第一项、第二项”；点号<code>·</code>读“点乘”。写成 <code>x·w=x₁w₁+x₂w₂</code>。若把输入顺序换成 <code>[1,2]</code>，同一组权重得到 <code>1×0.5+2×(-1)=-1.5</code>。<strong>交换数组元素会改变含义和结果。</strong></p>
+<h2 id="2">2. 多个候选一起算，就是矩阵运算</h2>
+<p>这节让你检查输入轴和输出轴，带走“每一列对应一个输出分数”的本章约定。</p>
+<p>要同时给A、B、C打分，就把三组权重并排。约定输入是行向量，计算时从左向右乘：</p>
+<pre><code class="language-text">x = [2,1]                 形状[1,2]
+W = [[ 0.5, 1, 0],
+     [-1.0, 0, 2]]       形状[2,3]
+b = [0, 0.5, -1]         形状[3]
+
+A分数 = 2×0.5 + 1×(-1) + 0   = 0
+B分数 = 2×1   + 1×0    + 0.5 = 2.5
+C分数 = 2×0   + 1×2    − 1   = 1
+z = [0,2.5,1]            形状[1,3]
+</code></pre>
+<p>大写 <code>W</code>读“达不溜矩阵”，小写 <code>b</code>是偏置向量，<code>z</code>是输出分数向量。一般写 <code>z=xW+b</code>。中间维度2必须相同：两个输入特征，各自贡献给三个候选。</p>
+<p>若两条输入一起算，<code>X=[[2,1],[0,1]]</code>形状为<code>[2,2]</code>，结果第二行是<code>[-1,0.5,1]</code>。第一维2是样本数，第二维2是特征数，虽然数值相同，职责不同。把样本轴当成特征轴，程序可能恰好能乘，但含义已错。</p>
+<p><div class="figure"><svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="矩阵输入特征轴与候选输出轴">
+<rect width="720" height="170" rx="12" fill="#edf5ff"/><g font-family="sans-serif" font-size="18" fill="#163655">
+<text x="25" y="45">每条输入：2项特征</text><text x="300" y="45">权重：2行×3列</text><text x="555" y="45">3个候选分数</text>
+<text x="55" y="100">[2, 1]</text><text x="245" y="100">×</text><text x="305" y="100">W [2,3]</text><text x="480" y="100">→</text><text x="555" y="100">[0, 2.5, 1]</text>
+<text x="25" y="145">输入项与权重行对应；权重列与候选A、B、C对应。</text></g></svg></div></p>
+<p>PyTorch的线性层把权重存成 <code>[输出维,输入维]</code>。所以数学里本章的W，对应代码层权重的转置；转置读作“交换行与列”，记为上标T。别只看变量都叫weight就直接相乘。<a href="07-training.html">第07章</a>会核对接口。</p>
+<h2 id="3">3. 从“分数”到“概率”缺哪一步</h2>
+<p>这节用三个小数值手算softmax，带走它改变比例、保留排序的作用。</p>
+<p>分数可以是负数，和也不必为1，不能直接拿来抽样。先用更好算的一组分数 <code>[0,ln2,ln3]</code>。<code>ln</code>读“自然对数”，是指数的反操作，所以 <code>e⁰=1</code>、<code>e^(ln2)=2</code>、<code>e^(ln3)=3</code>；<code>e</code>读“自然常数”，约2.718。</p>
+<pre><code class="language-text">先指数化：[1,2,3]
+再算总和：1+2+3=6
+最后逐项除总和：[1/6,2/6,3/6]
+概率：[0.1667,0.3333,0.5]
+</code></pre>
+<p>这个操作叫softmax，读作“索夫特麦克斯”。<code>zⱼ</code>读“第j个分数”，<code>pⱼ</code>读“第j个概率”，<code>j</code>是候选下标；<code>Σₖ</code>读“对所有候选k求和”。公式为 <code>pⱼ=e^(zⱼ)/Σₖe^(zₖ)</code>。刚才j为C时，就是 <code>3/6=0.5</code>。</p>
+<p>softmax不是只留下最大项。它给三个候选都保留概率；<code>argmax</code>才是取最大项的下标。这是两个不同操作。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>输入分数</th>
+<th>指数比例</th>
+<th>输出概率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[0,0,0]</td>
+<td>[1,1,1]</td>
+<td>[1/3,1/3,1/3]</td>
+</tr>
+<tr>
+<td>[0,ln2,ln3]</td>
+<td>[1,2,3]</td>
+<td>[1/6,2/6,3/6]</td>
+</tr>
+<tr>
+<td>[ln2,ln4,ln6]</td>
+<td>[2,4,6]</td>
+<td>[1/6,2/6,3/6]</td>
+</tr>
+</tbody>
+</table></div>
+<p>最后两行说明：所有分数加上同一个常数ln2，结果不变。计算机利用这个性质，先减去最大分数，避免指数溢出。例如 <code>[1000,1001,1002]</code>先变成<code>[-2,-1,0]</code>，再指数化。直接计算 <code>e^1002</code> 会出问题；减去最大数没有改变预测分布。</p>
+<h2 id="4">4. 条件概率中的竖线是什么意思</h2>
+<p>这节把概率与已知前文绑定，带走“改变条件就可能改变答案”。</p>
+<p>若三次看见A后面分别接B、B、C，未平滑的经验频率为 <code>B:2/3,C:1/3</code>。写 <code>P(B|A)=2/3</code>，读“已知前一个是A，下一个是B的概率”。大写P表示概率，竖线表示“在已知……条件下”。这不是 <code>P(A|B)</code>，也不是B在所有位置中的总频率。<a href="03-counting.html">第03章</a>会完整构造计数模型。</p>
+<p>一次模型输出0.6，不等于“长期实测60%”；要验证概率是否与真实频率相符，还要收集独立样本。更不能把“下一个token像训练文本”偷换成“生成内容一定真实”。</p>
+<h2 id="5">5. 用标准库检查你的手算</h2>
+<p>这节让你在没有张量库时核对归一化，先预测输出再运行。</p>
+<p>在课程根目录执行 <code>python3 labs/foundations.py</code> 可检查课程的基础数值例子；以下独立片段也可存成临时脚本运行：</p>
+<pre><code class="language-python">import math
+z = [0.0, math.log(2), math.log(3)]
+m = max(z)
+e = [math.exp(v - m) for v in z]
+p = [v / sum(e) for v in e]
+print(p, sum(p))
+</code></pre>
+<p><code>[]</code>是列表；<code>for v in z</code>依次读取每个元素；<code>math.exp</code>计算指数。预期概率接近 <code>[1/6,2/6,1/2]</code>、和接近1，浮点数末位允许有舍入误差。若你得到三行概率各为1，请检查是否错误地分别归一化了每个单独数字。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li><code>x=[1,2]</code>，W和b用第2节的数，三个分数分别是多少？</li>
+</ol>
+<details><summary>展开答案</summary><p>A=1×0.5+2×(-1)=-1.5；B=1×1+2×0+0.5=1.5；C=1×0+2×2−1=3。输出仍是三个候选分数，还不是概率。</p></details>
+
+<ol>
+<li>分数是 <code>[ln2,ln2,ln4]</code>，softmax是多少？取最大值又得到什么？</li>
+</ol>
+<details><summary>展开答案</summary><p>指数为2、2、4，和8，概率为0.25、0.25、0.5。取最大值下标得到C；它不会保留完整分布。</p></details>
+
+<ol>
+<li>输入形状是 <code>[4,2]</code>，数学W为 <code>[2,3]</code>，结果形状是什么？若softmax沿第一维算有什么问题？</li>
+</ol>
+<details><summary>展开答案</summary><p>结果[4,3]，四条输入每条三个分数。下一项预测需沿每条输入的三个候选归一化；沿第一维会让不同样本互相争概率，无法解释为单条输入的候选分布。</p></details>
+
+<p>下一章：<a href="03-counting.html">用文本计数做出第一个语言模型</a>。</p><div class="chapter-links"><a href="01-models.html">← 上一章</a><a href="03-counting.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

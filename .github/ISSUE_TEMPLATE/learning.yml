@@ -1,0 +1,21 @@
+name: 阅读卡点或勘误
+description: 帮助我们修复具体的理解断点
+body:
+  - type: input
+    id: chapter
+    attributes:
+      label: 章节、小节或链接
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: 哪一步卡住或哪里有错
+      description: 请写出已有理解、具体疑问；数值或程序问题附最小输入。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 运行命令、环境和实际结果（如适用）
+      description: 请勿粘贴密码、API key或私有业务资料。

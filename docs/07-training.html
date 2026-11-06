@@ -1,0 +1,169 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>07｜用PyTorch把训练变成一个能检查的循环 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="07-training"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 07 / 18</div><h1>07｜用PyTorch把训练变成一个能检查的循环</h1><a href="index.html">课程路线</a> · <a href="source/chapters/07-training.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 张量是什么，和数组差在哪里</a></li>
+<li><a href="#2">2. 先用三个分数核对自动求导</a></li>
+<li><a href="#3-mlp">3. 从一个单元到小MLP</a></li>
+<li><a href="#4">4. 循环的顺序为什么如此固定</a></li>
+<li><a href="#5">5. 看报告，不只看一条下降曲线</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>自动求导负责沿计算图算梯度；训练程序还必须正确管理清梯度、更新、数据分工和保存状态。代码能运行不等于任务设对，训练损失下降也不等于新数据改善。</strong> 本章先复现小网络，再阅读可扩展的训练循环。</p>
+<p>前置：<a href="05-gradients.html">第05章的梯度下降</a>、<a href="06-backprop.html">第06章的链式法则</a>。不要求你已熟悉Python或PyTorch；下面只介绍本次要读的接口，完整模型留在后续章节。</p>
+<h2 id="1">1. 张量是什么，和数组差在哪里</h2>
+<p>这节给软件读者一座最短的接口桥，带走“形状、类型、求导状态”三个检查点。</p>
+<p>PyTorch是一个数值计算与自动求导库。tensor读“张量”，可以先理解为带形状和类型的多维数组。<code>torch.tensor([[1.,2.],[3.,4.]])</code>是2行2列的浮点张量；<code>.shape</code>给出<code>[2,2]</code>。后缀点号是对象方法/属性访问，和Java的调用风格类似；Python缩进表示代码块，没有大括号。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>本章接口</th>
+<th>做什么</th>
+<th>容易写错的地方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>torch.tensor(...)</code></td>
+<td>建立张量</td>
+<td>token ID和类别标签用整数long，参数/分数用浮点</td>
+</tr>
+<tr>
+<td><code>requires_grad=True</code></td>
+<td>为该浮点变量记录求导关系</td>
+<td>整数ID本身不求梯度</td>
+</tr>
+<tr>
+<td><code>@</code></td>
+<td>矩阵乘法</td>
+<td><code>*</code>是逐元素乘法</td>
+</tr>
+<tr>
+<td><code>.backward()</code></td>
+<td>从标量损失往回累加梯度</td>
+<td>默认会累加，下一轮要清理</td>
+</tr>
+<tr>
+<td><code>.grad</code></td>
+<td>读取梯度</td>
+<td>不等于参数的新值</td>
+</tr>
+<tr>
+<td><code>.item()</code></td>
+<td>将单个数转成Python数值</td>
+<td>调用后脱离原计算图</td>
+</tr>
+</tbody>
+</table></div>
+<p>参数表会收到梯度，但“选择第几行”的ID不需要梯度；自动求导只对本次查到的浮点运算反传。</p>
+<h2 id="2">2. 先用三个分数核对自动求导</h2>
+<p>这节复现已手算的更新，带走“框架计算也要对着已知答案检查”。</p>
+<p>先按课程<a href="setup.html">安装说明</a>安装训练依赖，再在课程根目录运行下面片段。可以存为<code>check_update.py</code>后执行<code>python3 check_update.py</code>，完成后自行删除该临时文件。</p>
+<pre><code class="language-python">import torch
+import torch.nn.functional as F
+
+z = torch.tensor([[0., 0., 0.]], requires_grad=True)
+target = torch.tensor([1], dtype=torch.long)
+loss = F.cross_entropy(z, target)
+loss.backward()
+print('loss:', loss.item(), 'gradient:', z.grad)
+with torch.no_grad():
+    z -= 0.3 * z.grad
+print('new scores:', z)
+print('new loss:', F.cross_entropy(z, target).item())
+</code></pre>
+<p>预期旧损失ln3≈1.098612，梯度一行 <code>[1/3,−2/3,1/3]</code>；新分数<code>[-0.1,0.2,-0.1]</code>，新损失约0.908918。这里z就是待更新的一行参数，没有深层网络，形状<code>[1,3]</code>表示一条样本、三个候选。</p>
+<p><code>F.cross_entropy</code>直接接原始分数，内部完成数值稳定的log-softmax与真实项罚分。<strong>不要先softmax再传进去。</strong> 若真实分数<code>[0,1,0]</code>，真实B概率约0.5761；先算成概率再把它当分数，内部还会再转一次分布，任务函数已变化。</p>
+<p><code>torch.no_grad()</code>表示这个代码块不记录求导关系。参数更新属于训练状态修改，通常不需要为“更新动作本身”再建立新的求导图；它不会抹掉先前算好的<code>.grad</code>。</p>
+<h2 id="3-mlp">3. 从一个单元到小MLP</h2>
+<p>这节运行带隐藏层的模型，带走“前向、解析梯度、数值梯度、自动求导要说同一件事”。</p>
+<pre><code class="language-bash">python3 -m llm_course.mlp
+</code></pre>
+<p>实验包含一个固定的“两输入→两隐藏单元ReLU→三候选”局部例，核对解析、有限差分与自动求导的梯度，并执行一次更新；随后用两字符窗口做分类训练：A编码0、B编码1，标签是窗口内B的个数，类别为0/1/2。这里A/B的二值编码是特意设计的分类特征，不是语言模型的通用token距离。它与第06章的一隐藏单元例参数不同，比较时先看输入、权重与形状，不能拿两个损失值直接相减。</p>
+<p>固定例的输入是[1,2]、目标下标1。第一层按PyTorch的每行一个隐藏单元存储：</p>
+<pre><code class="language-text">W1=[[0.2,0.1],[0.1,0.3]]，b1=[0.1,0.2]
+隐藏第1项=0.2×1+0.1×2+0.1=0.5
+隐藏第2项=0.1×1+0.3×2+0.2=0.9
+两项都是正数，ReLU保持[0.5,0.9]
+W2=[[0.1,0.2],[0.3,−0.1],[−0.2,0.4]]，b2=[0,0.1,−0.1]
+输出第1项=0.1×0.5+0.2×0.9=0.23
+输出第2项=0.3×0.5−0.1×0.9+0.1=0.16
+输出第3项=−0.2×0.5+0.4×0.9−0.1=0.16
+</code></pre>
+<p>本次CPU实际运行，softmax约为[0.349066,0.325467,0.325467]，CE约1.122494；SGD学习率0.1更新一次，目标概率升到约0.397314，CE约0.923028。解析与有限差分的梯度最大绝对差约1.91×10⁻¹¹，与autograd约1.11×10⁻¹⁶；这表明此处计算互相吻合，不能扩成“任何网络都已验证”。</p>
+<p>两个隐藏单元如何接收梯度？由本例目标1，三个输出分数的梯度为dz=[0.349066,−0.674533,0.325467]。第一隐藏单元收到0.349066×0.1−0.674533×0.3+0.325467×(−0.2)≈−0.232547；第二个收到0.349066×0.2+(−0.674533)×(−0.1)+0.325467×0.4≈0.267453。它们分别沿W2的对应列累加三条输出路径。本次两个ReLU输入均为正，再乘局部导数1，梯度继续回到第一层；这就是第06章“分叉相加”在多输出网络里的应用。</p>
+<p>后半段分类用Adam训练300步，训练CE从约1.08344降到0.005347。训练文档和评价文档虽分开，AA/AB/BA/BB四种可能窗口却都出现在两边；它只演示优化闭环，不是独立泛化证据，更不是下一token语言模型结果。</p>
+<p>运行前先做三个预测：更新前后是否使用同一真实目标；梯度是否和参数形状一致；如果把一步更新的学习率改为0，参数和损失会怎样。运行后在输出中找到对应证据。这个小实验优先于完整decoder，是为了把“手算的乘加”与“框架保存的图”接起来，不要求它展示真正语言能力。</p>
+<p>在数学行向量约定里，线性层写<code>h=xW+b</code>；<code>nn.Linear(2,3)</code>保存的<code>.weight</code>形状却是<code>[3,2]</code>，<code>.bias</code>为<code>[3]</code>。用数学W复现时，应把它的转置复制进<code>.weight</code>。例如输入<code>[2,1]</code>，权重存储的第一行为<code>[0.5,-1]</code>，第一输出是<code>2×0.5+1×(-1)+b₀</code>。这与第02章相同，不是库换了一套数学。</p>
+<h2 id="4">4. 循环的顺序为什么如此固定</h2>
+<p>这节把训练写成状态变化，带走每次更新使用哪一次前向的梯度。</p>
+<p><div class="figure"><svg viewBox="0 0 740 195" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="训练循环清梯度前向反向更新与验证">
+<rect width="740" height="195" rx="14" fill="#eef8f3"/><g font-family="sans-serif" font-size="17" fill="#224a39"><text x="20" y="40">取训练批 → 清旧梯度 → 前向分数 → 计算CE</text><text x="20" y="90">↑ 下一步                 ↓ backward：保存本批梯度</text><text x="20" y="140">← optimizer.step：修改参数 ← 梯度</text><text x="20" y="177">定期验证只计算分数和损失；不反向，不更新参数。</text></g></svg></div></p>
+<pre><code class="language-python">import torch
+import torch.nn.functional as F
+from llm_course.mlp import TinyMLP
+
+model = TinyMLP()  # 使用本章固定参数，内部为float64
+optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+inputs = torch.tensor([[1., 2.]], dtype=torch.float64)
+targets = torch.tensor([1], dtype=torch.long)
+optimizer.zero_grad(set_to_none=True)
+logits = model(inputs)
+loss = F.cross_entropy(logits, targets)
+loss.backward()
+optimizer.step()
+</code></pre>
+<p>这是适用于“每条输入一个目标”的MLP骨架，不是完整decoder接口原样复制。<code>optimizer</code>是更新器，持有模型参数；最简单的SGD就是第05章的减法。完整实验若用AdamW，步长还结合历史梯度统计和权重衰减，不能用单步SGD数字要求它逐项相等。</p>
+<p>遗漏清理会怎样？本次偏导0.2，下一次偏导0.3；若不清理，第二次<code>.grad</code>得到0.5，而非0.3。累积有时是有意的大批量模拟，但要明确归一化；无意保留就是错误。</p>
+<p>验证时同时使用<code>model.eval()</code>与<code>torch.no_grad()</code>：前者切换dropout等模块行为，后者停止构建求导图，职责不同。当前课程完整模型dropout为0，但不能把两接口说成同义词。</p>
+<h2 id="5">5. 看报告，不只看一条下降曲线</h2>
+<p>这节说明该如何决定保存哪一版，带走测试数据不参与参数更新或版本选择。</p>
+<p>假设训练到三次检查：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>检查步</th>
+<th style="text-align: right;">训练CE</th>
+<th style="text-align: right;">验证CE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>50</td>
+<td style="text-align: right;">1.2</td>
+<td style="text-align: right;">1.3</td>
+</tr>
+<tr>
+<td>100</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr>
+<td>150</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">1.1</td>
+</tr>
+</tbody>
+</table></div>
+<p>这是说明性数字。按验证CE选择第100步，而非训练CE最低的150步；最后再对选中权重计算测试CE。验证不更新参数，却通过版本选择影响最终方案，不能称它完全没参与开发。</p>
+<p>保存检查点时要带参数、结构配置、词表映射和预处理规则。相同权重配错ID映射，数值可运行却会把字符含义打乱。续训还需更新器状态与步数；“可恢复推理”不自动等于“可无缝恢复训练”。</p>
+<p>最小诊断顺序：先核目标是否真为下一项；再看少量数据能否降低训练损失；再查梯度非空/数值有限、参数是否变化；最后才讨论加层。刻意在小批数据上拟合是排查计算链的探针，不能作为泛化证据。后续<a href="14-toy-training.html">第14章</a>会使用报告比较计数模型与decoder，本章不要求提前运行。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li><code>nn.Linear(4,3)</code>保存的权重与偏置形状是什么？输入5条样本时输出形状是什么？</li>
+</ol>
+<details><summary>展开答案</summary><p>权重[3,4]、偏置[3]；输入[5,4]，输出[5,3]。5是样本轴，3是候选/输出轴，不能交换含义。</p></details>
+
+<ol>
+<li>训练CE从0.9降到0.3，验证CE从1.0升到1.4，是否立刻增加模型层数？</li>
+</ol>
+<details><summary>展开答案</summary><p>不应仅据此加层。先核对数据切分、分布差异、验证口径和过拟合；训练拟合加强但保留表现恶化，加容量未必解决。选择更早的验证最优版本并保留测试验收。</p></details>
+
+<ol>
+<li>你在验证循环调用了<code>.backward()</code>，但没调用<code>step()</code>。参数是否已经变化？下一步有什么风险？</li>
+</ol>
+<details><summary>展开答案</summary><p>通常backward只累加梯度，尚未修改参数；但验证梯度可能混入下一次更新。验证应不建图、不反传，训练更新前清理梯度。</p></details>
+
+<p>下一章：<a href="08-tokenization.html">文本如何变成ID：字符与BPE</a>。</p><div class="chapter-links"><a href="06-backprop.html">← 上一章</a><a href="08-tokenization.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

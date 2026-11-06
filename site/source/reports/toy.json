@@ -1,0 +1,273 @@
+{
+  "schema": 1,
+  "dataset": "toy",
+  "seed": 42,
+  "config": {
+    "vocab_size": 12,
+    "d_model": 32,
+    "heads": 4,
+    "layers": 2,
+    "context": 64
+  },
+  "training": {
+    "steps": 200,
+    "batch_size": 16,
+    "lr": 0.003,
+    "optimizer": "AdamW",
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "eval_every": 25,
+    "length_buckets": "window-frequency length selection; replacement within bucket"
+  },
+  "parameter_count": 28288,
+  "source": {
+    "source": "作者原创有限语法；完整文本组不相交，模板共享",
+    "sha256": "0715f73c18d8b90df1f99521e8455abf4ec0a10a29cb4a39e7d6aafeb36032d0"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.11.0",
+    "device": "cpu",
+    "threads": 1
+  },
+  "splits": {
+    "train": {
+      "groups": 201,
+      "raw_characters": 7958,
+      "windows": 201,
+      "targets": 7958,
+      "unknown_characters": 0
+    },
+    "validation": {
+      "groups": 25,
+      "raw_characters": 1064,
+      "windows": 25,
+      "targets": 1064,
+      "unknown_characters": 0
+    },
+    "test": {
+      "groups": 26,
+      "raw_characters": 962,
+      "windows": 26,
+      "targets": 962,
+      "unknown_characters": 0
+    }
+  },
+  "tokens": [
+    "<UNK>",
+    "<EOS>",
+    "。",
+    "务",
+    "常",
+    "时",
+    "服",
+    "正",
+    "试",
+    "超",
+    "重",
+    "，"
+  ],
+  "history": [
+    {
+      "step": 25,
+      "batch_train_ce": 0.424810528755188,
+      "validation_ce": 0.37639010669593526
+    },
+    {
+      "step": 50,
+      "batch_train_ce": 0.2912164032459259,
+      "validation_ce": 0.22932732015624083
+    },
+    {
+      "step": 75,
+      "batch_train_ce": 0.1651185005903244,
+      "validation_ce": 0.18159203421800657
+    },
+    {
+      "step": 100,
+      "batch_train_ce": 0.1559564620256424,
+      "validation_ce": 0.1656061921800886
+    },
+    {
+      "step": 125,
+      "batch_train_ce": 0.1339229941368103,
+      "validation_ce": 0.1470782927104405
+    },
+    {
+      "step": 150,
+      "batch_train_ce": 0.13773475587368011,
+      "validation_ce": 0.1621375146665071
+    },
+    {
+      "step": 175,
+      "batch_train_ce": 0.14757278561592102,
+      "validation_ce": 0.15318972589378071
+    },
+    {
+      "step": 200,
+      "batch_train_ce": 0.23202858865261078,
+      "validation_ce": 0.1431206554398501
+    }
+  ],
+  "selected_step": 200,
+  "validation": {
+    "ce": 0.1431206554398501,
+    "nll_sum": 152.2803773880005,
+    "target_count": 1064
+  },
+  "test": {
+    "model": {
+      "ce": 0.1741559951568096,
+      "nll_sum": 167.53806734085083,
+      "target_count": 962
+    },
+    "unigram": {
+      "ce": 2.3168754721433693,
+      "nll_sum": 2228.8342042019212,
+      "target_count": 962
+    },
+    "bigram": {
+      "ce": 0.19173760931774272,
+      "nll_sum": 184.4515801636685,
+      "target_count": 962
+    }
+  },
+  "parameter_tensors_changed_at_final_step": {
+    "token.weight": true,
+    "position.weight": true,
+    "blocks.0.ln1.weight": true,
+    "blocks.0.ln1.bias": true,
+    "blocks.0.ln2.weight": true,
+    "blocks.0.ln2.bias": true,
+    "blocks.0.attn.qkv.weight": true,
+    "blocks.0.attn.qkv.bias": true,
+    "blocks.0.attn.proj.weight": true,
+    "blocks.0.attn.proj.bias": true,
+    "blocks.0.mlp.0.weight": true,
+    "blocks.0.mlp.0.bias": true,
+    "blocks.0.mlp.2.weight": true,
+    "blocks.0.mlp.2.bias": true,
+    "blocks.1.ln1.weight": true,
+    "blocks.1.ln1.bias": true,
+    "blocks.1.ln2.weight": true,
+    "blocks.1.ln2.bias": true,
+    "blocks.1.attn.qkv.weight": true,
+    "blocks.1.attn.qkv.bias": true,
+    "blocks.1.attn.proj.weight": true,
+    "blocks.1.attn.proj.bias": true,
+    "blocks.1.mlp.0.weight": true,
+    "blocks.1.mlp.0.bias": true,
+    "blocks.1.mlp.2.weight": true,
+    "blocks.1.mlp.2.bias": true,
+    "norm.weight": true,
+    "norm.bias": true,
+    "head.weight": true
+  },
+  "sample": {
+    "ids": [
+      6,
+      3,
+      9,
+      5,
+      11,
+      10,
+      8,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      9,
+      5,
+      11,
+      10,
+      8,
+      2,
+      1
+    ],
+    "stop_reason": "eos",
+    "text": "服务超时，重试。服务正常。服务正常。服务正常。服务正常。服务正常。服务超时，重试。<EOS>",
+    "prompt_text": "服务超",
+    "prompt_ids": [
+      6,
+      3,
+      9
+    ],
+    "prompt_decoded": "服务超",
+    "generated_ids": [
+      5,
+      11,
+      10,
+      8,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      7,
+      4,
+      2,
+      6,
+      3,
+      9,
+      5,
+      11,
+      10,
+      8,
+      2,
+      1
+    ],
+    "generated_text": "时，重试。服务正常。服务正常。服务正常。服务正常。服务正常。服务超时，重试。<EOS>"
+  },
+  "duration_seconds": 1.100052084075287,
+  "limitations": [
+    "有限数据和单 seed；不证明语言理解或工程应用有效。",
+    "toy 完整组不同，但共享语法；real 相邻切分仍可能有重复表达。",
+    "开发期间可见的固定 test 不是永远未触碰的盲测；不要据此反复调参。",
+    "计数 baseline 仅使用前一个 token 或全局频率；与 decoder 的上下文长度不同。",
+    "无 PAD；字符而非 BPE 训练；无跨窗口记忆；绝对位置按窗口重置。",
+    "生成使用贪心，EOS/context/token budget 停止；不保证语义、正确性或安全性。"
+  ],
+  "reporting_note": "提示分界由本次已记录的默认三字符提示规则及token IDs还原；原始指标、时长、完整样本与停止原因未改，未重新训练。"
+}

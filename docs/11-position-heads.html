@@ -1,0 +1,89 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>11｜位置与多头：知道顺序，也保留多种读取方式 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="11-position-heads"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 11 / 18</div><h1>11｜位置与多头：知道顺序，也保留多种读取方式</h1><a href="index.html">课程路线</a> · <a href="source/chapters/11-position-heads.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 因果遮罩和位置，分别解决什么</a></li>
+<li><a href="#2">2. 把位置加在哪里</a></li>
+<li><a href="#3">3. 多头怎样并行，又怎样合起来</a></li>
+<li><a href="#4">4. 从形状检查到边界实验</a></li>
+<li><a href="#5">5. 换数小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p>上一章已能算一个注意力头。本章解决两个缺口：相同 token 换个顺序，输入里有什么变化？多个头的结果怎样回到同一条数据流？先读<a href="10-attention.html">单头注意力</a>，本章只增加位置与接口。</p>
+<h2 id="1">1. 因果遮罩和位置，分别解决什么</h2>
+<p>这节要分清“允许读谁”和“知道谁在第几位”，不要把两者当成同一个功能。</p>
+<p>用上一章预切好的教学标签“服务 / 超时 / 重试”。如果只做不带遮罩、不带位置的注意力，把后三项中的两项交换，查询面对的仍是同一组键值，只是它们的排列变了。加权和对键值的同步重排不变。输出会随查询的重排而重排，却不会凭空多出绝对位置。</p>
+<p>例如查询给两个键的分数是 <code>[0, ln(3)]</code>，其中 <code>ln</code> 读“自然对数”。softmax 权重为 <code>[1/4,3/4]</code>；值为 <code>[2,4]</code>，结果是 <code>1/4×2+3/4×4=3.5</code>。同时把分数和值交换，结果变成 <code>3/4×4+1/4×2=3.5</code>。这里是人为设定的一维小例，说明求和的性质，不是训练结果。</p>
+<p>因果遮罩则让第0位只读第0位，第1位读前两位。它打破了“任意交换行而计算完全等价”的条件，因此<strong>不能说带因果遮罩的网络完全没有任何顺序线索</strong>：可见集合本身有先后差异。但它没有显式给出“现在是第17位”或“两次出现相隔多少位”的数值。本课在遮罩之外加入位置向量。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>机制</th>
+<th>给模型什么</th>
+<th>没有保证什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>因果遮罩</td>
+<td>当前行不能访问未来</td>
+<td>不提供一张绝对位置编号表</td>
+</tr>
+<tr>
+<td>位置向量</td>
+<td>输入中可区别不同位置</td>
+<td>不阻止未来信息泄漏</td>
+</tr>
+<tr>
+<td>两者同时使用</td>
+<td>有位置的合法前缀</td>
+<td>不保证模型已经学会语法</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>因果性的检验仍然是：改未来 token，过去位置的输出应保持不变。给每行加位置向量并不能代替这项检验。</p>
+</blockquote>
+<h2 id="2">2. 把位置加在哪里</h2>
+<p>这节跟踪一次逐元素相加，理解位置维度与特征维度不同。</p>
+<p>设“服务”的 token 向量为 <code>[1,0]</code>，第0位位置向量为 <code>[0.1,0.2]</code>，第1位为 <code>[0.3,-0.1]</code>。那么同一个 token 在两个位置进入网络时分别是：</p>
+<pre><code class="language-text">第0位：[1,0]+[0.1,0.2]=[1.1,0.2]
+第1位：[1,0]+[0.3,-0.1]=[1.3,-0.1]
+</code></pre>
+<p>写成 <code>x_t = E[id_t] + P[t]</code>。<code>t</code> 读“位置t”，从0开始；<code>id_t</code> 是该位置的 token 编号；<code>E</code> 是按 token 编号查的向量表；<code>P</code> 是按位置查的向量表；<code>x_t</code> 是相加后的输入向量。两个表都由训练更新，不是先写好“第1维代表语义，第2维代表位置”。</p>
+<p>完整实验的输入张量是 <code>[B,T,32]</code>：<code>B</code> 读“批大小”，是同时处理的序列数；<code>T</code> 是每条序列的位置数；32是每个位置的特征数。位置表形状是 <code>[64,32]</code>，取前T行后，给批中的每条序列使用同一组位置编号。位置不是额外的第33维，也不是把 token ID 与位置整数相加。</p>
+<p>本课使用<strong>学习式绝对位置</strong>，最多64个位置。训练过长度64不表示能直接访问位置100；换成长上下文属于另一个设计与验证问题。原始 Transformer 论文还讨论了正弦位置编码，现代模型也有旋转位置等方案；这些方案不改变本节“位置与访问权限分工不同”的结论。</p>
+<h2 id="3">3. 多头怎样并行，又怎样合起来</h2>
+<p>这节用具体形状证明，多头是多套投影和读取，不是几个分类器投票。</p>
+<p>先看独立的微型接口：输入两行，每行4维，设两头，每头输出2维。第一头在两位置输出 <code>[[1,2],[3,4]]</code>；第二头输出 <code>[[10,20],[30,40]]</code>。并头时沿<strong>特征轴</strong>拼接：</p>
+<pre><code class="language-text">位置0：[1,2] 与 [10,20] → [1,2,10,20]
+位置1：[3,4] 与 [30,40] → [3,4,30,40]
+</code></pre>
+<p>不是把两行变成四行，也不是取平均 <code>[5.5,11]</code>。令输出投影的4×4矩阵为：</p>
+<pre><code class="language-text">W_O = [[1,0,0,0],
+       [0,1,0,0],
+       [1,0,1,0],
+       [0,1,0,1]]
+</code></pre>
+<p>按数学中的行向量右乘，位置0得到 <code>[11,22,10,20]</code>：第一项是 <code>1×1+2×0+10×1+20×0=11</code>，第二项是 <code>2+20=22</code>，其余两项是10和20。它混合不同头的通道，但仍只处理当前这一行。</p>
+<p><div class="figure"><svg viewBox="0 0 700 170" role="img" aria-label="两个头沿特征轴拼接后做输出投影"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="55" width="120" height="55" rx="8"/><path d="M130 70 L200 35 M130 95 L200 130"/><rect x="200" y="10" width="130" height="45" rx="8"/><rect x="200" y="110" width="130" height="45" rx="8"/><path d="M330 33 L395 70 M330 133 L395 95"/><rect x="395" y="55" width="160" height="55" rx="8"/><path d="M555 83 H590"/><rect x="590" y="55" width="100" height="55" rx="8"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="70" y="87">每位置4维</text><text x="265" y="39">头1：2维</text><text x="265" y="139">头2：2维</text><text x="475" y="87">拼成4维</text><text x="640" y="87">输出投影</text></g></svg></div></p>
+<p>完整模型为4头、总宽32，所以每头8维。Q、K、V通常从 <code>[B,T,32]</code> 投影后重排成 <code>[B,4,T,8]</code>。每头算出的注意力权重是 <code>[B,4,T,T]</code>，聚合后为 <code>[B,4,T,8]</code>；转置和拼接回 <code>[B,T,32]</code>，再做32到32的输出投影。<code>32÷4=8</code> 是接口约束，不是经验偏好；若改成宽30、头4，此实现应拒绝。</p>
+<p>“不同头可以学不同关系”是容量描述，不是分工承诺。没有人保证头1专门找主语，头2专门找故障；两个头也可能学相近内容。权重图也不能单独证明某个 token 对最终回答的因果影响。</p>
+<h2 id="4">4. 从形状检查到边界实验</h2>
+<p>这节把纸上接口连到可运行检查，运行位置均为课程根目录。</p>
+<pre><code class="language-bash">python3 labs/attention.py --json
+python3 -m llm_course.experiments
+</code></pre>
+<p>第一条重算上一章的单头局部例，并不代表跑了完整4头模型；第二条包含完整模型的因果前缀检查。阅读 <code>llm_course/model.py</code>，找到位置查表、分头、恢复特征轴和输出投影。每看一处先写下输入输出形状，再核代码。不要用“最后能运行”代替轴检查：沿错误轴 softmax 有时也能输出同形张量，却已经改变了含义。</p>
+<p>故障练习：如果去掉因果遮罩而保留位置表，改末尾字符仍可能改变第一行输出；如果只去掉位置表，因果检查仍可能通过。两次实验检验的是不同功能。</p>
+<h2 id="5">5. 换数小测</h2>
+<p>这节用三个新问题检查是否能独立跟踪接口。</p>
+<ol>
+<li>token 向量 <code>[2,-1]</code> 加位置向量 <code>[-0.5,0.25]</code> 后是什么？能把位置直接加到 token ID 上吗？</li>
+<li>三个头各输出 <code>[2,5]</code>、<code>[0,1]</code>、<code>[-1,3]</code>，拼接结果是什么？若输出宽度为6，共有4头，按本课等宽分头能成立吗？</li>
+<li>某模型因果检查通过，是否证明它具有学习式位置表？怎样说明理由？</li>
+</ol>
+<details><summary>展开完整答案</summary><ol><li><p>逐元素相加得到 [1.5,-0.75]。token ID 是查表索引，不是向量数值；把位置加到 ID 上通常会查到另一个 token。</p></li><li><p>拼接为 [2,5,0,1,-1,3]。6不能被4整除，无法按本课接口分成等宽的四头，应该在配置检查时拒绝，而不是丢掉两个通道。</p></li><li><p>不能。因果检查证明受测条件下未来没有影响过去；一个只带因果遮罩、没有显式位置表的实现也可能通过。需另查输入是否加入了位置表示及其编号方式。</p></li></ol></details>
+
+<p>延伸阅读：<a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a> 中的多头与位置编码。下一章：<a href="12-decoder.html">把这些部件连成完整 decoder</a>。</p><div class="chapter-links"><a href="10-attention.html">← 上一章</a><a href="12-decoder.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

@@ -1,0 +1,127 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>16｜预训练、SFT与偏好：究竟改了什么 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="16-post-training"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 16 / 18</div><h1>16｜预训练、SFT与偏好：究竟改了什么</h1><a href="index.html">课程路线</a> · <a href="source/chapters/16-post-training.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 规模能改变容量，不能替代数据目标</a></li>
+<li><a href="#2">2. 三种训练阶段的依据</a></li>
+<li><a href="#3-sft">3. SFT只算答案，提示仍然可见</a></li>
+<li><a href="#4">4. 偏好不是一条标准答案</a></li>
+<li><a href="#5-lora">5. LoRA选修：只更新一个低秩修正</a></li>
+<li><a href="#6">6. 换数小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p>本章解释为什么“会续写文本”与“按要求回答”之间还有距离，并用一个答案遮罩与一个局部低秩矩阵实验，把后训练从名词落到计算。先读<a href="13-next-token.html">下一token训练</a>和<a href="15-real-text.html">自然文本实验</a>。本章不训练通用聊天助手。</p>
+<h2 id="1">1. 规模能改变容量，不能替代数据目标</h2>
+<p>这节先区分架构、模型类别与系统，避免把Transformer等同于所有AI。</p>
+<p>Transformer是一类神经网络架构；语言模型可以采用它预测文本；LLM是大语言模型类别；聊天产品还需要交互、工具、权限与评估。机器学习也包含计数、线性模型、树等路线，并不全是Transformer。本课小decoder演示一条路径，不是AI的全貌。</p>
+<p>规模至少有参数、数据、计算预算三条轴。独立小例：一个线性层从4维到6维，无偏置时有 <code>4×6=24</code> 个参数；宽度翻倍到8维与12维，有 <code>8×12=96</code> 个，是4倍，不是2倍。若增加偏置还要加6或12个。完整模型还包括嵌入、注意力、FFN与归一化，不能只用一张线性层矩阵推总参数。</p>
+<p>多给参数扩大可调空间，多给数据增加观察，多给计算允许做更多更新。哪一项成为瓶颈必须测，不能把小模型300步失败全部归于“参数不够”，也不能把更多同质数据当成新的知识覆盖。</p>
+<h2 id="2">2. 三种训练阶段的依据</h2>
+<p>这节用同一个“发布失败怎么办”例子区分数据与目标。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>提供什么数据</th>
+<th>训练依据</th>
+<th>尚未保证什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>预训练</td>
+<td>大量文本片段</td>
+<td>预测文本里的下一token</td>
+<td>不保证遵循指令或事实正确</td>
+</tr>
+<tr>
+<td>SFT监督微调</td>
+<td>提示与示范回答</td>
+<td>使示范回答在提示条件下更可能</td>
+<td>不保证示范覆盖所有问题</td>
+</tr>
+<tr>
+<td>偏好学习</td>
+<td>同一提示下回答的偏好比较等反馈</td>
+<td>调整对更受偏好回答的倾向</td>
+<td>偏好不等于事实真相</td>
+</tr>
+</tbody>
+</table></div>
+<p>预训练目标可以由文本自身构造，常称自监督；SFT的答案可以由人或明确流程提供。这里的“监督”指训练依据，不是每一步都有人盯着运行。后训练是预训练之后调整行为的一组方法，并不是任何模型都必须按唯一固定顺序走完的流水线。</p>
+<p>同一句“测试失败时回滚”，出现在普通文本里，是续写材料；作为“问：测试失败如何处理？答：测试失败时回滚”的答案，是示范行为。字符串相似，组织方式、损失位置和任务条件仍可不同。</p>
+<h2 id="3-sft">3. SFT只算答案，提示仍然可见</h2>
+<p>这节手算移位后的答案遮罩，区分注意力访问权限与损失计分位置。</p>
+<p>用符号序列 <code>[Q,分隔,A,B,EOS]</code>。Q和分隔属于提示，A/B/EOS属于回答。训练输入、目标与计分规则是：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>输入位置</th>
+<th>当前输入</th>
+<th>移位目标</th>
+<th>计损失吗</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Q</td>
+<td>分隔</td>
+<td>否</td>
+<td>目标仍属于提示</td>
+</tr>
+<tr>
+<td>1</td>
+<td>分隔</td>
+<td>A</td>
+<td>是</td>
+<td>目标是首个答案token</td>
+</tr>
+<tr>
+<td>2</td>
+<td>A</td>
+<td>B</td>
+<td>是</td>
+<td>目标属于答案</td>
+</tr>
+<tr>
+<td>3</td>
+<td>B</td>
+<td>EOS</td>
+<td>是</td>
+<td>学会回答结束</td>
+</tr>
+</tbody>
+</table></div>
+<p>常见错位是按“当前输入是否属于答案”来遮罩：这样会漏掉预测A的那一行。规则应看<strong>移位目标的来源</strong>。提示不计损失不代表删除提示：答案计算依然要读提示，而且梯度仍可通过答案的计算路径影响参与表示提示的参数。</p>
+<p>若四行正确目标的概率依次为 <code>0.1、0.5、0.25、0.8</code>，只取后三项，平均损失是 <code>(0.693147+1.386294+0.223144)/3≈0.767528</code>；第一项 <code>-ln0.1≈2.302585</code> 不进入分子，也不进入分母。若没有任何答案目标，应报错，不能除以0，也不能悄悄当作损失0。</p>
+<pre><code class="language-bash">python3 -m llm_course.experiments
+</code></pre>
+<p>其中SFT小实验使用序列 <code>[2,3,4,5,1]</code>，答案从原序列下标3开始，因此只计目标5与EOS(ID1)，遮罩为 <code>[false,false,true,true]</code>。它用6候选的全零logits，两个有效目标的损失都为 <code>ln6≈1.791759</code>；一次实际运行得到1.79175949097，与浮点精度下的手算相符。这验证的是移位和遮罩算术，没有执行完整模型指令微调。</p>
+<h2 id="4">4. 偏好不是一条标准答案</h2>
+<p>这节通过两条回答解释偏好目标，知道它和SFT的差别。</p>
+<p>同一提示“发布测试失败怎么办”，A回答“先检查失败原因，必要时回滚”，B回答“忽略失败继续发布”。若收集到10次比较，有8次选A、2次选B，那么80%是<strong>这批比较的选择频率</strong>，不是“A有80%概率事实正确”。评审人、任务条件和题目分布都会影响偏好。</p>
+<p>SFT给出要模仿的序列；偏好学习利用相对选择。RLHF的一类流程先用偏好训练奖励模型，再用强化学习调整语言模型；DPO直接从成对偏好构造优化目标，是另一条方法。不是所有后训练都必须训练奖励模型，也不是有偏好数据就能自动消除幻觉。</p>
+<p>难点看不懂可跳过，记住：答案“受欢迎”、引用“有证据”、动作“被授权”是三个问题。优化前者不能替代后两者的检验。完整偏好算法需要新的训练代码与评估，本课不把这张小表称作已完成对齐。</p>
+<h2 id="5-lora">5. LoRA选修：只更新一个低秩修正</h2>
+<p>这节用一个可手算矩阵说明减少可训练参数的方法，不把它等同于某个训练目标。</p>
+<p>先冻结原来的4输入、4输出矩阵W，共16个参数；新增A形状1×4、B形状4×1，总计8个可训练参数。取 <code>A=[1,0,0,0]</code>，<code>B=[[0.1],[0.2],[0],[0]]</code>，缩放取1，输入列向量为 <code>[2,1,0,-1]</code>：</p>
+<pre><code class="language-text">A x = 1×2+0×1+0×0+0×(-1) = 2
+B (A x) = [0.2,0.4,0,0]
+新输出 = W x + [0.2,0.4,0,0]
+</code></pre>
+<p>公式是 <code>新输出 = W x + (α/r) B A x</code>。<code>r</code>读“秩参数”，是中间宽度，这里为1；<code>α</code>读“阿尔法”，是缩放系数，这里为1；W冻结，A和B训练。矩阵乘法的顺序由右向左，先Ax再乘B。此处改用列向量明确配合形状，不能直接拿前章行向量的数组照抄。</p>
+<p><div class="figure"><svg viewBox="0 0 650 175" role="img" aria-label="冻结基础矩阵和可训练低秩支路相加"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M30 85 L140 35 H425 L535 85 M30 85 L140 135 H425 L535 85 H620"/><rect x="200" y="10" width="150" height="50"/><rect x="160" y="110" width="100" height="50"/><rect x="320" y="110" width="100" height="50"/></g><g fill="currentColor" text-anchor="middle" font-size="17"><text x="275" y="41">W：冻结</text><text x="210" y="141">A：训练</text><text x="370" y="141">B：训练</text><text x="540" y="78">相加</text></g></svg></div></p>
+<p>上面的实验命令还会训练一个独立LoRALinear层，检查基础权重未变、A/B变化；随课一次实跑中，这三项检查均符合预期。它的损失用局部数值目标，不是语言SFT；LoRA是参数更新方式，SFT是数据与目标组织方式，两者可以组合但不是同义词。小矩阵下省一半参数不表示整个大模型总显存必定省一半：优化器状态、激活、缓存仍占空间。</p>
+<h2 id="6">6. 换数小测</h2>
+<p>这节检查能否把训练依据与实现机制分开。</p>
+<ol>
+<li><code>[P1,P2,R1,EOS]</code>，答案从R1开始，移位后的目标和loss mask是什么？</li>
+<li>原线性矩阵8输出、6输入，LoRA秩2。原参数与新增参数分别多少？忽略偏置。</li>
+<li>20次偏好比较有15次选择回答A，能否写“A正确率75%”？</li>
+</ol>
+<details><summary>展开完整答案</summary><ol><li><p>目标[P2,R1,EOS]，遮罩[false,true,true]。预测R1的当前输入是P2，但该行必须计分，因为看的是目标所属区域。</p></li><li><p>原矩阵8×6=48个；A为2×6有12个，B为8×2有16个，新增28个。若W冻结，可训练的是28个；总存储还包含原48个，不能说模型总共只有28参数。</p></li><li><p>不能。15/20=75%是当前比较集合里A被偏好的频率。是否事实正确需要对照证据与判定标准另做标注，且小样本不足以概括所有用户。</p></li></ol></details>
+
+<p>原始阅读：<a href="https://arxiv.org/abs/2106.09685">LoRA</a>、<a href="https://arxiv.org/abs/2305.18290">DPO</a>。下一章：<a href="17-inference.html">缓存与推理</a>。</p><div class="chapter-links"><a href="15-real-text.html">← 上一章</a><a href="17-inference.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

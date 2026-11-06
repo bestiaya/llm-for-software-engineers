@@ -1,0 +1,128 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>03｜从文本计数到第一个语言模型 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="03-counting"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 03 / 18</div><h1>03｜从文本计数到第一个语言模型</h1><a href="index.html">课程路线</a> · <a href="source/chapters/03-counting.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 先决定什么算一条数据</a></li>
+<li><a href="#2">2. 为什么不能把零次当成绝不可能</a></li>
+<li><a href="#3">3. 不只问“猜没猜中”，还问“给真答案多少概率”</a></li>
+<li><a href="#4">4. 训练、验证、测试分别能改什么</a></li>
+<li><a href="#5">5. 运行和解释失败</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>语言模型给已知前文后面的候选token分配概率。最简单的版本只记相邻项出现几次；它便宜、能检查，也明确暴露“看不见更早前文”的限制。</strong> 本章会第一次算预测损失，之后神经网络仍接受同一把尺子的检查。</p>
+<p>前置：<a href="02-math.html">第02章</a>的条件概率与自然对数。完成后请能从三组文本建一行计数，给未见转移留概率，并计算每个目标token的平均损失。</p>
+<h2 id="1">1. 先决定什么算一条数据</h2>
+<p>这节先限定数据边界，带走“分组之后才能切相邻对”。</p>
+<p>手算用三个事先切好的训练组：<code>A B</code>、<code>A B</code>、<code>A C</code>。A、B、C是教学token，词表固定为 <code>{A,B,C}</code>。组之间没有连续关系；不能把第一组结尾B与第二组开头A拼成一个训练转移。这里暂不加开始/结束记号，只对组内相邻位置建模。真实文件的结束策略必须另外写明。</p>
+<p>只看A作为前一个token，它后面有三次机会：B出现2次，C出现1次，A出现0次。这个只看紧邻前项的模型叫bigram，读作“拜格拉姆”，中文常称二元语言模型。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>前项固定为A</th>
+<th style="text-align: right;">后项A</th>
+<th style="text-align: right;">后项B</th>
+<th style="text-align: right;">后项C</th>
+<th style="text-align: right;">总数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>训练转移计数</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>直接除总数</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2/3</td>
+<td style="text-align: right;">1/3</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table></div>
+<p>这就能预测：当前看到A，最高概率下一项是B。它没有理解A或B的意义；它只利用训练中的相邻规律。</p>
+<h2 id="2">2. 为什么不能把零次当成绝不可能</h2>
+<p>这节修复未见转移的零概率，带走平滑是明确假设，而不是发现了新事实。</p>
+<p>如果保留数据出现 <code>A A</code>，直接计数模型给真实下一项A的概率是0。小样本里“没看过”通常不足以证明“不可能”。这里给每个候选都加1，叫加一平滑，也叫拉普拉斯平滑：</p>
+<pre><code class="language-text">原始计数A/B/C：[0,2,1]
+每格加1：     [1,3,2]
+新总数：     3+3×1=6
+概率A/B/C：  [1/6,3/6,2/6]
+</code></pre>
+<p>为什么分母不是4？因为三个候选各加了1，总计加了3。B的概率从2/3降到1/2，是把一部分把握分给未见或少见项。没有额外观测支持“真实概率一定是1/2”。</p>
+<p>符号 <code>c(a,b)</code>读“a到b的计数”；<code>N(a)</code>读“a后面的总转移数”；<code>V</code>读“词表大小”；希腊字母 <code>α</code>读“阿尔法”，是每格加的数。一般式为：</p>
+<pre><code class="language-text">P(b|a) = [c(a,b)+α] / [N(a)+αV]
+本例b=B： (2+1)/(3+1×3)=3/6
+</code></pre>
+<p>若前项B在训练里没有任何后续，整行原计数都是0；平滑后变成 <code>[1,1,1]/3</code>，即均匀分布。α越大越偏向均匀：α=2时A行变为 <code>[2,4,3]/9</code>。平滑参数要在验证数据上比较，不能拿测试答案反复选择。</p>
+<h2 id="3">3. 不只问“猜没猜中”，还问“给真答案多少概率”</h2>
+<p>这节用交叉熵比较预测，带走单token罚分与总体平均的分母。</p>
+<p>假设保留的三次目标转移是 <code>A→B</code>、<code>A→C</code>、<code>A→A</code>。它们用于本章展示计算，不纳入前面的训练计数。平滑模型分别给真答案 <code>1/2、1/3、1/6</code>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>真实下一项</th>
+<th style="text-align: right;">给该项的概率</th>
+<th style="text-align: right;">单token损失</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B</td>
+<td style="text-align: right;">1/2</td>
+<td style="text-align: right;">−ln(1/2)≈0.693147</td>
+</tr>
+<tr>
+<td>C</td>
+<td style="text-align: right;">1/3</td>
+<td style="text-align: right;">−ln(1/3)≈1.098612</td>
+</tr>
+<tr>
+<td>A</td>
+<td style="text-align: right;">1/6</td>
+<td style="text-align: right;">−ln(1/6)≈1.791759</td>
+</tr>
+</tbody>
+</table></div>
+<p>这里的“正确答案概率”是针对<strong>当前一个目标位置</strong>说的。即使最大概率猜了B，真实项为C时就必须取C那一格算损失。</p>
+<p><code>L</code>读“艾尔”，是一个目标位置的损失；<code>p_true</code>读“真实项概率”；<code>ln</code>是自然对数。定义 <code>L=−ln(p_true)</code>。自然对数的底为e，本课程损失单位为nat；不必先背单位，先保持所有模型用同一底。均值损失叫交叉熵，常简写CE：</p>
+<pre><code class="language-text">损失总和 = 0.693147+1.098612+1.791759 = 3.583518
+目标token数 = 3
+平均CE = 3.583518/3 ≈ 1.194506
+</code></pre>
+<p>对比均匀预测，三个目标每次都得到1/3，平均CE是ln3≈1.098612，反而更低。<strong>训练里B多，不代表这份保留数据也以B为主。</strong> 基线可以赢，神经网络也可以输。</p>
+<p>为什么选对数？连续事件的概率相乘，对数把乘法变成加法：两个目标概率为1/2和1/3，总概率1/6；两项损失和 <code>−ln(1/2)−ln(1/3)=−ln(1/6)</code>。因此可以逐token累加后按目标数平均。不用“答对次数”代替，是因为0.34和0.99都可能猜对，但对真实项的把握不同。若模型给真实项0概率，损失趋于无穷大，这正是前面需要处理零格的原因。</p>
+<h2 id="4">4. 训练、验证、测试分别能改什么</h2>
+<p>这节用文件接口解释数据分工，带走“先分组，再拟合，再评价”。</p>
+<p><div class="figure"><svg viewBox="0 0 740 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="分组数据后训练拟合计数，验证选平滑，测试最终报告">
+<rect width="740" height="190" rx="14" fill="#eff8f5"/><g fill="#193b35" font-family="sans-serif" font-size="17"><text x="20" y="35">原始独立文本组 → 先分成三份</text><text x="25" y="85">训练：建词表/计数</text><text x="270" y="85">验证：比较α</text><text x="505" y="85">测试：冻结后验收</text><path d="M130 103 V135 H375 V103" stroke="#147e60" stroke-width="3" fill="none"/><text x="35" y="166">选择阶段可返回调整；测试结果不再用于选择同一版方案。</text></g></svg></div></p>
+<p>词表若不是像本例预先规定，应只从训练数据拟合；未见token可以映射到预留的未知项。不能一边读测试文本一边扩大词表，再说这是完全未见数据。也别随机拆高度重叠的窗口，使同一原文的几乎相同片段落入训练与测试。</p>
+<p>不同组长度不同时，平均方式也要小心。第一组1个目标、CE为2；第二组3个目标、各为0。按token平均是 <code>(2+0+0+0)/4=0.5</code>；先按组平均再平均是 <code>(2+0)/2=1</code>，回答的是另一问题。本课程报告每token损失，使用前一种口径。</p>
+<h2 id="5">5. 运行和解释失败</h2>
+<p>这节把手算接到检查命令，带走“输出对得上”之后还需要说明模型边界。</p>
+<p>在课程根目录运行：</p>
+<pre><code class="language-bash">python3 labs/foundations.py
+</code></pre>
+<p>检查计数部分是否对应A行 <code>[1/6,3/6,2/6]</code>。这些是数学预期值，不是自然文本训练分数。再在纸上把第三个训练组改成<code>A B</code>：平滑计数会变成 <code>[1,4,1]/6</code>；注意词表仍是预先固定的三项，不因这次没出现C而减少。</p>
+<p>故障例：前文 <code>请求 成功 后</code> 与 <code>请求 失败 后</code>，若最后token同为“后”，bigram会给出同一个下一项分布，无法依据更早的“成功/失败”分别续写。再多算一次相邻计数也修不好这个信息边界；要换能读取更多前文的输入结构。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li>A行原计数是 <code>[1,3,0]</code>，α=1、V=3，平滑概率是多少？</li>
+</ol>
+<details><summary>展开答案</summary><p>每格加1得到[2,4,1]，总数4+3=7，概率[2/7,4/7,1/7]。分母必须包含所有格的新增计数。</p></details>
+
+<ol>
+<li>两个真实目标分别得到0.8和0.2，CE是多少？两个都取最高项的概率来算可以吗？</li>
+</ol>
+<details><summary>展开答案</summary><p>总损失−ln0.8−ln0.2≈0.223144+1.609438=1.832582，除2约0.916291。必须取每个真实目标对应的概率，不能换成最大概率。</p></details>
+
+<ol>
+<li>为使新版本测试CE更好，你查看测试中的转移并把它们加入计数。为什么这个数字失去原来的意义？</li>
+</ol>
+<details><summary>展开答案</summary><p>测试答案已参与拟合，它不再评价未参与开发的数据。可以诚实记录开发结果，但需另取未用于本版选择与拟合的数据才可作新的保留评价。</p></details>
+
+<p>下一章：<a href="04-parameters.html">把计数表换成可训练的参数表</a>。</p><div class="chapter-links"><a href="02-math.html">← 上一章</a><a href="04-parameters.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

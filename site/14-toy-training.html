@@ -1,0 +1,135 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>14｜CPU训练：让每一项结果都有来处 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="14-toy-training"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 14 / 18</div><h1>14｜CPU训练：让每一项结果都有来处</h1><a href="index.html">课程路线</a> · <a href="source/chapters/14-toy-training.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 为什么先用有限语法</a></li>
+<li><a href="#2">2. 冻结一次实验配置</a></li>
+<li><a href="#3">3. 跑通最小完整链路</a></li>
+<li><a href="#4">4. 怎样公平比较计数模型</a></li>
+<li><a href="#5">5. 用失败样本检验理解</a></li>
+<li><a href="#6">6. 换数小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p>本章跑一个完整的微型decoder实验。目标是核实参数确实更新、数据分工正确、选出的模型能按规定评估，而不是把几句生成样本当成“已经理解语言”。先读<a href="13-next-token.html">下一token训练</a>，并按课程入口安装训练依赖。这里不用API密钥，也不要求GPU。</p>
+<h2 id="1">1. 为什么先用有限语法</h2>
+<p>这节先收窄模型要学的对象，避免训练出一点规律就宣称得到通用助手。</p>
+<p>课程的toy数据是原创的有限语法文本组。它保留可检查的组合规律，规模小，适合在CPU上发现标签、因果遮罩、梯度和评估口径错误。真实世界的措辞变化、事实知识和用户意图远比这些组复杂。模型生成符合模板，只支持它在该数据设定下学到某些模式。</p>
+<p>想象两个教学组：“服务甲超时，建议重试。”和“服务乙正常，无需重试。”若先把两句切成大量重叠窗口，再随机划分窗口，几乎相同的片段可能同时进入训练与测试。测试分数就可能主要反映见过的字符串。这里先按<strong>完整唯一文本组</strong>划分，然后各区内部建窗口，不跨组拼接。这两句仅帮助理解切分，实际内容与数量看数据文件和运行报告。</p>
+<p><div class="figure"><svg viewBox="0 0 720 170" role="img" aria-label="先分完整组再各自切窗口"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="55" width="145" height="55" rx="8"/><path d="M155 82 L220 30 M155 82 H220 M155 82 L220 140"/><path d="M415 30 H470 M415 82 H470 M415 140 H470"/></g><g fill="currentColor" font-size="17"><text x="25" y="87">完整唯一文本组</text><text x="225" y="35">训练组</text><text x="225" y="87">验证组</text><text x="225" y="145">测试组</text><text x="480" y="35">本区窗口 → 更新参数</text><text x="480" y="87">本区窗口 → 选择权重</text><text x="480" y="145">本区窗口 → 最后验收</text></g></svg></div></p>
+<p>组不重叠不等于世界独立：各区可能共享同一套语法。它检验的是这套生成分布内的组合，不是跨领域泛化。</p>
+<h2 id="2">2. 冻结一次实验配置</h2>
+<p>这节把运行预算与模型规模写清，保证后来能知道自己比较的是什么。</p>
+<p>默认实现为字符级词表，训练集字符排序后编号；UNK为0、EOS为1，没有PAD。以下是默认设置，不是所有Transformer都必须采用的设置：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>本次默认</th>
+<th>对读者意味着什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>特征宽 / 注意力头</td>
+<td>32 / 4</td>
+<td>每头8维</td>
+</tr>
+<tr>
+<td>decoder块 / FFN</td>
+<td>2 / 128维GELU</td>
+<td>与前章完整路线一致</td>
+</tr>
+<tr>
+<td>位置 / 上下文</td>
+<td>学习式绝对位置 / 64</td>
+<td>不能直接预测第65位置</td>
+</tr>
+<tr>
+<td>归一化 / dropout</td>
+<td>Pre-LN加最终LN / 0</td>
+<td>本实现没有随机丢弃</td>
+</tr>
+<tr>
+<td>批大小 / 学习率</td>
+<td>16 / 0.003</td>
+<td>一步看多个训练窗口</td>
+</tr>
+<tr>
+<td>toy步数</td>
+<td>200</td>
+<td>是200次优化器更新，不是200轮遍历</td>
+</tr>
+<tr>
+<td>计算</td>
+<td>CPU单线程、固定随机种子</td>
+<td>仍应记录硬件与软件版本</td>
+</tr>
+</tbody>
+</table></div>
+<p>训练窗口随机抽取，因此 <code>step</code> 不是 <code>epoch</code>。<code>epoch</code>通常指把训练数据完整走一轮；这里200步不能换算成“每条数据刚好看了多少次”。同一窗口可能重复抽到，某些窗口可能没抽到。</p>
+<h2 id="3">3. 跑通最小完整链路</h2>
+<p>这节执行训练、读产物，先确认完整过程，再考虑增大预算。</p>
+<p>从课程根目录运行：</p>
+<pre><code class="language-bash">python3 -m llm_course.train --dataset toy --steps 200 --out outputs/toy
+</code></pre>
+<p>产物职责如下：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>应检查的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>outputs/toy/report.json</code></td>
+<td>实际配置、种子、划分计数、各模型损失、耗时、样本及限制</td>
+</tr>
+<tr>
+<td><code>outputs/toy/report.md</code></td>
+<td>可阅读的实验摘要</td>
+</tr>
+<tr>
+<td><code>outputs/toy/checkpoint.pt</code></td>
+<td>配置、词表和所选模型权重</td>
+</tr>
+<tr>
+<td><code>outputs/toy/sample.txt</code></td>
+<td>真实生成文本及相关记录</td>
+</tr>
+</tbody>
+</table></div>
+<p>课程随附的<a href="reports-toy.html">一次toy运行记录</a>与自己重跑的输出是两次记录，不能混成一次。若代码、种子或依赖不同，差异先写出来；不靠编辑报告把数值“对齐”。检查点存的是配置与state_dict，加载使用受限的权重读取方式，不需要反序列化一个任意Python模型对象。</p>
+<p>随课真实运行使用种子42，共28,288个参数；训练/验证/测试分别201/25/26个文本组，测试有962个目标。所选第200步的decoder test CE为0.174156，unigram为2.316875，bigram为0.191738；三者均在这962个目标上计算。decoder在此单次切分上比bigram低约 <code>0.191738-0.174156=0.017582</code>，尚不能由一个种子证明稳定优势。该次训练报告总耗时1.100秒，仅代表报告所记环境。</p>
+<p>真实贪心样本是：</p>
+<p><strong>输入提示（不是模型生成）</strong></p>
+<pre><code class="language-text">服务超
+</code></pre>
+<p><strong>模型新增内容</strong></p>
+<pre><code class="language-text">时，重试。服务正常。服务正常。服务正常。服务正常。服务正常。服务超时，重试。&lt;EOS&gt;
+</code></pre>
+<p>停止原因是eos。它含有重复的“服务正常”，即使符合有限语法，也不能推断模型会根据真实故障作建议。训练使用AdamW，weight decay为0.01、梯度范数裁剪上限1.0：若整组梯度的欧氏长度大于1，就统一缩小到1，避免单次更新被过大梯度主导；并不保证训练稳定。这些设置和完整轨迹以报告为准。</p>
+<p>训练每25步及最后一步在validation上计算损失，选validation CE最低的权重；选定后才算test。示意：三个候选步的验证损失为 <code>1.4、1.1、1.2</code>，应选第二个；即使第三个训练损失更低，也不能据此覆盖选择。这里三个数是选择规则示例，不是实测曲线。</p>
+<h2 id="4">4. 怎样公平比较计数模型</h2>
+<p>这节用同一批目标算分，学会判断“胜过基线”到底比较了什么。实际toy词表有12项，包含UNK和EOS；第03章手算的3项词表是独立小例，平滑分母必须使用当前实际词表大小。</p>
+<p>代码同时评估unigram和bigram：前者不看上文、只根据训练集目标频率；后者看上一个token，计数方法见<a href="03-counting.html">计数预测</a>。它们与decoder使用同一批窗口、同一组目标。若一个模型多算EOS、另一个少算，平均数再漂亮也不是公平比较。</p>
+<p>沿用独立手算：两个窗口分别3目标与1目标，decoder损失总和为 <code>2.1、1.2</code>，平均是 <code>3.3/4=0.825</code>；bigram对应总和 <code>2.4、0.6</code>，平均为 <code>3/4=0.75</code>。本例bigram更低。不能因为decoder名称更新，就把这种结果判成实验失败；它可能说明短规则足以解释当前数据，或decoder预算/参数选择不合适。</p>
+<p>观察指标的顺序建议是：先数分母，再查划分与训练过程，最后解释高低。如果训练和验证都很差，可能优化未充分、配置不适合，或任务本身难；训练低验证高，要检查过拟合、分布差异与数据泄漏；测试不如验证并不自动说明代码错了。单个切分上的小差距也不提供稳定优势的证据。</p>
+<h2 id="5">5. 用失败样本检验理解</h2>
+<p>这节要求保留不成功输出，防止只展示最顺眼的一句。</p>
+<p>至少记录固定提示、完整生成样本、停止原因。标出重复循环、未见字符的UNK、格式不完整和提前EOS。若提示已占64位置，新增预算可能为0；这不是语言失败，而是调用条件耗尽。贪心重复也不直接证明模型完全没有学到规律，要回到概率和生成策略检查。</p>
+<pre><code class="language-bash">python3 -m unittest discover -s tests -v
+python3 -m llm_course.experiments
+</code></pre>
+<p>这些命令用于查实现约束，不能把测试通过写成语言能力通过。想改学习率或步数时，先保留本次输出到另一个目录，说明只根据训练/验证作新选择。若已经查看测试结果再调整，下一次同一测试集是复用过的测试，不能称完全未触碰的验收。</p>
+<h2 id="6">6. 换数小测</h2>
+<p>这节检查是否能够独立解读实验记录。</p>
+<ol>
+<li>训练损失从0.8降到0.5，验证损失从0.9升到1.0，按本章规则该选哪次？能否据此说最后一次更好？</li>
+<li>窗口A有2个目标、平均损失0.4；窗口B有6个目标、平均1.2。全体平均是多少？</li>
+<li>模型生成十句合法toy文本，是否证明可处理自然语言问答？下一条有意义的验证是什么？</li>
+</ol>
+<details><summary>展开完整答案</summary><ol><li><p>选验证损失0.9的权重。训练损失只说明拟合训练数据的表现，不能用它推翻事先声明的验证选择规则；还需独立验收判断最终表现。</p></li><li><p>总损失2×0.4+6×1.2=8，总目标8，平均1.0。两窗口均值直接平均为0.8，会过度加权短窗口。</p></li><li><p>不能，只支持有限语法分布内的部分行为。可先对保留toy组系统评估并检查失败，再按下一章在有来源与许可的真实文本上测损失和生成；自然语言助手能力仍需另做任务评估。</p></li></ol></details>
+
+<p>下一章：<a href="15-real-text.html">把实验放到自然语言上</a>。</p><div class="chapter-links"><a href="13-next-token.html">← 上一章</a><a href="15-real-text.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

@@ -1,0 +1,121 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>15｜自然语言小实验：从会跑到知道没学会什么 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="15-real-text"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 15 / 18</div><h1>15｜自然语言小实验：从会跑到知道没学会什么</h1><a href="index.html">课程路线</a> · <a href="source/chapters/15-real-text.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 真实文本为什么改变问题</a></li>
+<li><a href="#2">2. 先按连续文本分区，再各自切窗口</a></li>
+<li><a href="#3">3. 运行与保存一次真实记录</a></li>
+<li><a href="#4">4. 损失怎样帮助理解，怎样误导</a></li>
+<li><a href="#5">5. 失败报告比精选句子更有用</a></li>
+<li><a href="#6">6. 换数小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p>本章将同一个小decoder放到真实英文文本上，学习如何记录来源、切分、耗时、损失与失败。先完成<a href="14-toy-training.html">toy训练</a>。这一步增加了语言复杂度，但没有把模型升级成聊天助手，也不检验中文能力。</p>
+<h2 id="1">1. 真实文本为什么改变问题</h2>
+<p>这节说明真实语料增加了哪些困难，避免把“换一个文件”理解为相同难度的任务。</p>
+<p>有限语法的句子结构受控；自然文本包含长距离依赖、稀有字符、不同叙述语气和大量不重复表达。64字符的前文可能连一段完整句子都装不下。即使训练损失下降，模型也可能只学会字母、空格和短片段搭配。</p>
+<p>课程随附 Lewis Carroll 的英文原作 <em>Alice's Adventures in Wonderland</em>。准备后的训练输入在 <code>data/real.txt</code>；来源、原始与处理后SHA-256、提取方式写在 <code>data/real-provenance.json</code>，未修改下载源和许可文本留在 <code>data/sources/</code>。SHA-256是内容指纹：一个字节变了，核对值通常就变；它证明两份内容是否一致，不证明文学质量或模型效果。</p>
+<p>不要凭文件名断言权限，也不要把代码许可证自动覆盖到语料上。再分发依据与使用地区说明以<a href="source/data/README.md">数据说明</a>和随附许可为准。课程不要求联网抓取新的网页，来源记录与正文同时保留。</p>
+<h2 id="2">2. 先按连续文本分区，再各自切窗口</h2>
+<p>这节跟踪一次小切分，分清原始字符、词表ID与训练窗口。</p>
+<p>实现先按原始字符顺序以80%/10%/10%划分训练、验证、测试，再只用训练区建立字符词表。假设独立教学文本恰有1000字符，那么前800训练，接着100验证，最后100测试；真实长度和取整结果看当次报告。窗口不能从训练区尾巴伸进验证区开头。</p>
+<p><div class="figure"><svg viewBox="0 0 720 145" role="img" aria-label="连续文本分为80百分比训练及各10百分比验证和测试"><g stroke="currentColor" stroke-width="2"><rect x="10" y="30" width="560" height="55" fill="none"/><rect x="570" y="30" width="70" height="55" fill="none"/><rect x="640" y="30" width="70" height="55" fill="none"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="290" y="64">前80%：训练与拟合词表</text><text x="605" y="64">验证</text><text x="675" y="64">测试</text><text x="360" y="123">每个分区独立切窗口；不把边界两侧拼成一条样本</text></g></svg></div></p>
+<p>训练区没出现过的字符在其他分区映射到UNK。假设训练字符集是 <code>{a,b,空格}</code>，验证文本是 <code>ab!</code>，它会变成 <code>[id(a),id(b),UNK]</code>，不能为了降低未知率回头把 <code>!</code> 加到训练词表。报告应该让读者看见未知字符的数量或局限；UNK损失好看也不表示模型区分了原来的所有稀有字符。</p>
+<p>这里连续切分减少跨边界的窗口泄漏，却不保证不同区统计独立。同一本书可能重复人名、句式和完整短语；叙述顺序也会造成前后分布不同。不能把这个测试集称作“全世界英文的代表”。</p>
+<h2 id="3">3. 运行与保存一次真实记录</h2>
+<p>这节执行同一模型的自然语言训练，结果由文件承担，不由教材预先猜测。</p>
+<p>从课程根目录运行：</p>
+<pre><code class="language-bash">python3 -m llm_course.train --dataset real --steps 300 --out outputs/real
+</code></pre>
+<p>默认仍是宽32、4头、2层、上下文64、字符级预测，300次更新。产物为 <code>report.json</code>、<code>report.md</code>、<code>checkpoint.pt</code> 和 <code>sample.txt</code>。先读随课的<a href="reports-real.html">实际自然文本运行记录</a>，再对照自己输出。报告里的种子、版本、CPU与耗时属于那次运行；不能把某台机器的秒数写成所有电脑的性能保证。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>阅读顺序</th>
+<th>要问的问题</th>
+<th>不足以推出的结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>来源和切分</td>
+<td>输入是哪版文本、目标来自哪区</td>
+<td>有来源不等于分布代表所有语言</td>
+</tr>
+<tr>
+<td>配置和预算</td>
+<td>实际几层、几步、上下文多长</td>
+<td>参数更多不保证分数更好</td>
+</tr>
+<tr>
+<td>基线和test CE</td>
+<td>同目标上谁损失更低</td>
+<td>CE低不等于回答事实正确</td>
+</tr>
+<tr>
+<td>样本和停止原因</td>
+<td>真输出了什么、为什么停</td>
+<td>单句流畅不等于总体可靠</td>
+</tr>
+<tr>
+<td>失败与限制</td>
+<td>有哪些反复出现的问题</td>
+<td>没列出的错误不等于不存在</td>
+</tr>
+</tbody>
+</table></div>
+<p>随课实跑采用种子42，词表73项、32,192个参数，选中第300步。原字符分区为训练115,212、验证14,402、测试14,402；测试目标14,402个，验证有4个未知字符。具体结果如下：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">同一测试目标上的每目标CE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>decoder</td>
+<td style="text-align: right;">2.450565</td>
+</tr>
+<tr>
+<td>unigram</td>
+<td style="text-align: right;">3.172494</td>
+</tr>
+<tr>
+<td>bigram</td>
+<td style="text-align: right;">2.442503</td>
+</tr>
+</tbody>
+</table></div>
+<p>decoder比bigram略高约 <code>2.450565-2.442503=0.008062</code>，<strong>这次没有胜过bigram</strong>；它比unigram低，支持其学到超出全局字符频率的一些规律，但不能证明理解。单次结果也不确定差距在换种子后是否保持。该次总耗时2.333秒，是记录环境下的实测，不是所有CPU的承诺。</p>
+<p>报告中的真实贪心样本原样为：</p>
+<p><strong>输入提示（不是模型生成）</strong></p>
+<pre><code class="language-text">CHA
+</code></pre>
+<p><strong>模型新增内容</strong></p>
+<pre><code class="language-text">l the the the the the the t the the the the the the the the t
+</code></pre>
+<p>停止原因是context_limit，未生成自然结束。可见重复“the”和不完整片段。贪心、短上下文、有限更新与小模型都是候选影响因素；本次没有逐项对照，不能指定其中一个是已确认原因。</p>
+<p>还可以核对两个具体条件。评价按不重叠的64字符窗口重新开始位置和上下文；每个满窗口的第一个目标只有1字符前文，最后一个目标有64字符，平均是(1+64)/2=32.5字符，不能把“context=64”读成每个目标都看了64字符。报告history中的验证CE在本次300步内仍持续下降，提示优化预算可能未充分。可另存新目录、只按训练/验证比较更多步数；它是待检验假设，不是已经确认的失败原因。</p>
+<p>别因为看见几个真实单词就忽略乱码与循环。报告展示的样本应保留原样，不能手工补标点、改语法，再把修订后文本署为模型输出。</p>
+<h2 id="4">4. 损失怎样帮助理解，怎样误导</h2>
+<p>这节用小数字解释困惑度，并说明为什么它不能跨分词方式随意比较。</p>
+<p>假设三个真实目标的概率是 <code>0.5、0.25、0.5</code>。平均CE为 <code>(0.693147+1.386294+0.693147)/3≈0.924196</code>。把自然常数e取这个指数，得到困惑度约 <code>exp(0.924196)=2.519842</code>。<code>exp</code>读“指数函数”，是自然对数的逆运算；困惑度常写PPL。</p>
+<p>它把平均对数损失转换到另一个尺度，越低仍表示同一批目标上分布更贴近实际目标。它不是“模型大约只懂2.52个词”，也不是“每次必定有2.52个等可能候选”。均匀三选一时CE为ln3，PPL才正好为3；本例三次分布并不相同。</p>
+<p>字符级和子词级模型的一个token长度不同，所以每token CE/PPL不能直接判断谁语言更强。即使都字符级，测试文本、UNK策略和EOS口径不同，也不能只摘两个数排名。本课程只比较当前相同目标集合的模型。</p>
+<h2 id="5">5. 失败报告比精选句子更有用</h2>
+<p>这节把失败分成可定位的层次，为下一章的规模和后训练建立问题。</p>
+<p>若输出重复几个字符，先问它们是否在训练中高频、是否总用贪心、上下文是否过短；若文字像原书片段，检查是否复现训练片段，不能把记忆当成新知识推理；若测试CE不如bigram，保留结果，再检查优化预算和任务结构，不为迎合预期而换口径。</p>
+<p>一次有价值的记录至少包含：固定提示、原始生成、停止原因、一条成功现象、一条明确失败、候选解释及区分解释的下一项实验。例如“重复可能来自贪心”只是解释候选；还没有改变策略比较，就不能断言原因已确认。</p>
+<p>可以改变种子或训练步数做扩展，但每次单独存目录，只用训练/验证做选择。本课程制作与实现检查已使用过这份固定测试区，它不是新的盲测。重新运行命令不会使这段历史消失。</p>
+<h2 id="6">6. 换数小测</h2>
+<p>这节检查是否能给自然语料实验下恰当结论。</p>
+<ol>
+<li>2000字符按80/10/10连续分区，各区多少？先切成重叠窗口再随机分有什么风险？</li>
+<li>同一目标集上模型CE为ln4，困惑度多少？能说“有四个词等概率”吗？</li>
+<li>十条样本中挑出最好一条展示，且没有保存其他九条，读者能判断什么？应该怎样补记录？</li>
+</ol>
+<details><summary>展开完整答案</summary><ol><li><p>训练1600、验证200、测试200。先切重叠窗口再分，可能让几乎相同的字符片段在训练和测试同时出现，导致评估过于乐观。连续分区仍不保证文本统计独立。</p></li><li><p>exp(ln4)=4。不能由平均损失反推出每一步的完整分布，更不能推断词汇量或事实正确率。这里只能作为同目标口径下的损失转换。</p></li><li><p>只能看见一条被挑选过的样本，无法评估常见失败或成功比例。应保存固定提示与全部原始输出、参数、停止原因，并标明展示选择规则；遗失数据不能事后假装从未失败。</p></li></ol></details>
+
+<p>下一章：<a href="16-post-training.html">规模、监督微调与偏好学习各改变什么</a>。</p><div class="chapter-links"><a href="14-toy-training.html">← 上一章</a><a href="16-post-training.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

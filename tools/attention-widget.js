@@ -1,0 +1,5 @@
+
+(()=>{const query=document.getElementById('query'),causal=document.getElementById('causal'),future=document.getElementById('future');
+function calculate(){const x=[[1,0],[0,1],future.checked?[0,0]:[1,1]],i=Number(query.value),q=x[i],v=x.map(row=>row.map(z=>2*z));const scores=x.map(k=>(q[0]*k[0]+q[1]*k[1])/Math.sqrt(2)),allowed=x.map((_,j)=>!causal.checked||j<=i);const m=Math.max(...scores.filter((_,j)=>allowed[j]));const e=scores.map((s,j)=>allowed[j]?Math.exp(s-m):0),sum=e.reduce((a,b)=>a+b,0),w=e.map(z=>z/sum);const out=[0,1].map(d=>w.reduce((acc,z,j)=>acc+z*v[j][d],0));const rows=document.getElementById('attention-rows');rows.replaceChildren();for(let j=0;j<x.length;j++){const tr=document.createElement('tr');for(const t of [String(j),scores[j].toFixed(4),allowed[j]?'是':'否',w[j].toFixed(4),'['+v[j].join(', ')+']']){const td=document.createElement('td');td.textContent=t;tr.append(td)}rows.append(tr)}document.getElementById('attention-output').textContent='当前位置输出：['+out.map(z=>z.toFixed(4)).join(', ')+']';}
+for(const e of [query,causal,future])e.addEventListener('change',calculate);calculate();
+})();

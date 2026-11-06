@@ -1,0 +1,93 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>17｜推理与KV cache：省掉重复计算，保留同一问题 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="17-inference"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 17 / 18</div><h1>17｜推理与KV cache：省掉重复计算，保留同一问题</h1><a href="index.html">课程路线</a> · <a href="source/chapters/17-inference.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 哪些计算可以保留</a></li>
+<li><a href="#2">2. 手算缓存为何可以等价</a></li>
+<li><a href="#3">3. 等价需要哪些前提</a></li>
+<li><a href="#4">4. 上下文溢出为什么不能悄悄裁剪</a></li>
+<li><a href="#5">5. 内存预算与现代优化的边界</a></li>
+<li><a href="#6">6. 跑等价检查，保留误差</a></li>
+<li><a href="#7">7. 换数小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p>本章回答：已经算过的前缀，下一步为什么还要算？怎样复用而不改变logits？先读<a href="12-decoder.html">完整decoder</a>和<a href="13-next-token.html">逐步生成</a>。缓存是计算复用，不是让模型多记住训练外的知识。</p>
+<h2 id="1">1. 哪些计算可以保留</h2>
+<p>这节追踪从3个token到4个token的增量，确定缓存真正存了什么。</p>
+<p>提示为ABC时，各层已经得到A、B、C各位置的键K和值V。生成D后，D的查询Q需要读取A/B/C/D的键值。因为因果遮罩下A/B/C的表示不依赖未来D，在固定模型与位置条件下，旧K/V不必重算。只为D计算新Q/K/V，再把新K/V接到缓存尾部。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>第4个位置要做的事</th>
+<th>无缓存</th>
+<th>有缓存</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>计算旧A/B/C各层表示</td>
+<td>再算</td>
+<td>复用缓存</td>
+</tr>
+<tr>
+<td>计算新D各层Q/K/V</td>
+<td>要算</td>
+<td>仍要算</td>
+</tr>
+<tr>
+<td>新D读取历史键值</td>
+<td>要算</td>
+<td>仍要算</td>
+</tr>
+<tr>
+<td>新D的FFN和词表输出</td>
+<td>要算</td>
+<td>仍要算</td>
+</tr>
+</tbody>
+</table></div>
+<p>为什么不只缓存最后一层？每一层的新token都要读<strong>该层</strong>旧token的K/V；上一层与下一层的投影参数和表示不同，不能拿一层缓存冒充所有层。</p>
+<p><div class="figure"><svg viewBox="0 0 700 170" role="img" aria-label="新token查询读取每层的旧键值和新键值"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="30" width="300" height="65" rx="8"/><rect x="340" y="30" width="130" height="65" rx="8"/><path d="M310 63 H340 M470 63 H510"/><rect x="510" y="30" width="180" height="65" rx="8"/></g><g fill="currentColor" text-anchor="middle" font-size="17"><text x="160" y="68">旧缓存：K/V(A,B,C)</text><text x="405" y="68">加入K/V(D)</text><text x="600" y="68">Q(D)读取四项</text><text x="350" y="140">每一层都有自己的K/V；旧Q不必用于新token的查询</text></g></svg></div></p>
+<h2 id="2">2. 手算缓存为何可以等价</h2>
+<p>这节用一维局部例核对“缓存”和“重算”用了完全相同的数。</p>
+<p>设旧两个键为 <code>[1,0]</code>，对应值 <code>[2,4]</code>；新token的查询是1、新键为1、新值为6。这里每头键宽1，所以缩放除以sqrt(1)仍为1。新行的分数是 <code>[1,0,1]</code>，指数为 <code>[e,1,e]</code>，e约2.71828，总和约6.43656。权重约 <code>[0.422319,0.155362,0.422319]</code>，加权值为：</p>
+<pre><code class="language-text">0.422319×2 + 0.155362×4 + 0.422319×6
+≈0.844638+0.621448+2.533914=4
+</code></pre>
+<p>重算路径重新生成三个键值，再做这一步；缓存路径复用前两个键值，只算第三个。只要两路给出的键值确实相同，加权结果就相同。这个局部例没证明所有代码正确；它指出等价的前提是“数没变”，而不是“都叫缓存”。</p>
+<p>完整模型的浮点加法顺序可能不同，所以按容差比较logits，而不要求每个二进制位完全相同。更不能只比较最终argmax：<code>[0.51,0.49]</code> 与 <code>[0.9,0.1]</code> 会选同一token，分布却相差很大。</p>
+<h2 id="3">3. 等价需要哪些前提</h2>
+<p>这节列出可执行的等价条件，避免把一个局部测试推广到任意模型。</p>
+<p>同一权重、同一token前缀、同一位置编号、同一因果访问规则、相同精度与兼容计算路径；模型处于eval模式，不启用随机dropout，比较时不更新参数。<code>eval()</code> 和“不算梯度”不是同一开关：前者影响训练态行为，后者关闭梯度记录。此实现dropout为0，仍明确采用eval/no_grad来表达推理用途。</p>
+<p>本课接口 <code>Decoder(config).forward(ids, cache=None)</code> 返回 <code>(logits, cache)</code>；第一次可输入整段前缀，后续只传新token并带上旧cache。缓存是每层 <code>(K,V)</code> 的集合，位置从缓存长度继续，不能每次增量都重置到0。若把整个ABC又传给保存ABC的缓存，实际变成重复拼接，不是“更保险的输入”。</p>
+<p>还要防止多token增量时的遮罩错误。假设旧长度3，一次追加D/E：D允许读旧3项加自己，共4项；E允许读旧3项加D/E，共5项。若套一个从0开始的2×5普通下三角而不加历史偏移，D可能只能读第一项，逻辑已经变了。</p>
+<h2 id="4">4. 上下文溢出为什么不能悄悄裁剪</h2>
+<p>这节处理缓存寿命，知道正确停止比隐藏状态错位更可靠。</p>
+<p>本模型学习式绝对位置只有0到63。缓存已有64位置时，再追加一个token会报 <code>ValueError</code>；生成器会在剩余上下文预算耗尽时停止，不自动滑窗。它不是无限长对话。</p>
+<p>如果删掉第一个缓存token却保持旧K/V，其余向量仍是旧位置及旧前缀下计算的结果。把剩余位置重新编号0起算也不够：旧K/V包含旧位置表示，深层表示还读过被删前文。不能认为“少一个元素”就完成了语义重置。</p>
+<p>可明确选择的另一种策略是：丢弃全部旧缓存，取选定短前缀，从位置0完整重算。这得到的是<strong>新短上下文任务</strong>，可与同一短前缀的无缓存结果比较，却不等价于原完整历史。新会话、修改旧消息、切换模型权重也都应重建缓存。缓存命中错误会稳定输出错误结果，不一定触发形状异常。</p>
+<h2 id="5">5. 内存预算与现代优化的边界</h2>
+<p>这节算缓存字节数，理解缓存不是免费加速，也不是所有推理都用同一方案。</p>
+<p>对标准多头注意力，设批大小1、2层、长度64、4头、每头8维，float32每数4字节。K和V各一份：</p>
+<pre><code class="language-text">缓存数值个数 = 2(K和V) × 2层 × 1批 × 64位置 × 4头 × 8维 = 8192
+字节数 = 8192 × 4 = 32768字节 = 32 KiB
+</code></pre>
+<p>KiB是1024字节；这只算K/V数组，不包括权重、临时分数、激活、Python对象与分配器开销。长度翻倍，其他条件固定，K/V字节数翻倍。新token仍要读更长历史，所以有缓存不表示后面的每一步耗时恒定。</p>
+<p>选修阅读：MQA/GQA让多个查询头共享键值头，减少缓存宽度；量化缓存改变每数存储与误差；分页管理改内存分配；FlashAttention一类方法优化注意力计算与数据搬运。它们不是同一种机制，也不意味着都已实现于本课。不能把上面的32 KiB算式原样套到所有模型；先查层数、KV头数、维度、精度和额外状态。</p>
+<h2 id="6">6. 跑等价检查，保留误差</h2>
+<p>这节运行真实实现，并把通过范围说完整。</p>
+<pre><code class="language-bash">python3 -m llm_course.experiments
+python3 -m unittest discover -s tests -v
+</code></pre>
+<p>实验用固定随机权重与固定前缀，在eval/no_grad条件下比较完整与逐token缓存logits，同时测试未来替换不改变过去。输出的 <code>cache_max_error</code> 是最大绝对误差；先看数值与容差，再看是否通过。随课固定小实验的一次实跑中，因果前缀最大误差为0，完整/缓存logits最大绝对误差约 <code>3.58×10⁻⁷</code>，低于脚本的 <code>2×10⁻⁶</code> 容差。这些数对应脚本中的宽16、2层、随机初始化小模型，而不是训练报告中的宽32模型。它验证计算复用，不需要训练出语言能力；也不能由一个短前缀测试证明任意设备、精度、长度都等价。</p>
+<h2 id="7">7. 换数小测</h2>
+<p>这节检查缓存的容量、位置和判据。</p>
+<ol>
+<li>1层、批大小2、长度10、2头、每头4维，float32的K/V总字节数多少？</li>
+<li>缓存已有3个token，再传1个新token，其位置该为0还是3？若用户修改了最早消息怎么办？</li>
+<li>两种路径生成相同文本，是否足够证明缓存等价？超长后裁剪缓存并重编号能直接沿用旧K/V吗？</li>
+</ol>
+<details><summary>展开完整答案</summary><ol><li><p>2×1×2×10×2×4=320个数，乘4字节为1280字节，即1.25 KiB。这里只算K/V，不算模型总内存。</p></li><li><p>位置3，因为旧位置为0、1、2。若最早消息改变，后续缓存可能全部依赖旧前文，应重建，不只覆盖被改那一项。</p></li><li><p>不够，应比较同前缀对应位置的logits误差并满足声明容差。裁剪重编号不能改写旧向量中已经混入的位置与前文信息；本课实现拒绝溢出，若换短前缀需清空缓存重算。</p></li></ol></details>
+
+<p>原始阅读：<a href="https://arxiv.org/abs/2305.13245">GQA</a>、<a href="https://arxiv.org/abs/2205.14135">FlashAttention</a>、<a href="https://arxiv.org/abs/2309.06180">PagedAttention</a>。下一章：<a href="18-evaluation.html">用固定证据验收一个问答任务</a>。</p><div class="chapter-links"><a href="16-post-training.html">← 上一章</a><a href="18-evaluation.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

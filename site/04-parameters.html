@@ -1,0 +1,114 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>04｜把计数表换成参数：一次神经网络前向 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="04-parameters"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 04 / 18</div><h1>04｜把计数表换成参数：一次神经网络前向</h1><a href="index.html">课程路线</a> · <a href="source/chapters/04-parameters.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 计数表保留任务，换掉数的来历</a></li>
+<li><a href="#2-one-hottoken">2. one-hot不是给token规定数值大小</a></li>
+<li><a href="#3">3. 用两张小表连接输入和输出</a></li>
+<li><a href="#4">4. 参数数目和容量并非越少越好</a></li>
+<li><a href="#5">5. 把前向写成可以检查的代码</a></li>
+<li><a href="#_1">小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p><strong>可训练模型先用参数给候选打分，再转成概率。one-hot乘矩阵等于取出一行；词向量查表让多个候选共享更小的表示空间。</strong> 本章只算前向，数值都是手设参数；“能算出概率”还不意味着“已经学会”。</p>
+<p>前置：<a href="02-math.html">矩阵与softmax</a>、<a href="03-counting.html">计数语言模型</a>。目标是从一个token ID追踪到整张词表的分数，指出哪些数会被训练修改。</p>
+<h2 id="1">1. 计数表保留任务，换掉数的来历</h2>
+<p>这节说明为什么引入参数，并带走“输入输出契约可以保持不变”。</p>
+<p>计数模型看到A后给B较高概率，是因为A→B出现得多。现在仍输入A，仍输出A/B/C的概率，但先保存三行可调整分数：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>输入token</th>
+<th style="text-align: right;">给A的分数</th>
+<th style="text-align: right;">给B的分数</th>
+<th style="text-align: right;">给C的分数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">ln3</td>
+<td style="text-align: right;">ln2</td>
+</tr>
+<tr>
+<td>B</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>C</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table></div>
+<p>A行经过softmax，指数为 <code>[1,3,2]</code>，总和6，概率 <code>[1/6,1/2,1/3]</code>，与上章平滑计数相同。这里把对应数字写进表，只是复现一次分布，不是执行了学习。后续训练不必把表格内容解释为次数，它们可以是任意实数。</p>
+<p>直接分数表足以处理小bigram，为何还要继续？如果词表很大，完整表需要“词表大小平方”个数；而且每一行几乎各学各的，无法通过中间表示共享规律。是否真的需要复杂模型，要等保留数据比较；不能因“神经”二字直接判胜。</p>
+<h2 id="2-one-hottoken">2. one-hot不是给token规定数值大小</h2>
+<p>这节解释ID与独热编码的差别，带走“ID是索引，不是距离”。</p>
+<p>约定A/B/C的ID分别是0/1/2。输入B可以写成三维向量 <code>[0,1,0]</code>，只有对应位置是1，这叫one-hot，中文称独热编码。</p>
+<pre><code class="language-text">x=[0,1,0]
+M=[[1,2,3],
+   [4,5,6],
+   [7,8,9]]
+xM=[0×1+1×4+0×7,
+    0×2+1×5+0×8,
+    0×3+1×6+0×9]=[4,5,6]
+</code></pre>
+<p>结果就是M的B行。<code>x</code>是独热行向量，<code>M</code>是参数表；一般式 <code>z=xM</code> 对应“按ID取行”。实际程序可直接索引，不必真的创建满是0的长向量。</p>
+<p>错误替代方案是把ID直接当一个连续特征。若分数为 <code>2×ID</code>，B得2、C得4；只是重新编号就改变预测，还无故假定C比B“大一倍”。独热/查表不要求ID有这种度量意义。重排ID时同步重排参数行，行为可以保持一致。</p>
+<h2 id="3">3. 用两张小表连接输入和输出</h2>
+<p>这节手算嵌入查表与输出层，带走“输入表示维度不等于词表大小”。</p>
+<p>词表仍有三项，改用每项两个数表示。下面是局部教学模型，与后面完整decoder的宽度不同：</p>
+<pre><code class="language-text">嵌入表E：A=[1,0]，B=[0,1]，C=[1,1]
+输入B → 查E的第1行 → h=[0,1]
+输出权重U=[[0,1,0],
+           [0,0,1]]
+偏置b=[0,0,0]
+分数z=hU+b=[0,0,1]
+指数=[1,1,2.718282]
+总和≈4.718282
+概率≈[0.211942,0.211942,0.576117]
+</code></pre>
+<p><code>E</code>读“嵌入表”，英文embedding，指可训练的向量查表；<code>h</code>读“艾尺”，是当前输入的内部表示；<code>U</code>读“优”，是输出权重；<code>b</code>是输出偏置。公式 <code>h=E[input_id]</code>、<code>z=hU+b</code> 分别对应查表与线性输出层。形状为 <code>E:[3,2]</code>、<code>h:[1,2]</code>、<code>U:[2,3]</code>、<code>z:[1,3]</code>。</p>
+<p><div class="figure"><svg viewBox="0 0 730 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="token索引到嵌入向量再到候选分数">
+<rect width="730" height="170" rx="14" fill="#f2f2ff"/><g font-family="sans-serif" font-size="18" fill="#29245c"><text x="20" y="45">ID=1(B)</text><text x="170" y="45">→ 查E</text><text x="300" y="45">h=[0,1]</text><text x="450" y="45">→ 乘U、加b</text><text x="620" y="45">z</text><text x="20" y="105">E：三行，每行两维</text><text x="300" y="105">U：两行三列</text><text x="540" y="105">→ softmax</text><text x="20" y="145">ID选择行；向量参与算术；输出最后一维仍覆盖整个词表。</text></g></svg></div></p>
+<p>E和U都可训练，不是只训练最后一层。偏置b也是参数，但不是矩阵：它不乘输入，对每个样本加同一组候选基础分。完整decoder后面采用无偏置词表头，本章带偏置的局部例只是帮助辨别两类参数，不要把配置直接拼过去。</p>
+<p>查到同一个B，h也相同；这个最小模型仍只看一个token。嵌入本身不会凭空看到更早的文本，必须另设计上下文计算。</p>
+<h2 id="4">4. 参数数目和容量并非越少越好</h2>
+<p>这节比较存储和表达的代价，带走“两层线性表并非无损压缩”。</p>
+<p>本例直接表有 <code>3×3=9</code>个数；嵌入加输出加偏置有 <code>3×2+2×3+3=15</code>个，反而更多。若词表1000项、表示宽度32，则直接表100万项，E与U共64000项，加偏置1000项，总共65000项。</p>
+<p>节约来自中间维度小。代价是有效分数表被限制为两个小矩阵的乘积，未必能表示任意完整大表。参数共享有时帮助泛化，有时容量不足；需要验证，不是“压缩后一定更聪明”。隐藏层怎样增加表达能力，见<a href="06-backprop.html">第06章</a>。</p>
+<h2 id="5">5. 把前向写成可以检查的代码</h2>
+<p>这节用普通Python对应手算，带走“运行前先写形状和预期”。</p>
+<pre><code class="language-python">E = [[1, 0], [0, 1], [1, 1]]
+U = [[0, 1, 0], [0, 0, 1]]
+b = [0, 0, 0]
+h = E[1]  # Python索引从0开始；1是B
+z = [sum(h[i] * U[i][j] for i in range(2)) + b[j]
+     for j in range(3)]
+print(h, z)
+</code></pre>
+<p>预期输出 <code>[0,1]</code>与<code>[0,0,1]</code>，不是完整训练结果。<code>range(2)</code>枚举0、1；外层遍历三个输出候选，内层把两个输入贡献相加。</p>
+<p>故障例：把输出维度也设为2，得到两个概率就无法给C打分。表示向量可以是两维，输出词表却仍有三项。另一故障是只保存E，忘记U和词表ID映射；相同向量搭配不同输出权重或编号会产生不同预测，无法复现实验。</p>
+<h2 id="_1">小测</h2>
+<ol>
+<li>用第3节的参数输入A，分数与概率是多少？</li>
+</ol>
+<details><summary>展开答案</summary><p>h=[1,0]，z=[0,1,0]，指数[1,e,1]，概率约[0.211942,0.576117,0.211942]。查到另一行，最高项改成B。</p></details>
+
+<ol>
+<li>词表4项、向量宽度3、输出带偏置，共有多少参数？输入ID算参数吗？</li>
+</ol>
+<details><summary>展开答案</summary><p>E有4×3=12，U有3×4=12，b有4，总计28。某次输入ID是数据索引，不是被梯度更新的模型参数。</p></details>
+
+<ol>
+<li>同一个token B出现在两个不同句子中，这个模型会给出不同分布吗？应改哪里？</li>
+</ol>
+<details><summary>展开答案</summary><p>不会。它只读取B的ID，同一行E连接同一U和b。要让前文影响输出，必须增加读取上下文的计算；只扩大B向量并不能自动带入没有输入的信息。</p></details>
+
+<p>下一章：<a href="05-gradients.html">用损失指引一次参数更新</a>。</p><div class="chapter-links"><a href="03-counting.html">← 上一章</a><a href="05-gradients.html">下一章 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

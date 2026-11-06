@@ -1,0 +1,116 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="面向软件工程师的中文大语言模型课程：必要基础、神经网络、Transformer与可复现实验。"><title>18｜有证据的问答：把“看起来不错”拆成可核对的判断 · 给软件工程师的大语言模型课</title><style>
+:root{--ink:#182e35;--muted:#526b73;--paper:#fff;--bg:#f3f6f6;--line:#d9e3e6;--accent:#086f78;--soft:#e8f5f4}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}a{color:var(--accent);text-underline-offset:4px}header{max-width:1180px;margin:0 auto;padding:48px 24px 28px}header p{max-width:760px;color:var(--muted)}.eyebrow{font-size:13px;letter-spacing:.12em;font-weight:700}header h1{font-size:clamp(30px,5vw,50px);line-height:1.3;margin:12px 0 18px}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;max-width:1180px;margin:auto;padding:0 24px 60px}nav{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow:auto;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-size:13px}nav ul{list-style:none;padding-left:12px}nav>div>ul{padding-left:0}nav li{margin:7px 0}nav a{text-decoration:none;display:block;padding:3px 5px;border-radius:4px}nav a[aria-current]{background:var(--soft);font-weight:700}main{min-width:0;background:var(--paper);padding:34px;border:1px solid var(--line);border-radius:12px}main>h1{font-size:30px}h2{font-size:26px;line-height:1.5;margin:48px 0 16px;border-top:1px solid var(--line);padding-top:26px}h3{font-size:20px;line-height:1.5;margin:26px 0 12px}p{margin:14px 0}li{margin:7px 0}blockquote{border-left:4px solid var(--accent);background:var(--soft);padding:6px 18px;margin:20px 0}code{font: .92em ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#f0f4f5;padding:2px 4px;border-radius:4px}pre{overflow:auto;padding:18px;background:#142d36;color:#e5f6f6;border-radius:8px;line-height:1.65;font-size:14px}pre code{background:none;padding:0;color:inherit}.table-wrap{overflow:auto;margin:18px 0}table{border-collapse:collapse;min-width:530px;width:100%;font-size:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}details{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:20px 0}summary{cursor:pointer;font-weight:700}details[open]>summary{margin-bottom:12px}.figure{overflow:auto}svg{display:block;width:100%;min-width:660px;height:auto;margin:20px auto}.playground{padding:24px;background:var(--soft);border:1px solid #a9d4d1;border-radius:10px;margin:38px 0}.playground h2{border:0;padding:0;margin:0 0 16px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.controls label{font-size:15px}select,input,button{font:inherit}select{padding:5px;border:1px solid var(--line);border-radius:5px}input[type=checkbox]{width:18px;height:18px;vertical-align:-3px;accent-color:var(--accent)}.result{font-weight:700;font-size:20px}footer{font-size:13px;color:var(--muted);padding-top:24px}.note{font-size:14px;color:var(--muted)}a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d18c25;outline-offset:3px}@media(max-width:850px){.layout{display:block;padding:0 14px 30px}nav{position:static;max-height:240px;margin-bottom:20px}main{padding:22px 17px}header{padding:26px 17px}body{font-size:16px}.playground{padding:16px}h2{font-size:23px}}@media print{nav,.playground,.controls{display:none}.layout{display:block}main{border:0}body{background:white}}
+.bookmark{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.book-group{border:1px solid var(--line);border-radius:10px;padding:22px;background:white}.book-group h2{border:0;margin:0 0 16px;padding:0;font-size:23px}.book-group li{margin:10px 0}.book-group ol{padding-left:22px}.book-home{max-width:1180px;margin:auto;padding:0 24px 50px}.chapter-links{display:flex;justify-content:space-between;gap:16px;margin:30px 0}.primary-link{display:inline-block;background:var(--accent);color:white;padding:9px 16px;text-decoration:none;border-radius:7px}.progress-note{font-size:14px;color:var(--muted)}.book-toc{border-bottom:1px solid var(--line);margin-bottom:14px;padding-bottom:14px}.book-toc a{padding:8px}.hero-facts{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.hero-facts span{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:14px}.lead{font-size:21px}.book-intro{padding:26px;background:white;border:1px solid var(--line);border-radius:12px;margin:22px 0}.book-intro h2{margin-top:0;border:0;padding:0}@media(max-width:850px){.book-grid{grid-template-columns:1fr}.book-home{padding:0 14px 30px}.chapter-links{font-size:14px}.lead{font-size:18px}}</style></head><body data-chapter="18-evaluation"><header><div class="eyebrow">LLM FOR SOFTWARE ENGINEERS · 18 / 18</div><h1>18｜有证据的问答：把“看起来不错”拆成可核对的判断</h1><a href="index.html">课程路线</a> · <a href="source/chapters/18-evaluation.md">阅读源文</a> · <a href="setup.html">环境与运行</a></header><div class="layout"><nav aria-label="章节目录"><div class="book-toc"><a href="index.html">← 全部18章</a><a href="setup.html">运行与排查</a></div><div class="toc">
+<ul>
+<li><a href="#1">1. 先固定资料和问题</a></li>
+<li><a href="#2">2. 检索好不等于回答好</a></li>
+<li><a href="#3">3. 手算两个指标</a></li>
+<li><a href="#4">4. 运行并保留真实输出</a></li>
+<li><a href="#5">5. 选修：接入你真正调用过的模型</a></li>
+<li><a href="#6">6. 用最小反例决定下一步</a></li>
+<li><a href="#7">7. 换数小测</a></li>
+</ul>
+</div>
+</nav><main>
+<p>本章用三条固定资料完成一个很小的问答评价项目：先查有没有找到证据，再查输出是否受证据支持，最后说明当前实验还证明不了什么。前置是<a href="15-real-text.html">自然语言实验</a>；不需要搭建RAG平台、购买模型API或相信小decoder已有问答能力。</p>
+<h2 id="1">1. 先固定资料和问题</h2>
+<p>这节把任务输入、参考依据与期待行为写清，避免生成后才修改评分标准。</p>
+<p>下面三条是课程作者编写的教学制度，不是真实生产规范。项目只允许根据这些资料回答；资料没有的内容应说明缺失，不能靠常识补成制度。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>资料ID</th>
+<th>完整内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>timeout</td>
+<td>请求超时后最多重试2次；每次重试间隔1秒。</td>
+</tr>
+<tr>
+<td>backup</td>
+<td>系统每天凌晨2点备份，保留7天。</td>
+</tr>
+<tr>
+<td>deploy</td>
+<td>发布前必须通过自动测试，失败时回滚到上一个版本。</td>
+</tr>
+</tbody>
+</table></div>
+<p>三个演示问题是“超时后重试几次？”、“备份保留几天？”和“测试失败如何发布？”。脚本分别给它们标注相关资料timeout、backup、deploy，并提供预写待核对主张。<strong>这些主张是人工写入的测试输入，不是模型回答。</strong></p>
+<p>任务可以拆成五个问题：输出要有资料支持的回答；输入是给定文本、不能访问隐藏制度；本实验没有训练；评价关心证据召回与支持关系；系统先用简单检索，不默认需要大模型。这样做可以发现瓶颈是否真的在语言生成。</p>
+<h2 id="2">2. 检索好不等于回答好</h2>
+<p>这节沿数据流定位错误，避免一个总分掩盖不同失败。</p>
+<p><div class="figure"><svg viewBox="0 0 740 170" role="img" aria-label="问答从问题经检索证据到回答再分层评分"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="45" width="100" height="60" rx="8"/><path d="M110 75 H145"/><rect x="145" y="45" width="125" height="60" rx="8"/><path d="M270 75 H305"/><rect x="305" y="45" width="125" height="60" rx="8"/><path d="M430 75 H465"/><rect x="465" y="45" width="125" height="60" rx="8"/><path d="M590 75 H625"/><rect x="625" y="45" width="105" height="60" rx="8"/></g><g fill="currentColor" text-anchor="middle" font-size="16"><text x="60" y="80">问题</text><text x="208" y="80">检索资料</text><text x="368" y="80">实际证据</text><text x="528" y="80">候选回答</text><text x="678" y="80">分层评分</text><text x="370" y="145">脚本用预写主张检验证据；可选模型实验才产生新回答</text></g></svg></div></p>
+<p>若问备份保留期却只取到timeout，首先是检索失败；若拿到backup仍回答“保留30天”，是回答偏离证据；若说“保留7天，因此每周必须删除全部备份”，前半有依据，后半新增了制度。引用了正确资料ID，也不能使额外主张自动正确。</p>
+<p>当前检索器只是按中文字符集合重合数排序，取第一项，并以资料ID打破平局。它不理解同义词、不做复杂推理。“保留多久”和“保存期限”是否都能检索到，必须测；三个熟悉措辞上的正确结果不能推断任意问法都正确。</p>
+<h2 id="3">3. 手算两个指标</h2>
+<p>这节算清召回率与原文支持率的分母，并指出它们各自遗漏了什么。</p>
+<p><code>Recall@1</code>读“取前1项的召回率”。对某个问题，它等于“找到的相关资料数 / 全部相关资料数”。若有2条相关资料而只取回1条，得到 <code>1/2=0.5</code>；即使第一项完全相关，也没有找齐所有依据。当前三道题各只有1条标注相关资料，命中为1，未中为0。</p>
+<p>平均以问题为单位算。独立示意：三题召回分别1、0.5、0，则平均 <code>(1+0.5+0)/3=0.5</code>。如果各题需要的资料条数不同，它不等于把所有相关资料混在一起算的总召回；要说明采用哪种口径。</p>
+<p>第二个指标是 <code>exact_quote_supported</code>，含义是“非空主张是否为所引用资料中的连续原文”。例如“保留7天”在backup里，所以返回true；“无限重试”不在timeout里，返回false。若4条主张中3条通过，原文支持率 <code>3/4=75%</code>。</p>
+<blockquote>
+<p>原文包含不是语义正确性的完整判定。资料“不得无限重试”包含“无限重试”四字，但抽出来主张“无限重试”就丢了否定。当前脚本没有语义蕴含检查，也不判断回答是否全面、是否正面回答问题。</p>
+</blockquote>
+<p>改写成“保存一周”可能语义正确，却不能通过连续原文检测；反过来只答“保留”虽来自原文，也没回答几天。自动指标适合发现部分机械错误，最终答案质量仍需按固定标准逐主张检查。</p>
+<h2 id="4">4. 运行并保留真实输出</h2>
+<p>这节执行标准库脚本，明确这次实际运行了什么。</p>
+<p>从课程根目录运行：</p>
+<pre><code class="language-bash">python3 labs/evaluation.py
+</code></pre>
+<p>这条命令不调用LLM，不产生任何模型回答。当前随课三题运行结果为：每题 <code>recall_at_1=1.0</code>、每条预写主张 <code>exact_quote_supported=true</code>，两个均值均为1.0；“无限重试”的反例支持判断为false。这只证明当前三个固定例子上的检索与原文检查结果，不是问答系统100%正确率。这三题参与过课程与脚本开发，也不是未触碰的独立测试。</p>
+<p>可以用下面的标准shell重定向原样保存本次日志：</p>
+<pre><code class="language-bash">mkdir -p outputs/evaluation
+python3 labs/evaluation.py &gt; outputs/evaluation/retrieval.json
+</code></pre>
+<p>保留脚本版本、资料版本、执行时间与原始JSON。若输出与上述不同，先比较资料和代码版本，不手工改输出。原始日志与说明分开，解释可以修订，运行证据不能被润色成另一次结果。</p>
+<h2 id="5">5. 选修：接入你真正调用过的模型</h2>
+<p>这节给可执行的评价过程，不伪造一段“模型可能会回答”的文本。</p>
+<p>没有模型也能完成前面的主线。若希望测已有模型，先固定一个简短提示：“只根据以下资料回答，列出资料ID；资料不足时说明不足。”对三题使用同一份资料与同一规则，记录实际调用。课程的小decoder不是指令助手，不要求它完成这个实验。</p>
+<p>每题日志至少保存：问题、实际送入的完整资料、提示、模型名与确切版本、调用日期、温度/最大输出等设置、未经修改的原始回答、来源ID、耗时与错误。无法取得精确版本或成本时写“未提供”或“未测”，不要猜。只有真正执行并保存，才可以给模型填分；复制本章预写主张不能当作模型输出。</p>
+<p>人工评分可采用四项：所需证据是否检索到；回答里的每个事实主张是否有支持；是否回答完整；无证据时是否承认缺失。费用与延迟独立记录。以同一问题同一资料比较方案，不能给一个模型完整资料、另一个只给标题，却把差别全归因于模型能力。</p>
+<p>保留新问题的方法是：在调提示之前另写一批题并固定答案依据；开发只用演示题，候选确定后再打开保留题。若已经看过保留题错误再调提示，就标记复用，另增题目做后续验证。公开课程读者会看见题和答案，因此也不宣称它是长期秘密基准。</p>
+<h2 id="6">6. 用最小反例决定下一步</h2>
+<p>这节根据失败选择改动，而不是因为完成课程就开始搭复杂平台。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>观察</th>
+<th>下一项更有区分力的实验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同义问法找不到资料</td>
+<td>比较字符检索、关键词表或向量检索，固定问题集</td>
+</tr>
+<tr>
+<td>证据已给足但数字答错</td>
+<td>检查提示与模型回答，逐主张对照原文</td>
+</tr>
+<tr>
+<td>无答案问题仍编制度</td>
+<td>加入缺失证据题，统计错误回答与恰当拒答</td>
+</tr>
+<tr>
+<td>句子正确但引用错</td>
+<td>单独标记引用定位错误</td>
+</tr>
+<tr>
+<td>三题全过</td>
+<td>增加新措辞、多证据、冲突或过期资料；不直接宣称上线</td>
+</tr>
+</tbody>
+</table></div>
+<p>一个明确的缺失题是“备份是否异地保存？”：当前三条没有地点信息，不能由“每天备份”推出“异地备份”。这也是训练损失无法代替的工程验收：模型可以很擅长续写，同时在本任务里缺少依据。</p>
+<h2 id="7">7. 换数小测</h2>
+<p>这节用三个边界问题检查评价是否诚实。</p>
+<ol>
+<li>一题有3条相关资料，前2项找到其中2条，Recall@2是多少？能否说回答已有全部依据？</li>
+<li>资料写“不得跳过测试”，主张为“跳过测试”，当前原文包含检查可能怎样？该怎样补判？</li>
+<li>没有调用模型，只运行脚本得到两个1.0。可以写“模型问答正确率100%”吗？</li>
+</ol>
+<details><summary>展开完整答案</summary><ol><li><p>2/3≈0.6667。还有一条相关资料未找到，是否足以回答要看它包含什么，不能单由召回数字断言依据齐全。</p></li><li><p>连续子串检查可能返回true，因为这四字确实出现，但否定被丢失，主张方向与资料相反。需要在完整句子语境下判断是否支持，并把这种局限与失败例保存。</p></li><li><p>不能。脚本检验固定检索与预写主张的原文支持，没有模型生成。只能报告这三题的两个机械指标；真实模型正确率需要真实输出、判定标准与足够明确的测试范围。</p></li></ol></details>
+
+<p>回看<a href="../README.md">课程入口</a>，用“能手算一步、能复现实验、能解释失败、能限定结论”检查自己下一步要补什么。材料读完与能力已经获得，应由实际练习分别判断。</p><div class="chapter-links"><a href="17-inference.html">← 上一章</a><a href="index.html">返回课程路线 →</a></div><div class="bookmark"><label><input id="mark-read" type="checkbox"> 我已完成本章练习</label><span id="progress-message" class="progress-note">只记你的勾选，不自动判断掌握。</span></div></main></div><script>(()=>{const KEY='llm-engineers-read-v1';let read=[];try{read=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(read))read=[]}catch{}const current=document.body.dataset.chapter,check=document.getElementById('mark-read');if(check){check.checked=read.includes(current);check.addEventListener('change',()=>{read=read.filter(x=>x!==current);if(check.checked)read.push(current);try{localStorage.setItem(KEY,JSON.stringify(read))}catch{document.getElementById('progress-message').textContent='当前浏览器不能保存记录；正文仍可正常阅读。'}})}const count=document.getElementById('read-count');if(count)count.textContent=read.filter(x=>/^\d\d-/.test(x)).length+' / 18';const hs=[...document.querySelectorAll('main h2[id],main h3[id]')],as=[...document.querySelectorAll('nav .toc a')];let scheduled=false;function update(){scheduled=false;let cur=hs[0];for(const h of hs)if(h.getBoundingClientRect().top<150)cur=h;for(const a of as){if(cur&&decodeURIComponent(a.hash.slice(1))===cur.id){a.setAttribute('aria-current','location');const n=a.closest('nav'),b=n.getBoundingClientRect(),v=a.getBoundingClientRect();if(innerWidth>850&&(v.top<b.top||v.bottom>b.bottom))a.scrollIntoView({block:'nearest'})}else a.removeAttribute('aria-current')}}addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});update()})();</script></body></html>

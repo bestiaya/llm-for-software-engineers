@@ -1,0 +1,4 @@
+# Python >=3.11; install CPU wheels as documented by pytorch.org if appropriate.
+torch==2.11.0
+# PyTorch NumPy bridge; keeps the documented environment free of optional-import warnings.
+numpy==2.3.5
