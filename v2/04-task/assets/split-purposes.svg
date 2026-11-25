@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1018 276" role="img" aria-labelledby="sp-title sp-desc">
+  <title id="sp-title">训练、验证与留出检查的职责</title>
+  <desc id="sp-desc">十行训练数据用来调整模型并得到候选。用三行验证数据比较候选，选定后固定方案。最后用三行留出数据记录固定方案的表现。</desc>
+  <defs>
+    <marker id="sp-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#426176"/>
+    </marker>
+    <style>
+      .sp-major{font:700 22px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .sp-head{font:650 18px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .sp-copy{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#39566a}
+      .sp-link{fill:none;stroke:#426176;stroke-width:2;marker-end:url(#sp-arrow)}
+    </style>
+  </defs>
+  <rect width="1018" height="276" rx="16" fill="#f4f8fa"/>
+  <text x="28" y="43" class="sp-major">同一张数据表，三种用途</text>
+  <text x="28" y="70" class="sp-copy">先固定分区，再让不同的行参与相应步骤</text>
+
+  <g stroke-width="1.5">
+    <rect x="28" y="115" width="265" height="133" rx="12" fill="#eaf1fb" stroke="#a5bce0"/>
+    <rect x="376" y="115" width="266" height="133" rx="12" fill="#fff6e8" stroke="#dec19b"/>
+    <rect x="725" y="115" width="265" height="133" rx="12" fill="#e6f5f3" stroke="#8fc3bd"/>
+  </g>
+  <g text-anchor="middle">
+    <text x="160" y="148" class="sp-head">训练 10 行</text>
+    <text x="160" y="181" class="sp-copy">用输入和标签调整模型</text>
+    <text x="160" y="216" class="sp-copy">例如 a1-b2</text>
+
+    <text x="509" y="148" class="sp-head">验证 3 行</text>
+    <text x="509" y="181" class="sp-copy">比较候选，选定方案</text>
+    <text x="509" y="216" class="sp-copy">例如 a1-b3</text>
+
+    <text x="857" y="148" class="sp-head">留出 3 行</text>
+    <text x="857" y="181" class="sp-copy">检查已经固定的方案</text>
+    <text x="857" y="216" class="sp-copy">例如 a3-b2</text>
+
+    <text x="334" y="166" class="sp-copy">候选</text>
+    <text x="684" y="166" class="sp-copy">固定后</text>
+  </g>
+  <path d="M293 181H373" class="sp-link"/>
+  <path d="M642 181H722" class="sp-link"/>
+</svg>

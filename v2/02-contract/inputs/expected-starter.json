@@ -1,0 +1,23 @@
+{
+  "说明": "复制这个文件，把三个 null 换成你认为应用该有的行为，再运行 python3 v2/02-contract/lab.py --check 你的文件",
+  "写法": {
+    "查询": {
+      "outcome": "query",
+      "city": "城市名",
+      "days": 1,
+      "default_disclosed": false
+    },
+    "请求澄清": {
+      "outcome": "clarify"
+    },
+    "不支持": {
+      "outcome": "unsupported"
+    },
+    "注意": "查询必须写全城市、实际查询的天数、应用有没有说明用了默认天数。天数是整数，default_disclosed 是 true 或 false。"
+  },
+  "expected": {
+    "w04": null,
+    "w06": null,
+    "w09": null
+  }
+}

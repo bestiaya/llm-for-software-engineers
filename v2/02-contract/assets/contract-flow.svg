@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 420" role="img" aria-labelledby="contract-title contract-desc">
+  <title id="contract-title">三种结果怎样变成应用的行为</title>
+  <desc id="contract-desc">从左向右读。用户原话交给模型，模型交回三种文本之一：请求澄清、查询、不支持。查询这一种还要经过程序的规则：没说天数按一天并说明，天数超出一到十六天或城市没有配置时不支持。最后应用做三件事之一：问用户城市、查询天气服务、说明做不了。只有查询会发出天气请求。</desc>
+  <defs>
+    <marker id="contract-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#466376"/></marker>
+    <style>
+      .ct-head{font:650 17px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40;text-anchor:middle}
+      .ct-text{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e;text-anchor:middle}
+      .ct-small{font:13.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e}
+      .ct-code{font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:#1d3b50;text-anchor:middle}
+      .ct-link{fill:none;stroke:#466376;stroke-width:2;marker-end:url(#contract-arrow)}
+    </style>
+  </defs>
+  <rect width="940" height="420" rx="12" fill="#f4f8fa"/>
+  <g class="ct-head">
+    <text x="80" y="42">用户原话</text>
+    <text x="342" y="42">模型交回的文本，三种之一</text>
+    <text x="640" y="42">程序的规则</text>
+    <text x="847" y="42">应用的行为</text>
+  </g>
+  <g stroke="#b3c9d4">
+    <rect x="15" y="185" width="130" height="60" rx="9" fill="#fff"/>
+    <rect x="175" y="85" width="335" height="60" rx="9" fill="#eaf1fb"/>
+    <rect x="175" y="185" width="335" height="60" rx="9" fill="#eaf1fb"/>
+    <rect x="175" y="325" width="335" height="60" rx="9" fill="#eaf1fb"/>
+    <rect x="540" y="165" width="200" height="100" rx="9" fill="#e6f5f3"/>
+    <rect x="770" y="85" width="155" height="60" rx="9" fill="#fff"/>
+    <rect x="770" y="185" width="155" height="60" rx="9" fill="#fff6e8"/>
+    <rect x="770" y="325" width="155" height="60" rx="9" fill="#fff"/>
+  </g>
+  <g class="ct-text">
+    <text x="80" y="221">一句话</text>
+    <text x="342" y="109">没说城市</text>
+    <text x="342" y="209">提交查询参数</text>
+    <text x="342" y="349">这个版本做不了</text>
+    <text x="847" y="110">问用户城市</text>
+    <text x="847" y="131">不发天气查询</text>
+    <text x="847" y="210">查询天气服务</text>
+    <text x="847" y="231">展示逐日预报</text>
+    <text x="847" y="350">说明做不了</text>
+    <text x="847" y="371">不发天气查询</text>
+  </g>
+  <g class="ct-code">
+    <text x="342" y="131">{"result":"clarify","missing":"city"}</text>
+    <text x="342" y="231">{"result":"query","city":…,"days":…}</text>
+    <text x="342" y="371">{"result":"unsupported","reason":…}</text>
+  </g>
+  <g class="ct-small">
+    <text x="554" y="194">没说天数：查 1 天并说明</text>
+    <text x="554" y="220">天数不在 1 到 16：不支持</text>
+    <text x="554" y="246">城市没有配置：不支持</text>
+  </g>
+  <g class="ct-link">
+    <path d="M145 205L173 118"/>
+    <path d="M145 215L173 215"/>
+    <path d="M145 225L173 350"/>
+    <path d="M510 115L768 115"/>
+    <path d="M510 215L538 215"/>
+    <path d="M740 215L768 215"/>
+    <path d="M510 355L768 355"/>
+    <path d="M700 265L700 295L847 295L847 323"/>
+  </g>
+</svg>

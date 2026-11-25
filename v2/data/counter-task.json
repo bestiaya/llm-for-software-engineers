@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "data_kind": "author_created_teaching_fixture",
+  "task": "双通道计数分类",
+  "input_description": {
+    "a": "通道 A 最近三次检查中的超时次数",
+    "b": "通道 B 最近三次检查中的超时次数"
+  },
+  "input_domain": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "label_rule": "超时达到 2 次的通道有几条，标签就是几",
+  "threshold": 2,
+  "classes": {
+    "0": "两条通道都不到 2 次",
+    "1": "恰有一条通道达到 2 次",
+    "2": "两条通道都达到 2 次"
+  },
+  "rows": [
+    {
+      "id": "a0-b0",
+      "a": 0,
+      "b": 0,
+      "label": 0,
+      "split": "train"
+    },
+    {
+      "id": "a0-b1",
+      "a": 0,
+      "b": 1,
+      "label": 0,
+      "split": "validation"
+    },
+    {
+      "id": "a0-b2",
+      "a": 0,
+      "b": 2,
+      "label": 1,
+      "split": "train"
+    },
+    {
+      "id": "a0-b3",
+      "a": 0,
+      "b": 3,
+      "label": 1,
+      "split": "train"
+    },
+    {
+      "id": "a1-b0",
+      "a": 1,
+      "b": 0,
+      "label": 0,
+      "split": "heldout"
+    },
+    {
+      "id": "a1-b1",
+      "a": 1,
+      "b": 1,
+      "label": 0,
+      "split": "train"
+    },
+    {
+      "id": "a1-b2",
+      "a": 1,
+      "b": 2,
+      "label": 1,
+      "split": "train"
+    },
+    {
+      "id": "a1-b3",
+      "a": 1,
+      "b": 3,
+      "label": 1,
+      "split": "validation"
+    },
+    {
+      "id": "a2-b0",
+      "a": 2,
+      "b": 0,
+      "label": 1,
+      "split": "train"
+    },
+    {
+      "id": "a2-b1",
+      "a": 2,
+      "b": 1,
+      "label": 1,
+      "split": "heldout"
+    },
+    {
+      "id": "a2-b2",
+      "a": 2,
+      "b": 2,
+      "label": 2,
+      "split": "train"
+    },
+    {
+      "id": "a2-b3",
+      "a": 2,
+      "b": 3,
+      "label": 2,
+      "split": "validation"
+    },
+    {
+      "id": "a3-b0",
+      "a": 3,
+      "b": 0,
+      "label": 1,
+      "split": "train"
+    },
+    {
+      "id": "a3-b1",
+      "a": 3,
+      "b": 1,
+      "label": 1,
+      "split": "train"
+    },
+    {
+      "id": "a3-b2",
+      "a": 3,
+      "b": 2,
+      "label": 2,
+      "split": "heldout"
+    },
+    {
+      "id": "a3-b3",
+      "a": 3,
+      "b": 3,
+      "label": 2,
+      "split": "train"
+    }
+  ],
+  "limitations": [
+    "16 种输入全部列出，规则和答案都是公开的。",
+    "分成三组是为了演示数据的三种用途；留出的 3 行不能说明任何真实场景里的准确率。"
+  ]
+}

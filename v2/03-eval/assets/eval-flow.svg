@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" role="img" aria-labelledby="eval-title eval-desc">
+  <title id="eval-title">第一份评测怎样得出逐题结果</title>
+  <desc id="eval-desc">上面一行：十条输入交给两版应用，回放各自保存的真实模型回答，应用作出判定，得到应用的行为。人工构造的错误输出也先交给应用判定，用来检验评分程序本身。中间一行：事先固定的期望行为和应用的行为一起交给评分程序，逐项对照。下面一行：评分程序得出每一题通过或未通过，以及哪一项没对上；逐题结果再汇成两版应用的对比。</desc>
+  <defs>
+    <marker id="eval-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#466376"/></marker>
+    <style>
+      .ev-head{font:650 17px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40;text-anchor:middle}
+      .ev-text{font:14.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e;text-anchor:middle}
+      .ev-link{fill:none;stroke:#466376;stroke-width:2;marker-end:url(#eval-arrow)}
+      .ev-dash{fill:none;stroke:#466376;stroke-width:2;stroke-dasharray:6 5;marker-end:url(#eval-arrow)}
+    </style>
+  </defs>
+  <rect width="940" height="400" rx="12" fill="#f4f8fa"/>
+  <g stroke="#b3c9d4">
+    <rect x="20" y="40" width="190" height="70" rx="9" fill="#fff"/>
+    <rect x="290" y="40" width="270" height="70" rx="9" fill="#e6f5f3"/>
+    <rect x="660" y="40" width="260" height="70" rx="9" fill="#fff"/>
+    <rect x="20" y="165" width="190" height="70" rx="9" fill="#fff"/>
+    <rect x="290" y="165" width="270" height="70" rx="9" fill="#fff6e8"/>
+    <rect x="660" y="165" width="260" height="70" rx="9" fill="#eaf1fb"/>
+    <rect x="290" y="295" width="270" height="70" rx="9" fill="#fff"/>
+    <rect x="660" y="295" width="260" height="70" rx="9" fill="#fff"/>
+  </g>
+  <g class="ev-head">
+    <text x="115" y="70">十条输入</text>
+    <text x="425" y="70">应用的判定</text>
+    <text x="790" y="70">应用的行为</text>
+    <text x="115" y="195">人工构造的输出</text>
+    <text x="425" y="195">期望行为</text>
+    <text x="790" y="195">评分程序</text>
+    <text x="425" y="325">两版对比</text>
+    <text x="790" y="325">逐题结果</text>
+  </g>
+  <g class="ev-text">
+    <text x="115" y="93">用户原话</text>
+    <text x="425" y="93">两版应用，回放真实的模型回答</text>
+    <text x="790" y="93">查询、请求澄清、不支持</text>
+    <text x="115" y="218">检验评分程序用</text>
+    <text x="425" y="218">先固定，再看结果</text>
+    <text x="790" y="218">写了哪些项，就逐项对照</text>
+    <text x="425" y="348">通过数，逐题的变化</text>
+    <text x="790" y="348">通过或未通过，哪一项没对上</text>
+  </g>
+  <g class="ev-link">
+    <path d="M210 75L288 75"/>
+    <path d="M560 75L658 75"/>
+    <path d="M790 110L790 163"/>
+    <path d="M560 200L658 200"/>
+    <path d="M790 235L790 293"/>
+    <path d="M660 330L562 330"/>
+  </g>
+  <path class="ev-dash" d="M115 165L115 138L360 138L360 112"/>
+</svg>

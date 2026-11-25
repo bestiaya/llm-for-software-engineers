@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "case_id": "w03",
+  "app_version": "v2",
+  "capture": {
+    "kind": "live-model",
+    "transport": "codex-exec",
+    "cli_version": "0.166.0",
+    "model_requested": "gpt-6.1-sol",
+    "model_reported": "unknown",
+    "effort_requested": "medium",
+    "captured_at_utc": "2026-11-23T07:59:19Z",
+    "input_scope": "下列 stdin 为课程交给 Codex CLI 的完整文本。CLI 自带的指令和服务端请求封装不在记录范围内。",
+    "stdin": "用户想查天气。判断这句话能不能用“查询一个城市从今天起连续若干天的预报”来完成，只返回一个 JSON 对象，三种形式选一种。\n1. 能完成：{\"result\":\"query\",\"city\":\"中文城市名\",\"days\":整数}。用户没说天数时 days 写 null，不要自己补；天数再大也照实填写，范围由应用检查。用户顺带问冷不冷、热不热时也按这一种处理，应用会展示气温。\n2. 没说城市：{\"result\":\"clarify\",\"missing\":\"city\"}。不要猜城市。同时还有别的问题时，也先按这一种返回。\n3. 其他情况：{\"result\":\"unsupported\",\"reason\":\"一句话原因\"}。包括指定某一天或某个日期范围、多个城市、问是否下雨或要出行建议，以及天气以外的任务。\n不要查询天气，不要给预报，不要使用工具或 Markdown。\n\n那里明天天气怎么样？",
+    "other_item_types": []
+  },
+  "request": {
+    "instructions": "用户想查天气。判断这句话能不能用“查询一个城市从今天起连续若干天的预报”来完成，只返回一个 JSON 对象，三种形式选一种。\n1. 能完成：{\"result\":\"query\",\"city\":\"中文城市名\",\"days\":整数}。用户没说天数时 days 写 null，不要自己补；天数再大也照实填写，范围由应用检查。用户顺带问冷不冷、热不热时也按这一种处理，应用会展示气温。\n2. 没说城市：{\"result\":\"clarify\",\"missing\":\"city\"}。不要猜城市。同时还有别的问题时，也先按这一种返回。\n3. 其他情况：{\"result\":\"unsupported\",\"reason\":\"一句话原因\"}。包括指定某一天或某个日期范围、多个城市、问是否下雨或要出行建议，以及天气以外的任务。\n不要查询天气，不要给预报，不要使用工具或 Markdown。",
+    "input": "那里明天天气怎么样？"
+  },
+  "response": {
+    "text": "{\"result\":\"clarify\",\"missing\":\"city\"}",
+    "usage": {
+      "input_tokens": 25225,
+      "cached_input_tokens": 13568,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 29,
+      "reasoning_output_tokens": 13
+    }
+  },
+  "cli_message_event": {
+    "type": "item.completed",
+    "item": {
+      "id": "item_0",
+      "type": "agent_message",
+      "text": "{\"result\":\"clarify\",\"missing\":\"city\"}"
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "code": "K01",
+  "title": "给软件工程师的大语言模型课",
+  "edition": "22章路线",
+  "chapters": [
+    {
+      "number": 1,
+      "title": "一次请求怎样走完整个系统",
+      "unit": "阶段一 · 先完成一次应用判断",
+      "prerequisites": "编程与系统经验",
+      "outcome": "用成都三天天气请求追踪 GPT 提取参数、应用查询预报与展示结果，分清应用、模型服务和天气服务各自交回什么",
+      "source": "01-request/lesson.md"
+    },
+    {
+      "number": 2,
+      "title": "把任务说清楚",
+      "unit": "阶段一 · 先完成一次应用判断",
+      "prerequisites": "01",
+      "outcome": "把约定扩成查询、请求澄清、不支持三种结果，为十条输入写期望行为，分清哪些归模型、哪些归程序",
+      "source": "02-contract/lesson.md"
+    },
+    {
+      "number": 3,
+      "title": "第一份评测",
+      "unit": "阶段一 · 先完成一次应用判断",
+      "prerequisites": "01、02",
+      "outcome": "用固定的标准逐题评价两版应用，检验评分程序本身，分清评分和运行时检查，说明这十条题能支持什么结论",
+      "source": "03-eval/lesson.md"
+    },
+    {
+      "number": 4,
+      "title": "从例子里学",
+      "unit": "阶段二 · 计算与学习",
+      "prerequisites": "03",
+      "outcome": "看一遍完整的学习过程，认识输入、标签和标注规则，分清 16 行数据的三种用途，识别一个数据泄漏的反例",
+      "source": "04-task/lesson.md"
+    },
+    {
+      "number": 5,
+      "title": "模型就是参数加一套算法",
+      "unit": "阶段二 · 计算与学习",
+      "prerequisites": "04",
+      "outcome": "读出九个参数，手算三个分数并得到类别，区分改输入、改参数和改外部数据",
+      "source": "05-models/lesson.md"
+    },
+    {
+      "number": 6,
+      "title": "一次算一批",
+      "unit": "阶段二 · 计算与学习",
+      "prerequisites": "05",
+      "outcome": "用向量、矩阵和形状算一批输入，分清样本轴和特征轴，识别形状正确而含义错误的计算",
+      "source": "06-math/lesson.md"
+    },
+    {
+      "number": 7,
+      "title": "一层不够",
+      "unit": "阶段二 · 计算与学习",
+      "prerequisites": "06",
+      "outcome": "用三行数据说明线性模型的表达限制，跟踪隐藏层和非线性激活的一条计算路径",
+      "source": "07-hidden/lesson.md"
+    },
+    {
+      "number": 8,
+      "title": "从分数到概率和损失",
+      "unit": "阶段二 · 计算与学习",
+      "prerequisites": "07",
+      "outcome": "算一组概率和损失，说明模型给的概率不自动等于现实里的正确率",
+      "source": "08-loss/lesson.md"
+    },
+    {
+      "number": 9,
+      "title": "参数怎样学",
+      "unit": "阶段二 · 计算与学习",
+      "prerequisites": "08",
+      "outcome": "拨动一个参数看损失怎样变，做一次实际更新，沿一条短链把变化量传回去",
+      "source": "09-update/lesson.md"
+    },
+    {
+      "number": 10,
+      "title": "学得怎样",
+      "unit": "阶段二 · 计算与学习",
+      "prerequisites": "09",
+      "outcome": "用同一次训练比较训练、验证和留出三组数据，对照简单基线，认识欠拟合与过拟合",
+      "source": "10-training/lesson.md"
+    },
+    {
+      "number": 11,
+      "title": "文字变成 token，以及要预测什么",
+      "unit": "阶段三 · 语言模型",
+      "prerequisites": "10",
+      "outcome": "给七词例建词表并编码，列出每段前文和它的下一个 token，看清输入和目标错开一位",
+      "source": null
+    },
+    {
+      "number": 12,
+      "title": "最简单的一次预测",
+      "unit": "阶段三 · 语言模型",
+      "prerequisites": "11",
+      "outcome": "走通前文、向量、七个分数、概率，看到只用最后一个词时两句前文无法区分",
+      "source": null
+    },
+    {
+      "number": 13,
+      "title": "注意力",
+      "unit": "阶段三 · 语言模型",
+      "prerequisites": "12",
+      "outcome": "手算按内容加权读取前文的一行，用因果遮罩保证不偷看后面",
+      "source": null
+    },
+    {
+      "number": 14,
+      "title": "走通完整的预测",
+      "unit": "阶段三 · 语言模型",
+      "prerequisites": "13",
+      "outcome": "沿一条简化的完整路径走到词表上的分布，逐段跟踪形状，核算参数量和存储量",
+      "source": null
+    },
+    {
+      "number": 15,
+      "title": "从一个 token 到一段回答",
+      "unit": "阶段三 · 语言模型",
+      "prerequisites": "14",
+      "outcome": "跑生成循环，比较取最大和抽样，调温度，说明怎样停止，回看第 01 章那段 JSON 文本",
+      "source": null
+    },
+    {
+      "number": 16,
+      "title": "能力怎样形成",
+      "unit": "阶段三 · 语言模型",
+      "prerequisites": "15",
+      "outcome": "读一份训练记录，把输入与目标、参数更新和前后的输出对应起来，分清各种训练方式改变什么",
+      "source": null
+    },
+    {
+      "number": 17,
+      "title": "输出会变，哪些能固定",
+      "unit": "阶段四 · 限制与对策",
+      "prerequisites": "03、16",
+      "outcome": "分清输出变化、语义错误和证据不足，认识约定的格式、程序检查、缓存与回放各能固定什么",
+      "source": null
+    },
+    {
+      "number": 18,
+      "title": "模型不知道的，把资料交给它",
+      "unit": "阶段四 · 限制与对策",
+      "prerequisites": "17",
+      "outcome": "让模型依据几条资料回答，给措辞不同的合格答案评分，看一个漏取资料的反例",
+      "source": null
+    },
+    {
+      "number": 19,
+      "title": "让模型动手",
+      "unit": "阶段四 · 限制与对策",
+      "prerequisites": "18",
+      "outcome": "走一遍工具调用的往返，分清本次上下文、服务保存的历史和权威的业务状态，按最终状态检查",
+      "source": null
+    },
+    {
+      "number": 20,
+      "title": "谁说了算",
+      "unit": "阶段四 · 限制与对策",
+      "prerequisites": "19",
+      "outcome": "看资料里夹带的指令会怎样，给执行入口加一条检查，说明程序保证的是已经表达出来的约束",
+      "source": null
+    },
+    {
+      "number": 21,
+      "title": "比较两个模型",
+      "unit": "阶段五 · 比较与迁移",
+      "prerequisites": "20",
+      "outcome": "固定任务、提示、工具和评分条件，在同一批新题上配对比较，把质量、错误代价、费用和延迟一起看",
+      "source": null
+    },
+    {
+      "number": 22,
+      "title": "结论与迁移",
+      "unit": "阶段五 · 比较与迁移",
+      "prerequisites": "21",
+      "outcome": "写出课程案例范围内的适用性结论，在一个很小的代码任务上重做规格、样本、评分器和错误代价",
+      "source": null
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "data_kind": "author_created_fault_outputs",
+  "note": "人工构造的错误输出，只用来检验评分程序本身。它们不是模型的回答，不计入真实模型的统计。",
+  "sets": {
+    "always-3-days": {
+      "label": "凡是交回查询参数的，天数一律填 3",
+      "outputs": {
+        "w01": "{\"result\":\"query\",\"city\":\"成都\",\"days\":3}",
+        "w02": "{\"result\":\"query\",\"city\":\"上海\",\"days\":3}",
+        "w03": "{\"result\":\"clarify\",\"missing\":\"city\"}",
+        "w04": "{\"result\":\"query\",\"city\":\"北京\",\"days\":3}",
+        "w05": "{\"result\":\"unsupported\",\"reason\":\"指定了日期范围\"}",
+        "w06": "{\"result\":\"unsupported\",\"reason\":\"涉及多个城市\"}",
+        "w07": "{\"result\":\"query\",\"city\":\"成都\",\"days\":3}",
+        "w08": "{\"result\":\"unsupported\",\"reason\":\"不是天气查询\"}",
+        "w09": "{\"result\":\"unsupported\",\"reason\":\"需要出行建议\"}",
+        "w10": "{\"result\":\"query\",\"city\":\"成都\",\"days\":3}"
+      }
+    },
+    "fabricate-city": {
+      "label": "用户没说城市时，自己编一个",
+      "outputs": {
+        "w01": "{\"result\":\"query\",\"city\":\"成都\",\"days\":3}",
+        "w02": "{\"result\":\"query\",\"city\":\"上海\",\"days\":2}",
+        "w03": "{\"result\":\"query\",\"city\":\"北京\",\"days\":1}",
+        "w04": "{\"result\":\"query\",\"city\":\"北京\",\"days\":null}",
+        "w05": "{\"result\":\"unsupported\",\"reason\":\"指定了日期范围\"}",
+        "w06": "{\"result\":\"unsupported\",\"reason\":\"涉及多个城市\"}",
+        "w07": "{\"result\":\"query\",\"city\":\"成都\",\"days\":30}",
+        "w08": "{\"result\":\"unsupported\",\"reason\":\"不是天气查询\"}",
+        "w09": "{\"result\":\"unsupported\",\"reason\":\"需要出行建议\"}",
+        "w10": "{\"result\":\"query\",\"city\":\"成都\",\"days\":3}"
+      }
+    },
+    "refuse-all": {
+      "label": "所有请求一律拒绝",
+      "outputs": {
+        "w01": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w02": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w03": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w04": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w05": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w06": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w07": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w08": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w09": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}",
+        "w10": "{\"result\":\"unsupported\",\"reason\":\"无法处理\"}"
+      }
+    },
+    "wrong-refusal": {
+      "label": "该拒绝的那一题拒绝了，原因却不对",
+      "outputs": {
+        "w01": "{\"result\":\"query\",\"city\":\"成都\",\"days\":3}",
+        "w02": "{\"result\":\"query\",\"city\":\"上海\",\"days\":2}",
+        "w03": "{\"result\":\"clarify\",\"missing\":\"city\"}",
+        "w04": "{\"result\":\"query\",\"city\":\"北京\",\"days\":null}",
+        "w05": "{\"result\":\"unsupported\",\"reason\":\"指定了日期范围\"}",
+        "w06": "{\"result\":\"unsupported\",\"reason\":\"涉及多个城市\"}",
+        "w07": "{\"result\":\"query\",\"city\":\"拉萨\",\"days\":3}",
+        "w08": "{\"result\":\"unsupported\",\"reason\":\"不是天气查询\"}",
+        "w09": "{\"result\":\"unsupported\",\"reason\":\"需要出行建议\"}",
+        "w10": "{\"result\":\"query\",\"city\":\"成都\",\"days\":3}"
+      }
+    }
+  }
+}

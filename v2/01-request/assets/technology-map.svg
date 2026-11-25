@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 544" role="img" aria-labelledby="tech-title tech-desc">
+  <title id="tech-title">技术关系</title>
+  <desc id="tech-desc">人工智能采用机器学习等方法，深度学习属于机器学习。深度学习可用于构建语言模型，许多大语言模型采用 Transformer 架构。天气查询应用调用语言模型提取参数，查询天气服务取得预报。</desc>
+  <defs>
+    <marker id="tech-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#426176"/>
+    </marker>
+    <style>
+      .tc-main{font:700 22px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .tc-title{font:650 19px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .tc-text{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#39566a}
+      .tc-link{fill:none;stroke:#426176;stroke-width:2;marker-end:url(#tech-arrow)}
+    </style>
+  </defs>
+  <rect width="1000" height="544" rx="16" fill="#f4f8fa"/>
+  <text x="28" y="38" class="tc-main">技术关系</text>
+
+  <g stroke-width="1.5">
+    <rect x="28" y="63" width="213" height="84" rx="12" fill="#fff" stroke="#beced7"/>
+    <rect x="383" y="63" width="233" height="84" rx="12" fill="#fff" stroke="#beced7"/>
+    <rect x="757" y="63" width="215" height="84" rx="12" fill="#fff" stroke="#beced7"/>
+
+    <rect x="28" y="228" width="213" height="84" rx="12" fill="#fff6e8" stroke="#dec19b"/>
+    <rect x="383" y="228" width="233" height="84" rx="12" fill="#eaf1fb" stroke="#a5bce0"/>
+    <rect x="757" y="228" width="215" height="84" rx="12" fill="#f4eef9" stroke="#c5acd8"/>
+
+    <rect x="28" y="356" width="944" height="160" rx="14" fill="#eef7f6" stroke="#a0c5c1"/>
+    <rect x="57" y="421" width="255" height="72" rx="12" fill="#fff" stroke="#a0c5c1"/>
+    <rect x="371" y="421" width="250" height="72" rx="12" fill="#fff" stroke="#a0c5c1"/>
+    <rect x="685" y="421" width="255" height="72" rx="12" fill="#fff" stroke="#a0c5c1"/>
+  </g>
+
+  <g text-anchor="middle">
+    <text x="134" y="98" class="tc-title">人工智能 AI</text>
+    <text x="134" y="126" class="tc-text">领域</text>
+    <text x="499" y="98" class="tc-title">机器学习 ML</text>
+    <text x="499" y="126" class="tc-text">依据数据学习的方法</text>
+    <text x="864" y="98" class="tc-title">深度学习 DL</text>
+    <text x="864" y="126" class="tc-text">使用多层神经网络的方法</text>
+
+    <text x="134" y="263" class="tc-title">Transformer</text>
+    <text x="134" y="291" class="tc-text">模型架构</text>
+    <text x="499" y="263" class="tc-title">大语言模型 LLM</text>
+    <text x="499" y="291" class="tc-text">模型类别</text>
+    <text x="864" y="263" class="tc-title">生成式 AI</text>
+    <text x="864" y="291" class="tc-text">GenAI，生成内容的方向</text>
+
+    <text x="185" y="451" class="tc-title">GPT 模型服务</text>
+    <text x="185" y="475" class="tc-text">根据用户原话生成查询参数</text>
+    <text x="496" y="451" class="tc-title">天气查询应用</text>
+    <text x="496" y="475" class="tc-text">解析参数、查询预报、显示结果</text>
+    <text x="812" y="451" class="tc-title">天气服务</text>
+    <text x="812" y="475" class="tc-text">提供逐日预报数据</text>
+  </g>
+
+  <text x="57" y="394" class="tc-title">天气查询系统</text>
+  <text x="207" y="394" class="tc-text">由应用、模型服务和天气服务组成</text>
+
+  <path class="tc-link" d="M241 110H380"/>
+  <path class="tc-link" d="M757 110H619"/>
+  <path class="tc-link" d="M864 147V182H499V225"/>
+  <path class="tc-link" d="M383 275H244"/>
+  <path class="tc-link" d="M616 275H754"/>
+  <path class="tc-link" d="M499 312V334H185V418"/>
+  <path class="tc-link" d="M864 312V353"/>
+  <path class="tc-link" d="M371 461H315"/>
+  <path class="tc-link" d="M621 461H682"/>
+
+  <g class="tc-text" text-anchor="middle">
+    <text x="312" y="100">采用的方法之一</text>
+    <text x="686" y="100">属于</text>
+    <text x="683" y="173">可用于构建语言模型</text>
+    <text x="312" y="265">许多 LLM 采用</text>
+    <text x="686" y="265">用于文本生成</text>
+    <text x="341" y="329">运行于模型服务中</text>
+    <text x="919" y="339">用于参数生成</text>
+    <text x="342" y="450">调用</text>
+    <text x="653" y="450">查询</text>
+  </g>
+</svg>

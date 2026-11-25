@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 814 534" role="img" aria-labelledby="cg-title cg-desc">
+  <title id="cg-title">双通道超时次数的 16 个组合</title>
+  <desc id="cg-desc">每行是通道 A 的超时次数，每列是通道 B 的超时次数。每格包含达到至少两次超时的通道数量和数据用途。完整的 16 行由本章实验逐行列出。</desc>
+  <style>
+    .cg-major{font:700 22px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+    .cg-axis{font:650 17px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+    .cg-class{font:700 26px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+    .cg-copy{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#39566a}
+  </style>
+  <rect width="814" height="534" rx="16" fill="#f4f8fa"/>
+  <text x="28" y="43" class="cg-major">双通道超时次数的 16 个组合</text>
+  <text x="28" y="72" class="cg-copy">每格的大数字是类别，下面是这一行的数据用途</text>
+  <text x="479" y="108" text-anchor="middle" class="cg-axis">通道 B 超时次数</text>
+  <text x="28" y="144" class="cg-axis">通道 A 超时次数</text>
+  <g text-anchor="middle" class="cg-axis">
+    <text x="243" y="144">0</text>
+    <text x="105" y="202">0</text>
+    <text x="400" y="144">1</text>
+    <text x="105" y="290">1</text>
+    <text x="557" y="144">2</text>
+    <text x="105" y="378">2</text>
+    <text x="714" y="144">3</text>
+    <text x="105" y="466">3</text>
+  </g>
+  <g text-anchor="middle" stroke-width="1.5">
+    <g data-id="a0-b0">
+      <rect x="169" y="156" width="148" height="77" rx="10" fill="#fff" stroke="#beced7"/>
+      <text x="243" y="192" class="cg-class">0</text>
+      <text x="243" y="217" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a0-b1">
+      <rect x="326" y="156" width="148" height="77" rx="10" fill="#fff" stroke="#beced7"/>
+      <text x="400" y="192" class="cg-class">0</text>
+      <text x="400" y="217" class="cg-copy">验证</text>
+    </g>
+    <g data-id="a0-b2">
+      <rect x="483" y="156" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="557" y="192" class="cg-class">1</text>
+      <text x="557" y="217" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a0-b3">
+      <rect x="640" y="156" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="714" y="192" class="cg-class">1</text>
+      <text x="714" y="217" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a1-b0">
+      <rect x="169" y="244" width="148" height="77" rx="10" fill="#fff" stroke="#beced7"/>
+      <text x="243" y="280" class="cg-class">0</text>
+      <text x="243" y="305" class="cg-copy">留出</text>
+    </g>
+    <g data-id="a1-b1">
+      <rect x="326" y="244" width="148" height="77" rx="10" fill="#fff" stroke="#beced7"/>
+      <text x="400" y="280" class="cg-class">0</text>
+      <text x="400" y="305" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a1-b2">
+      <rect x="483" y="244" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="557" y="280" class="cg-class">1</text>
+      <text x="557" y="305" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a1-b3">
+      <rect x="640" y="244" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="714" y="280" class="cg-class">1</text>
+      <text x="714" y="305" class="cg-copy">验证</text>
+    </g>
+    <g data-id="a2-b0">
+      <rect x="169" y="332" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="243" y="368" class="cg-class">1</text>
+      <text x="243" y="393" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a2-b1">
+      <rect x="326" y="332" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="400" y="368" class="cg-class">1</text>
+      <text x="400" y="393" class="cg-copy">留出</text>
+    </g>
+    <g data-id="a2-b2">
+      <rect x="483" y="332" width="148" height="77" rx="10" fill="#e6f5f3" stroke="#8fc3bd"/>
+      <text x="557" y="368" class="cg-class">2</text>
+      <text x="557" y="393" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a2-b3">
+      <rect x="640" y="332" width="148" height="77" rx="10" fill="#e6f5f3" stroke="#8fc3bd"/>
+      <text x="714" y="368" class="cg-class">2</text>
+      <text x="714" y="393" class="cg-copy">验证</text>
+    </g>
+    <g data-id="a3-b0">
+      <rect x="169" y="420" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="243" y="456" class="cg-class">1</text>
+      <text x="243" y="481" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a3-b1">
+      <rect x="326" y="420" width="148" height="77" rx="10" fill="#eaf1fb" stroke="#a5bce0"/>
+      <text x="400" y="456" class="cg-class">1</text>
+      <text x="400" y="481" class="cg-copy">训练</text>
+    </g>
+    <g data-id="a3-b2">
+      <rect x="483" y="420" width="148" height="77" rx="10" fill="#e6f5f3" stroke="#8fc3bd"/>
+      <text x="557" y="456" class="cg-class">2</text>
+      <text x="557" y="481" class="cg-copy">留出</text>
+    </g>
+    <g data-id="a3-b3">
+      <rect x="640" y="420" width="148" height="77" rx="10" fill="#e6f5f3" stroke="#8fc3bd"/>
+      <text x="714" y="456" class="cg-class">2</text>
+      <text x="714" y="481" class="cg-copy">训练</text>
+    </g>
+  </g>
+</svg>

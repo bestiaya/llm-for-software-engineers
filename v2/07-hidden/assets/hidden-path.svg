@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 440" role="img" aria-labelledby="hp-title hp-desc">
+  <title id="hp-title">一行输入走过隐藏层</title>
+  <desc id="hp-desc">输入 a 等于 0、b 等于 2。隐藏层有四个单元：前两个只看 a，后两个只看 b，各自先乘加再过 ReLU，得到 0、0、1、0。四个隐藏值都通向输出层的三个类别，乘加以后得到三个分数：类别 0 是负 1，类别 1 是 0，类别 2 是负 1。最大的是类别 1。</desc>
+  <defs>
+    <marker id="hp-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#466376"/></marker>
+    <style>
+      .hp-title{font:650 20px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .hp-sub{font:14.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e}
+      .hp-head{font:650 16px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40;text-anchor:middle}
+      .hp-text{font:15.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40;text-anchor:middle}
+      .hp-note{font:14.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e;text-anchor:middle}
+      .hp-link{fill:none;stroke:#466376;stroke-width:2;marker-end:url(#hp-arrow)}
+      .hp-line{fill:none;stroke:#466376;stroke-width:2}
+    </style>
+  </defs>
+  <rect width="940" height="440" rx="12" fill="#f4f8fa"/>
+  <text class="hp-title" x="30" y="44">一行输入走过隐藏层</text>
+  <text class="hp-sub" x="30" y="68">输入 a=0、b=2。参数是手工设定的，没有经过训练</text>
+  <g class="hp-head">
+    <text x="110" y="112">输入</text>
+    <text x="440" y="112">隐藏层：乘加，再过 ReLU</text>
+    <text x="800" y="112">输出层：乘加</text>
+  </g>
+  <g stroke="#b3c9d4">
+    <rect x="40" y="170" width="140" height="56" rx="9" fill="#fff"/>
+    <rect x="40" y="290" width="140" height="56" rx="9" fill="#fff"/>
+    <rect x="290" y="130" width="300" height="52" rx="9" fill="#fff"/>
+    <rect x="290" y="198" width="300" height="52" rx="9" fill="#fff"/>
+    <rect x="290" y="266" width="300" height="52" rx="9" fill="#e6f5f3"/>
+    <rect x="290" y="334" width="300" height="52" rx="9" fill="#fff"/>
+    <rect x="700" y="150" width="200" height="56" rx="9" fill="#fff"/>
+    <rect x="700" y="232" width="200" height="56" rx="9" fill="#fff6e8"/>
+    <rect x="700" y="314" width="200" height="56" rx="9" fill="#fff"/>
+  </g>
+  <g class="hp-text">
+    <text x="110" y="204">a = 0</text>
+    <text x="110" y="324">b = 2</text>
+    <text x="440" y="162">h1 = ReLU(a − 1) = 0</text>
+    <text x="440" y="230">h2 = ReLU(a − 2) = 0</text>
+    <text x="440" y="298">h3 = ReLU(b − 1) = 1</text>
+    <text x="440" y="366">h4 = ReLU(b − 2) = 0</text>
+    <text x="800" y="184">类别 0　分数 −1</text>
+    <text x="800" y="266">类别 1　分数 0　最大</text>
+    <text x="800" y="348">类别 2　分数 −1</text>
+  </g>
+  <path class="hp-link" d="M180 190L282 158"/>
+  <path class="hp-link" d="M180 206L282 222"/>
+  <path class="hp-link" d="M180 310L282 294"/>
+  <path class="hp-link" d="M180 326L282 358"/>
+  <path class="hp-line" d="M590 156H645M590 224H645M590 292H645M590 360H645M645 156V360"/>
+  <path class="hp-link" d="M645 178H692"/>
+  <path class="hp-link" d="M645 260H692"/>
+  <path class="hp-link" d="M645 342H692"/>
+  <text class="hp-note" x="470" y="418">隐藏值 [0, 0, 1, 0] 是模型给这一行输入算出的新写法。输出层只用这四个数，不再直接用 a 和 b</text>
+</svg>

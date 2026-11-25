@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 466" role="img" aria-labelledby="cp-title cp-desc">
+  <title id="cp-title">沿着一条路径把变化率传回去</title>
+  <desc id="cp-desc">上面一行是前向计算：权重 W1 a 到 h1 等于 1，乘上 a 等于 3 并加上别的项得到 h1 的输入 2，过 ReLU 得到隐藏值 2，再乘 1、0、负 1 通向三个分数，h2 等于 1，它通向三个分数的权重是负 2、0、2，正好与 h1 的那一份抵消，所以三个分数都是 0，经 softmax 和损失得到 1.0986。下面一行从右往左。方框里是损失传回到这一处的变化率，方框之间标的是这一段自己的变化率：第一步，损失对三个分数的变化率是三个概率、正确类别的那一个减 1，正 0.333、正 0.333、负 0.667；第二步乘上这一段自己的变化率，也就是 h1 通向三个分数的权重 1、0、负 1；第三步三条支路相加，损失对 h1 的变化率是 1.0；第四步乘上 ReLU 这一段自己的变化率 1，损失对 h1 的输入的变化率是 1.0；第五步乘上这一段自己的变化率 a 等于 3，得到损失对这个权重的变化率 3.0。</desc>
+  <defs>
+    <marker id="cp-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#466376"/></marker>
+    <style>
+      .cp-title{font:650 20px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .cp-sub{font:14.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e}
+      .cp-row{font:650 15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .cp-name{font:14px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e;text-anchor:middle}
+      .cp-value{font:650 17px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40;text-anchor:middle}
+      .cp-small{font:650 12.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40;text-anchor:middle}
+      .cp-op{font:13.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e;text-anchor:middle}
+      .cp-link{fill:none;stroke:#466376;stroke-width:2;marker-end:url(#cp-arrow)}
+    </style>
+  </defs>
+  <rect width="940" height="466" rx="12" fill="#f4f8fa"/>
+  <text class="cp-title" x="30" y="44">沿着一条路径把变化率传回去</text>
+  <text class="cp-sub" x="30" y="68">a=3、b=3，正确类别 2。这组参数是为手算挑的，不是训练出来的</text>
+  <text class="cp-row" x="20" y="104">前向：从这个权重算到损失</text>
+  <g stroke="#b3c9d4">
+    <rect x="20" y="116" width="150" height="66" rx="9" fill="#fff6e8"/>
+    <rect x="207" y="116" width="140" height="66" rx="9" fill="#fff"/>
+    <rect x="385" y="116" width="140" height="66" rx="9" fill="#fff"/>
+    <rect x="562" y="116" width="190" height="66" rx="9" fill="#fff"/>
+    <rect x="790" y="116" width="130" height="66" rx="9" fill="#fff"/>
+    <rect x="20" y="284" width="150" height="66" rx="9" fill="#fff6e8"/>
+    <rect x="207" y="284" width="140" height="66" rx="9" fill="#e6f5f3"/>
+    <rect x="385" y="284" width="140" height="66" rx="9" fill="#e6f5f3"/>
+    <rect x="562" y="284" width="190" height="66" rx="9" fill="#e6f5f3"/>
+    <rect x="790" y="284" width="130" height="66" rx="9" fill="#fff"/>
+  </g>
+  <g class="cp-name">
+    <text x="95" y="141">权重 W1[a→h1]</text>
+    <text x="277" y="141">h1 的输入</text>
+    <text x="455" y="141">隐藏值 h1</text>
+    <text x="657" y="141">三个分数</text>
+    <text x="855" y="141">损失</text>
+    <text x="95" y="309">损失对这个权重</text>
+    <text x="277" y="309">损失对 h1 的输入</text>
+    <text x="455" y="309">损失对 h1</text>
+    <text x="657" y="309">损失对三个分数</text>
+    <text x="855" y="309">从损失出发</text>
+  </g>
+  <g class="cp-value">
+    <text x="95" y="167">1.0</text>
+    <text x="277" y="167">2</text>
+    <text x="455" y="167">2</text>
+    <text x="657" y="167">0、0、0</text>
+    <text x="855" y="167">1.0986</text>
+    <text x="95" y="335">3.0</text>
+    <text x="277" y="335">1.0</text>
+    <text x="455" y="335">1.0</text>
+    <text x="855" y="335">往回走</text>
+  </g>
+  <text class="cp-small" x="657" y="335">+0.333、+0.333、−0.667</text>
+  <path class="cp-link" d="M170 149H199"/>
+  <path class="cp-link" d="M347 149H377"/>
+  <path class="cp-link" d="M525 149H554"/>
+  <path class="cp-link" d="M752 149H782"/>
+  <path class="cp-link" d="M790 317H760"/>
+  <path class="cp-link" d="M562 317H533"/>
+  <path class="cp-link" d="M385 317H355"/>
+  <path class="cp-link" d="M207 317H178"/>
+  <g class="cp-op">
+    <text x="188" y="212">乘 a=3</text>
+    <text x="188" y="230">再加别的项</text>
+    <text x="366" y="221">过 ReLU</text>
+    <text x="544" y="212">乘 1、0、−1</text>
+    <text x="544" y="230">三条支路</text>
+    <text x="771" y="212">softmax</text>
+    <text x="771" y="230">再算损失</text>
+    <text x="188" y="372">⑤ 乘这一段的 3</text>
+    <text x="366" y="372">④ 乘这一段的 1</text>
+    <text x="544" y="372">② 乘 1、0、−1</text>
+    <text x="544" y="390">③ 三条支路相加</text>
+    <text x="771" y="372">① 概率，正确的减 1</text>
+  </g>
+  <text class="cp-row" x="20" y="272">回传：方框里是损失传回到这一处的变化率，方框之间是这一段自己的变化率</text>
+  <text class="cp-sub" x="470" y="422" text-anchor="middle">每往回走一段，就乘上这一段自己的变化率；分了岔的地方把几条支路加起来</text>
+  <text class="cp-sub" x="470" y="446" text-anchor="middle">前向里三个分数都是 0：h1=2 的一份是 2、0、−2，h2=1 的一份是 −2、0、2，两份正好抵消</text>
+</svg>

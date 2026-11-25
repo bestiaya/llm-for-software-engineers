@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "case_id": "w09",
+  "app_version": "v1",
+  "capture": {
+    "kind": "live-model",
+    "transport": "codex-exec",
+    "cli_version": "0.166.0",
+    "model_requested": "gpt-6.1-sol",
+    "model_reported": "unknown",
+    "effort_requested": "medium",
+    "captured_at_utc": "2026-11-23T08:40:24Z",
+    "input_scope": "下列 stdin 为课程交给 Codex CLI 的完整文本。CLI 自带的指令和服务端请求封装不在记录范围内。",
+    "stdin": "从用户的天气问题提取查询参数。只返回一个 JSON 对象，city 是中文城市名，days 是整数天数。不要查询天气，不要给预报，不要使用工具或 Markdown。\n\n明天去成都，要带伞吗？",
+    "other_item_types": []
+  },
+  "request": {
+    "instructions": "从用户的天气问题提取查询参数。只返回一个 JSON 对象，city 是中文城市名，days 是整数天数。不要查询天气，不要给预报，不要使用工具或 Markdown。",
+    "input": "明天去成都，要带伞吗？"
+  },
+  "response": {
+    "text": "{\"city\":\"成都\",\"days\":1}",
+    "usage": {
+      "input_tokens": 25066,
+      "cached_input_tokens": 8192,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 32,
+      "reasoning_output_tokens": 17
+    }
+  },
+  "cli_message_event": {
+    "type": "item.completed",
+    "item": {
+      "id": "item_0",
+      "type": "agent_message",
+      "text": "{\"city\":\"成都\",\"days\":1}"
+    }
+  }
+}

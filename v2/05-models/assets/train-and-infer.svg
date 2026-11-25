@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 441" role="img" aria-labelledby="ti-title ti-desc">
+  <title id="ti-title">训练和推理怎样各自使用参数</title>
+  <desc id="ti-desc">训练用当前参数计算，通过训练样本的标签和调整设置决定如何更新，得到新参数。推理读取当前参数和本次输入，算出分数。本章只运行推理计算的路径。</desc>
+  <defs>
+    <marker id="ti-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#426176"/>
+    </marker>
+    <style>
+      .ti-main{font:700 22px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .ti-head{font:650 18px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .ti-copy{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#39566a}
+      .ti-link{fill:none;stroke:#426176;stroke-width:2;marker-end:url(#ti-arrow)}
+    </style>
+  </defs>
+  <rect width="1010" height="441" rx="16" fill="#f4f8fa"/>
+  <text x="28" y="43" class="ti-main">训练会更新参数，推理用当前参数计算</text>
+  <text x="28" y="70" class="ti-copy">两条路径都执行前向计算，从输入算到分数</text>
+
+  <rect x="28" y="96" width="954" height="155" rx="14" fill="#fff6e8" stroke="#dec19b" stroke-width="1.5"/>
+  <rect x="28" y="272" width="954" height="140" rx="14" fill="#e6f5f3" stroke="#8fc3bd" stroke-width="1.5"/>
+
+  <text x="50" y="126" class="ti-head">训练概览</text>
+  <text x="50" y="302" class="ti-head">本章的推理计算</text>
+  <g fill="#fff" stroke="#beced7" stroke-width="1.5">
+    <rect x="50" y="147" width="211" height="76" rx="10"/>
+    <rect x="299" y="147" width="170" height="76" rx="10"/>
+    <rect x="508" y="147" width="220" height="76" rx="10"/>
+    <rect x="767" y="147" width="193" height="76" rx="10"/>
+
+    <rect x="50" y="321" width="211" height="69" rx="10"/>
+    <rect x="299" y="321" width="170" height="69" rx="10"/>
+    <rect x="508" y="321" width="452" height="69" rx="10"/>
+  </g>
+
+  <g text-anchor="middle">
+    <text x="155" y="176" class="ti-head">当前参数、训练输入</text>
+    <text x="155" y="202" class="ti-copy">按计算结构接入</text>
+    <text x="384" y="176" class="ti-head">前向计算</text>
+    <text x="384" y="202" class="ti-copy">得到分数</text>
+    <text x="618" y="176" class="ti-head">对照标签，调整参数</text>
+    <text x="618" y="202" class="ti-copy">按训练规则与学习率等设置</text>
+    <text x="863" y="176" class="ti-head">更新后的参数</text>
+    <text x="863" y="202" class="ti-copy">可以保存供后续加载</text>
+
+    <text x="155" y="350" class="ti-head">当前参数、本次输入</text>
+    <text x="155" y="374" class="ti-copy">按同一计算结构接入</text>
+    <text x="384" y="350" class="ti-head">前向计算</text>
+    <text x="384" y="374" class="ti-copy">得到分数</text>
+    <text x="734" y="350" class="ti-head">返回三个分数</text>
+    <text x="734" y="374" class="ti-copy">这次计算未写入参数</text>
+  </g>
+  <path d="M261 185H296" class="ti-link"/>
+  <path d="M469 185H505" class="ti-link"/>
+  <path d="M728 185H764" class="ti-link"/>
+  <path d="M261 355H296" class="ti-link"/>
+  <path d="M469 355H505" class="ti-link"/>
+</svg>

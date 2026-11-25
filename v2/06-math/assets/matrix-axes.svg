@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1044 363" role="img" aria-labelledby="ma-title ma-desc">
+  <title id="ma-title">矩阵乘法把输入的一行和权重的一列配起来</title>
+  <desc id="ma-desc">X 是样本乘特征，W 是特征乘候选类别，结果是样本乘候选类别。图中高亮第一条样本二、一和类别一的权重一、零，它们的点积二进入结果第一行的类别一列。</desc>
+  <style>
+    .ma-main{font:700 22px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+    .ma-head{font:650 17px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+    .ma-copy{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#39566a}
+    .ma-num{font:650 19px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+    .ma-cell{stroke-width:1.5;stroke:#bdced7;fill:#fff}
+    .ma-picked{stroke-width:1.5;stroke:#84b6af;fill:#dff1ee}
+  </style>
+  <rect width="1044" height="363" rx="16" fill="#f4f8fa"/>
+  <text x="28" y="43" class="ma-main">每个格来自一行输入和一列权重</text>
+  <text x="28" y="70" class="ma-copy">示范格为样本 1 的类别 1 点积，尚未加偏置</text>
+
+  <text x="28" y="119" class="ma-head">输入 X　2×2</text>
+  <text x="350" y="119" class="ma-head">权重 W　2×3</text>
+  <text x="710" y="119" class="ma-head">点积表　2×3</text>
+
+  <g text-anchor="middle" class="ma-copy">
+    <text x="152" y="156">A</text><text x="226" y="156">B</text>
+    <text x="46" y="200" text-anchor="start">样本 1</text>
+    <text x="46" y="247" text-anchor="start">样本 2</text>
+
+    <text x="442" y="156">类别 0</text><text x="513" y="156">类别 1</text><text x="584" y="156">类别 2</text>
+    <text x="370" y="200">A</text><text x="370" y="247">B</text>
+
+    <text x="807" y="156">类别 0</text><text x="882" y="156">类别 1</text><text x="957" y="156">类别 2</text>
+    <text x="709" y="200" text-anchor="start">样本 1</text>
+    <text x="709" y="247" text-anchor="start">样本 2</text>
+  </g>
+
+  <rect x="120" y="173" width="64" height="40" rx="6" class="ma-picked"/>
+  <rect x="194" y="173" width="64" height="40" rx="6" class="ma-picked"/>
+  <rect x="120" y="220" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="194" y="220" width="64" height="40" rx="6" class="ma-cell"/>
+
+  <rect x="410" y="173" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="481" y="173" width="64" height="40" rx="6" class="ma-picked"/>
+  <rect x="552" y="173" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="410" y="220" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="481" y="220" width="64" height="40" rx="6" class="ma-picked"/>
+  <rect x="552" y="220" width="64" height="40" rx="6" class="ma-cell"/>
+
+  <rect x="775" y="173" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="850" y="173" width="64" height="40" rx="6" class="ma-picked"/>
+  <rect x="925" y="173" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="775" y="220" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="850" y="220" width="64" height="40" rx="6" class="ma-cell"/>
+  <rect x="925" y="220" width="64" height="40" rx="6" class="ma-cell"/>
+
+  <g text-anchor="middle" class="ma-num">
+    <text x="152" y="200">2</text><text x="226" y="200">1</text>
+    <text x="152" y="247">0</text><text x="226" y="247">1</text>
+    <text x="301" y="219">×</text>
+    <text x="442" y="200">0.5</text><text x="513" y="200">1</text><text x="584" y="200">0</text>
+    <text x="442" y="247">−1</text><text x="513" y="247">0</text><text x="584" y="247">2</text>
+    <text x="660" y="219">=</text>
+    <text x="807" y="200">0</text><text x="882" y="200">2</text><text x="957" y="200">2</text>
+    <text x="807" y="247">−1</text><text x="882" y="247">0</text><text x="957" y="247">2</text>
+  </g>
+
+  <rect x="28" y="285" width="961" height="49" rx="10" fill="#e6f5f3"/>
+  <text x="48" y="317" class="ma-head">对齐 A、B 后用 2 × 1 加 1 × 0，得到样本 1 与类别 1 交叉位置的值 2</text>
+</svg>

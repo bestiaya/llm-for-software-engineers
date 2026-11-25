@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "origin": "hand_set_teaching_parameters",
+  "architecture": "two-input-three-score-affine",
+  "input_fields": [
+    "a",
+    "b"
+  ],
+  "output_classes": [
+    0,
+    1,
+    2
+  ],
+  "weights": [
+    [
+      0.5,
+      1.0,
+      0.0
+    ],
+    [
+      -1.0,
+      0.0,
+      2.0
+    ]
+  ],
+  "bias": [
+    0.0,
+    0.5,
+    -1.0
+  ],
+  "mathematical_layout": "input row vector times [input,output] weights, then bias",
+  "binary_layout": "9 little-endian float32 values: weights flattened row-major, followed by bias",
+  "hyperparameters": {
+    "learning_rate_example": 0.3
+  },
+  "note": "给定权重只用于计算与状态观察，尚未训练。"
+}

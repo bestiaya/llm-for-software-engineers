@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 440" role="img" aria-labelledby="request-title request-desc">
+  <title id="request-title">从一句天气查询到逐日预报</title>
+  <desc id="request-desc">由上向下读。用户把问题交给应用，应用请求 GPT 提取 city 和 days。应用读取返回的文本，解析为城市和天数，组装天气查询。天气服务提供日期和气温，应用向用户展示预报。</desc>
+  <defs>
+    <marker id="request-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#466376"/></marker>
+    <style>
+      .rq-lane{font:650 19px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40;text-anchor:middle}
+      .rq-msg{font:16px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e;text-anchor:middle}
+      .rq-guide{stroke:#afc1cc;stroke-dasharray:4 5}
+      .rq-link{fill:none;stroke:#466376;stroke-width:2;marker-end:url(#request-arrow)}
+    </style>
+  </defs>
+  <rect width="940" height="440" rx="12" fill="#f4f8fa"/>
+  <g stroke="#b3c9d4">
+    <rect x="15" y="22" width="150" height="45" rx="9" fill="#fff"/>
+    <rect x="220" y="22" width="170" height="45" rx="9" fill="#e6f5f3"/>
+    <rect x="486" y="22" width="170" height="45" rx="9" fill="#eaf1fb"/>
+    <rect x="735" y="22" width="185" height="45" rx="9" fill="#fff6e8"/>
+  </g>
+  <g class="rq-lane">
+    <text x="90" y="51">用户</text><text x="305" y="51">应用</text>
+    <text x="571" y="51">GPT</text><text x="827" y="51">天气服务</text>
+  </g>
+  <path class="rq-guide" d="M90 67V419 M305 67V419 M571 67V226 M827 67V353"/>
+  <g class="rq-msg">
+    <text x="197" y="100">帮我看看成都未来三天的天气</text>
+    <text x="438" y="148">用户原话 + 提取参数的指令</text>
+    <text x="438" y="196">返回文本：城市成都、天数 3</text>
+    <text x="567" y="252">应用解析并核对参数，发出预报查询</text>
+    <text x="567" y="310">返回逐日日期及最高、最低气温</text>
+    <text x="197" y="374">显示成都三天天气预报</text>
+  </g>
+  <path class="rq-link" d="M90 109H302"/>
+  <path class="rq-link" d="M305 157H568"/>
+  <path class="rq-link" d="M571 205H308"/>
+  <path class="rq-link" d="M305 262H824"/>
+  <path class="rq-link" d="M827 320H308"/>
+  <path class="rq-link" d="M305 384H93"/>
+</svg>

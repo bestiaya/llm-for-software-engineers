@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 460" role="img" aria-labelledby="lc-title lc-desc">
+  <title id="lc-title">同一次训练里，训练损失和验证损失的变化</title>
+  <desc id="lc-desc">横轴是十二个检查点，从第 0 步到第 2000 步，按顺序等距排列，横向距离不代表步数差；纵轴是平均损失。在所画的检查点上，训练损失逐个下降，从 1.292 到 0.009。验证损失从 1.304 降到第 500 步的 0.360，之后回升到 0.413。三类平分时的损失是 1.099。</desc>
+  <defs>
+    <style>
+      .lc-title{font:650 20px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .lc-sub{font:14.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e}
+      .lc-tick{font:13.5px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#24485e}
+      .lc-label{font:650 14px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .lc-line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+    </style>
+  </defs>
+  <rect width="940" height="460" rx="12" fill="#f4f8fa"/>
+  <text class="lc-title" x="30" y="44">同一次训练里，训练损失和验证损失的变化</text>
+  <text class="lc-sub" x="30" y="68">起点种子 1，学习率 0.1，共 2000 步；只画出留了记录的 12 个检查点</text>
+  <g>
+    <path d="M30 96H58" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/><circle cx="44" cy="96" r="4" fill="#2a78d6"/>
+    <text class="lc-sub" x="66" y="101">训练损失（10 行）</text>
+    <path d="M206 96H234" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/><circle cx="220" cy="96" r="4" fill="#eb6834"/>
+    <text class="lc-sub" x="242" y="101">验证损失（3 行）</text>
+  </g>
+  <path d="M96 390.0H806" stroke="#cfdde5" stroke-width="1"/><text class="lc-tick" x="88" y="395.0" text-anchor="end">0</text><path d="M96 295.0H806" stroke="#cfdde5" stroke-width="1"/><text class="lc-tick" x="88" y="300.0" text-anchor="end">0.5</text><path d="M96 200.0H806" stroke="#cfdde5" stroke-width="1"/><text class="lc-tick" x="88" y="205.0" text-anchor="end">1.0</text>
+  <path d="M96 181.3H806" stroke="#8fa6b3" stroke-width="1"/>
+  <text class="lc-tick" x="814" y="186.3">三类平分 1.099</text>
+  <path d="M674.5 124V390" stroke="#8fa6b3" stroke-width="1"/>
+  <text class="lc-label" x="666.5" y="136" text-anchor="end">第 500 步：验证损失最低，选这一份</text>
+  <path class="lc-line" d="M110.0 144.5L172.7 168.8L235.5 183.1L298.2 205.2L360.9 218.1L423.6 229.0L486.4 256.9L549.1 295.9L611.8 341.2L674.5 377.8L737.3 385.8L800.0 388.4" stroke="#2a78d6"/>
+  <path class="lc-line" d="M110.0 142.3L172.7 159.7L235.5 168.9L298.2 181.3L360.9 184.5L423.6 183.6L486.4 201.9L549.1 229.5L611.8 280.3L674.5 321.7L737.3 319.2L800.0 311.6" stroke="#eb6834"/>
+  <circle cx="110.0" cy="144.5" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="172.7" cy="168.8" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="235.5" cy="183.1" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="298.2" cy="205.2" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="360.9" cy="218.1" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="423.6" cy="229.0" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="486.4" cy="256.9" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="549.1" cy="295.9" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="611.8" cy="341.2" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="674.5" cy="377.8" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="737.3" cy="385.8" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/><circle cx="800.0" cy="388.4" r="4" fill="#2a78d6" stroke="#f4f8fa" stroke-width="2"/>
+  <circle cx="110.0" cy="142.3" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="172.7" cy="159.7" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="235.5" cy="168.9" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="298.2" cy="181.3" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="360.9" cy="184.5" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="423.6" cy="183.6" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="486.4" cy="201.9" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="549.1" cy="229.5" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="611.8" cy="280.3" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="674.5" cy="321.7" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="737.3" cy="319.2" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/><circle cx="800.0" cy="311.6" r="4" fill="#eb6834" stroke="#f4f8fa" stroke-width="2"/>
+  <text class="lc-label" x="814" y="316.6">验证 0.413</text>
+  <text class="lc-label" x="814" y="390.4">训练 0.009</text>
+  <text class="lc-tick" x="110.0" y="414" text-anchor="middle">0</text><text class="lc-tick" x="172.7" y="414" text-anchor="middle">1</text><text class="lc-tick" x="235.5" y="414" text-anchor="middle">2</text><text class="lc-tick" x="298.2" y="414" text-anchor="middle">5</text><text class="lc-tick" x="360.9" y="414" text-anchor="middle">10</text><text class="lc-tick" x="423.6" y="414" text-anchor="middle">20</text><text class="lc-tick" x="486.4" y="414" text-anchor="middle">50</text><text class="lc-tick" x="549.1" y="414" text-anchor="middle">100</text><text class="lc-tick" x="611.8" y="414" text-anchor="middle">200</text><text class="lc-tick" x="674.5" y="414" text-anchor="middle">500</text><text class="lc-tick" x="737.3" y="414" text-anchor="middle">1000</text><text class="lc-tick" x="800.0" y="414" text-anchor="middle">2000</text>
+  <text class="lc-sub" x="455" y="442" text-anchor="middle">训练步数。检查点按顺序等距排列，横向距离不代表步数差</text>
+  <text class="lc-sub" x="88" y="118" text-anchor="end">平均损失</text>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 391" role="img" aria-labelledby="ta-title ta-desc">
+  <title id="ta-title">转置后形状相同，轴含义交换</title>
+  <desc id="ta-desc">正确的输入第一行是样本一的 A、B 计数二、一。转置后第一行是通道 A 的两个样本计数二、零。两张表都有两行两列，原程序会将转置后的第一行误作同一个样本。</desc>
+  <defs>
+    <marker id="ta-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#426176"/>
+    </marker>
+    <style>
+      .ta-main{font:700 22px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .ta-head{font:650 17px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .ta-copy{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#39566a}
+      .ta-num{font:650 21px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .ta-link{fill:none;stroke:#426176;stroke-width:2;marker-end:url(#ta-arrow)}
+    </style>
+  </defs>
+  <rect width="1020" height="391" rx="16" fill="#f4f8fa"/>
+  <text x="28" y="43" class="ta-main">都是 2×2，第一行代表的对象却不同</text>
+  <text x="28" y="70" class="ta-copy">转置把原来的列变成行</text>
+  <rect x="28" y="95" width="390" height="261" rx="12" fill="#eaf1fb" stroke="#a5bce0" stroke-width="1.5"/>
+  <rect x="602" y="95" width="390" height="261" rx="12" fill="#fff6e8" stroke="#dec19b" stroke-width="1.5"/>
+
+  <text x="51" y="128" class="ta-head">X　行是样本，列是特征</text>
+  <text x="625" y="128" class="ta-head">Xᵀ　行是特征，列是样本</text>
+  <g text-anchor="middle" class="ta-copy">
+    <text x="206" y="170">A</text><text x="317" y="170">B</text>
+    <text x="88" y="213">样本 1</text><text x="88" y="264">样本 2</text>
+    <text x="780" y="170">样本 1</text><text x="891" y="170">样本 2</text>
+    <text x="662" y="213">A</text><text x="662" y="264">B</text>
+    <text x="510" y="196">原列变成新行</text>
+  </g>
+
+  <g stroke-width="1.5">
+    <rect x="156" y="185" width="100" height="43" rx="6" fill="#dbeafc" stroke="#a5bce0"/>
+    <rect x="267" y="185" width="100" height="43" rx="6" fill="#fff" stroke="#bdced7"/>
+    <rect x="156" y="236" width="100" height="43" rx="6" fill="#dbeafc" stroke="#a5bce0"/>
+    <rect x="267" y="236" width="100" height="43" rx="6" fill="#fff" stroke="#bdced7"/>
+    <rect x="730" y="185" width="100" height="43" rx="6" fill="#dbeafc" stroke="#a5bce0"/>
+    <rect x="841" y="185" width="100" height="43" rx="6" fill="#dbeafc" stroke="#a5bce0"/>
+    <rect x="730" y="236" width="100" height="43" rx="6" fill="#fff" stroke="#bdced7"/>
+    <rect x="841" y="236" width="100" height="43" rx="6" fill="#fff" stroke="#bdced7"/>
+  </g>
+  <g text-anchor="middle" class="ta-num">
+    <text x="206" y="214">2</text><text x="317" y="214">1</text>
+    <text x="206" y="265">0</text><text x="317" y="265">1</text>
+    <text x="780" y="214">2</text><text x="891" y="214">0</text>
+    <text x="780" y="265">1</text><text x="891" y="265">1</text>
+  </g>
+  <path d="M437 212H581" class="ta-link"/>
+  <text x="51" y="324" class="ta-copy">第 1 行是同一个样本的两项计数</text>
+  <text x="625" y="324" class="ta-copy">第 1 行是两个样本的 A 通道计数</text>
+</svg>

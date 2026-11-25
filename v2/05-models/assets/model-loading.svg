@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 393" role="img" aria-labelledby="ml-title ml-desc">
+  <title id="ml-title">模型参数从文件到计算</title>
+  <desc id="ml-desc">本章脚本从 683 字节的 JSON 取得参数，按顺序与 36 字节二进制参数核对一致。运行时用 JSON 加载的参数和本次输入计算出分数，手工改动留在内存。</desc>
+  <defs>
+    <marker id="ml-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#426176"/>
+    </marker>
+    <style>
+      .ml-main{font:700 22px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .ml-head{font:650 18px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#142e40}
+      .ml-copy{font:15px system-ui,"PingFang SC","Microsoft YaHei",sans-serif;fill:#39566a}
+      .ml-link{fill:none;stroke:#426176;stroke-width:2;marker-end:url(#ml-arrow)}
+    </style>
+  </defs>
+  <rect width="1010" height="393" rx="16" fill="#f4f8fa"/>
+  <text x="28" y="43" class="ml-main">同一组参数，从磁盘读到运行时</text>
+  <text x="28" y="70" class="ml-copy">本章读取两份文件，参数取自 JSON，二进制载荷用于核对</text>
+
+  <g stroke-width="1.5">
+    <rect x="28" y="103" width="240" height="100" rx="12" fill="#fff" stroke="#beced7"/>
+    <rect x="28" y="254" width="240" height="100" rx="12" fill="#fff" stroke="#beced7"/>
+    <rect x="370" y="168" width="223" height="122" rx="12" fill="#eaf1fb" stroke="#a5bce0"/>
+    <rect x="695" y="168" width="287" height="122" rx="12" fill="#e6f5f3" stroke="#8fc3bd"/>
+  </g>
+  <g text-anchor="middle">
+    <text x="148" y="136" class="ml-head">linear-model.json</text>
+    <text x="148" y="165" class="ml-copy">683 字节</text>
+    <text x="148" y="187" class="ml-copy">参数、结构说明、其他配置</text>
+
+    <text x="148" y="287" class="ml-head">linear-parameters.f32</text>
+    <text x="148" y="316" class="ml-copy">36 字节</text>
+    <text x="148" y="338" class="ml-copy">6 个权重和 3 个偏置</text>
+
+    <text x="481" y="202" class="ml-head">读取和核对</text>
+    <text x="481" y="231" class="ml-copy">检查尺寸，按顺序逐值比较</text>
+    <text x="481" y="257" class="ml-copy">两份参数一致</text>
+
+    <text x="838" y="202" class="ml-head">运行一次计算</text>
+    <text x="838" y="231" class="ml-copy">取本次输入，用 Python float 乘加</text>
+    <text x="838" y="257" class="ml-copy">得到三个分数</text>
+
+    <text x="316" y="140" class="ml-copy">解析数值</text>
+    <text x="316" y="328" class="ml-copy">按格式解码</text>
+    <text x="644" y="209" class="ml-copy">交付参数</text>
+  </g>
+  <path d="M268 153H319V204H367" class="ml-link"/>
+  <path d="M268 304H319V254H367" class="ml-link"/>
+  <path d="M593 229H692" class="ml-link"/>
+  <text x="695" y="326" class="ml-copy">手工修改只留在实验的内存副本中</text>
+</svg>
