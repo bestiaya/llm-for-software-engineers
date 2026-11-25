@@ -2,7 +2,7 @@
 
 上一章写好了新约定和十条期望行为。本章用这同一份标准，逐题评价沿用旧约定的应用和按新约定工作的应用，再检验评分程序本身靠不靠得住。
 
-- [阅读正文](lesson.md)或[打开离线页](lesson.html)。
+- [阅读正文](lesson.md)。
 - [真实模型回答的记录](records/README.md)：十条输入在两版约定下各一份。
 - [人工构造的错误输出](inputs/synthetic-outputs.json)：只用来检验评分程序。
 - 标准来自第 02 章：[十条输入和期望行为](../02-contract/inputs/cases.json)。

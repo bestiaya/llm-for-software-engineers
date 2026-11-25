@@ -2,7 +2,7 @@
 
 从“帮我看看成都未来三天的天气”走完一次天气查询。模型从这句话里提取城市和天数，交回一段文本；应用解析这段文本，用两个参数查询 Open-Meteo，把天气服务交回的逐日预报展示给用户。
 
-- [阅读正文](lesson.md)或[打开离线页](lesson.html)。
+- [阅读正文](lesson.md)。
 - [模型的请求与回答](records/chengdu-gpt.json)记录模型收到了什么、交回了什么。
 - [天气服务快照](records/chengdu-forecast.json)记录查询地址、采集时间、日期与气温。
 - [两份记录是怎样采集的](records/README.md)。

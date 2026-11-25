@@ -117,14 +117,14 @@ class StageTwoLessonTest(unittest.TestCase):
                 self.assertIn("next", anchors)
                 for name in ("README.md", "LESSON_BLUEPRINT.md", "review.md"):
                     for target in re.findall(r"\]\((?!http)([^)#]+)(?:#[^)]*)?\)", (folder / name).read_text(encoding="utf-8")):
-                        self.assertTrue((folder / target).exists() or target.endswith("lesson.html"), f"{name}: {target}")
+                        self.assertTrue((folder / target).exists(), f"{name}: {target}")
                 # 没有用到的图不留在目录里。
                 used = set(re.findall(r"\(assets/([^)]+)\)", text))
                 kept = {path.name for path in (folder / "assets").glob("*.svg")} if (folder / "assets").is_dir() else set()
                 self.assertEqual(used, kept)
 
-    def test_sources_link_to_markdown_and_built_pages_link_to_html(self):
-        """源文里指向别的章和课程导读的链接写 Markdown，在 GitHub 上能跳转；构建出的页面里换成 HTML 阅读页。"""
+    def test_course_text_is_markdown_only_and_links_resolve(self):
+        """课程内容只有 Markdown：仓库里不保存生成的网页，正文里的相对链接都指向存在的文件。"""
         import json
 
         course = json.loads((COURSE / "course.json").read_text(encoding="utf-8"))
@@ -133,16 +133,12 @@ class StageTwoLessonTest(unittest.TestCase):
         for source in sources:
             text = source.read_text(encoding="utf-8")
             with self.subTest(source=source.name, folder=source.parent.name):
-                links = re.findall(r"\]\((?!https?:)([^)#\s]+)", text)
-                self.assertFalse(
-                    [link for link in links if link.endswith("lesson.html") or link.endswith("about.html")],
-                    "源文里不要链接到 HTML 阅读页",
-                )
-                page = source.with_name("about.html" if source.name == "ABOUT.md" else "lesson.html")
-                built = page.read_text(encoding="utf-8")
-                body = built[built.index("<main>"):]
-                self.assertNotIn('ABOUT.md', body)
-                self.assertFalse(re.findall(r'href="[^"]*/lesson\.md', body))
+                self.assertFalse(source.with_suffix(".html").exists(), "不保存由正文生成的网页")
+                for link in re.findall(r"\]\((?!https?:)([^)#\s]+)", text):
+                    self.assertFalse(link.endswith(".html") and Path(link).stem in ("lesson", "about", "index"), link)
+                    self.assertTrue((source.parent / link).exists(), link)
+        self.assertFalse((COURSE / "index.html").exists())
+        self.assertFalse((COURSE / "about.html").exists())
 
     def test_numbers_drawn_on_the_loss_chart_come_from_the_record(self):
         import json

@@ -2,83 +2,32 @@
 
 写给会编程、做过软件系统、还没有系统学过机器学习的工程师。这门课帮你弄清大语言模型怎样运行，并据此判断一个应用该怎样设计、验证和改进：什么交给模型，什么交给程序，一个结果究竟说明了什么。
 
-**从这里开始：[新版课程目录 v2/README.md](v2/README.md)。** 新版暂定 22 章，已经写成前 10 章，后面的章逐章更新。
+**从这里开始：[课程目录 v2/README.md](v2/README.md)。** 课程号 K01，暂定 22 章，已经写成前 10 章，后面的章逐章更新。
 
-在 GitHub 上直接读 Markdown 就行。把仓库下载到本地以后，也可以用浏览器打开 `v2/index.html` 离线阅读。两种读法的入口和实验说明都在新版课程目录里。
-
-## 仓库里有两版课程
-
-| | 新版，课程号 K01 | 18 章版本 |
+| 阶段 | 章 | 你会得到什么 |
 | --- | --- | --- |
-| 路线 | 暂定 22 章：先完成一次应用判断，再学计算与学习、语言模型、限制与对策，最后用评测比较模型 | 从一个参数到一段回答：必要数学、神经网络、Transformer、小模型训练、推理和证据评价 |
-| 进度 | 已写成前 10 章，后面的章逐章更新 | 18 章完整 |
-| 位置 | `v2/` 目录 | 仓库根目录的 `chapters/`、`site/`、`labs/` 等 |
-| 入口 | [v2/README.md](v2/README.md) | 本页下方的“18 章版本” |
+| 一、先完成一次应用判断 | 01–03 | 走通一次真实调用，写清什么算对，做出第一份评测 |
+| 二、计算与学习 | 04–10 | 弄懂模型内部在算什么，参数怎样被样本改变，学得好不好怎样看 |
+| 三、语言模型 | 11–16，未发布 | 弄懂文字怎样被算成一段回答，能力是怎样训练出来的 |
+| 四、限制与对策 | 17–20，未发布 | 通过四种应用场景分析限制及对策，知道程序能保证的部分 |
+| 五、比较与迁移 | 21–22，未发布 | 用评测比较两个模型，把方法迁到另一个任务 |
 
-新读者请读新版。
+## 怎样读，怎样运行
 
-## 18 章版本
+课程的正文是 Markdown，在 GitHub 上直接读就行；下载到本地以后，用编辑器或任何 Markdown 预览工具读。
 
-本页从这里往下，都是 18 章版本的内容。
-
-**从一个参数到一段回答：把原理算清楚，把代码跑起来，再解释结果与局限。**
-
-面向会编程、没系统学过机器学习的软件工程师。中文正文，18章，覆盖必要数学、神经网络、Transformer、CPU小模型训练、推理和证据评价。无需先学完整经典ML或微积分课程；首次需要的数学会用小数值展开。
-
-[开始阅读](chapters/01-models.md) · [本地离线阅读](site/index.html) · [环境与运行](SETUP.md) · [English overview](README.en.md)
-
-## 十分钟先看见一个机制
-
-1. 读[第10章注意力](chapters/10-attention.md)的一行手算。
-2. 打开[交互页](site/10-attention.html#attention-playground)，切换因果遮罩，改变未来输入。
-3. 从仓库根目录运行：
+实验只用 Python 3.10 或更新版本的标准库，全部离线，不需要 GPU，也不需要 API key。在仓库根目录运行，例如：
 
 ```bash
-python3 labs/attention.py
+python3 v2/01-request/lab.py
 ```
 
-有因果遮罩时，改变未来位置不会改变较早位置的输出。这个实验只用Python标准库，不下载模型，也不需要GPU或API key。完整学习请回到第01章。
-
-## 学习路线
-
-| 部分 | 章节 | 你将完成 |
-|---|---|---|
-| 必要基础 | [01 模型与系统](chapters/01-models.md) · [02 数学](chapters/02-math.md) · [03 计数模型](chapters/03-counting.md) | 把预测、数据、概率、损失分开，建立可比较基线 |
-| 神经网络 | [04 可训练参数](chapters/04-parameters.md) · [05 梯度更新](chapters/05-gradients.md) · [06 反向传播](chapters/06-backprop.md) · [07 训练](chapters/07-training.md) | 从手算一步到autograd与真实小网络训练 |
-| 文本 | [08 分词](chapters/08-tokenization.md) · [09 上下文](chapters/09-context.md) | 理解token、查表、固定窗口与信息汇总 |
-| Transformer | [10 注意力](chapters/10-attention.md) · [11 位置与多头](chapters/11-position-heads.md) · [12 Decoder](chapters/12-decoder.md) | 核对Q/K/V、mask、张量形状和完整输出路径 |
-| 训练与生成 | [13 下一token](chapters/13-next-token.md) · [14 有限语法](chapters/14-toy-training.md) · [15 自然文本](chapters/15-real-text.md) | 运行CPU实验，比较计数基线并解释失败 |
-| 工程与验收 | [16 后训练](chapters/16-post-training.md) · [17 缓存与推理](chapters/17-inference.md) · [18 证据评价](chapters/18-evaluation.md) | 区分训练信号，验证缓存等价，提交有依据的评价报告 |
-
-已有ML基础可从08进入，矩阵/梯度卡点回查02、05、06。各章都包含手算或具体判断、故障反例与带答案练习；勾选读完不自动等于掌握。
-
-## 三层实验，各自证明什么
-
-| 层次 | 能检查 | 不能据此声称 |
-|---|---|---|
-| 给定小数字 | 计算链、形状与因果可见性 | 学会语言或获得语义 |
-| 有限语法decoder | 训练、验证选择、生成、与计数模型比较 | 真实语言理解或业务能力 |
-| 英文原作小语料 | 真实文本的损失、样本和失败 | 通用助手能力、事实正确性、中文能力 |
-
-发布配置的真实结果：有限语法模型CE约0.1742，bigram约0.1917；英文原作模型CE约2.4506，bigram约2.4425，**小decoder并未胜过bigram**，生成也会重复。完整配置、目标数和限制见[有限语法报告](reports/toy.md)、[自然文本报告](reports/real.md)。这些是固定数据、单seed运行，不是未使用过的新盲测。
-
-## 运行
-
-Python3.11/3.12；训练依赖PyTorch，标准库实验无需第三方包。平台安装细节与排查见[SETUP](SETUP.md)。
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements-train.txt
-.venv/bin/python -m llm_course.train --dataset toy --steps 200 --out outputs/toy
-.venv/bin/python -m llm_course.train --dataset real --steps 300 --out outputs/real
-.venv/bin/python -m llm_course.experiments
-.venv/bin/python -m unittest discover -s tests -v
-```
-
-结果随运行保存；不要覆盖之前的实验。模型小、预算有限，课程重视机制与可验证性，不承诺训练出可用聊天机器人。LoRA是可选的局部适配实验，结课使用手边模型记录实际回答，不要求搭完整RAG/Agent平台。
+各章的入口和命令都在[课程目录](v2/README.md)里。
 
 ## 贡献、来源和边界
 
-[贡献与勘误](CONTRIBUTING.md) · [来源与制作说明](NOTICE.md) · [数据许可](data/README.md) · [MIT](LICENSE)
+[贡献与勘误](CONTRIBUTING.md) · [来源与制作说明](NOTICE.md) · [MIT](LICENSE)
 
-课程使用AI协作编写，重要数字与实现经程序核对；尚无真实初学者的系统试读结论。欢迎报告理解卡点、数字不一致和复现失败。原始资料与实际运行证据比笼统质量评分更重要。
+课程使用 AI 协作编写，数字与实现经程序核对；还没有目标读者的试读结论。欢迎报告理解卡点、数字不一致和复现失败。
+
+早先的 18 章版本已经从仓库移除，不再维护；需要时可以在提交历史里找到，最后一个包含它的提交是 `1803397`。
