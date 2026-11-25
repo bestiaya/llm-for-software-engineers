@@ -124,21 +124,28 @@ class StageTwoLessonTest(unittest.TestCase):
                 self.assertEqual(used, kept)
 
     def test_course_text_is_markdown_only_and_links_resolve(self):
-        """课程内容只有 Markdown：仓库里不保存生成的网页，正文里的相对链接都指向存在的文件。"""
+        """课程内容只有 Markdown：不保存生成的网页；清单里的章与实际的正文一致；正文和入口文档里的相对链接、锚点都找得到。"""
         import json
 
         course = json.loads((COURSE / "course.json").read_text(encoding="utf-8"))
-        sources = [COURSE / chapter["source"] for chapter in course["chapters"] if chapter["source"]] + [COURSE / "ABOUT.md"]
-        self.assertEqual(len(sources), 11)
-        for source in sources:
-            text = source.read_text(encoding="utf-8")
-            with self.subTest(source=source.name, folder=source.parent.name):
-                self.assertFalse(source.with_suffix(".html").exists(), "不保存由正文生成的网页")
-                for link in re.findall(r"\]\((?!https?:)([^)#\s]+)", text):
-                    self.assertFalse(link.endswith(".html") and Path(link).stem in ("lesson", "about", "index"), link)
-                    self.assertTrue((source.parent / link).exists(), link)
-        self.assertFalse((COURSE / "index.html").exists())
-        self.assertFalse((COURSE / "about.html").exists())
+        listed = {COURSE / chapter["source"] for chapter in course["chapters"] if chapter["source"]}
+        self.assertEqual(listed, set(COURSE.glob("[0-9][0-9]-*/lesson.md")))
+        self.assertFalse(list(COURSE.glob("**/lesson.html")) + list(COURSE.glob("about.html")) + list(COURSE.glob("index.html")))
+        documents = sorted(listed) + [
+            COURSE / "ABOUT.md", COURSE / "README.md", COURSE / "COURSE_OUTLINE.md", COURSE / "CANON.md",
+            ROOT / "README.md", ROOT / "CONTRIBUTING.md", ROOT / "NOTICE.md",
+        ]
+        checked = 0
+        for document in documents:
+            text = document.read_text(encoding="utf-8")
+            for link, fragment in re.findall(r"\]\((?!https?:)([^)#\s]*)(?:#([^)\s]+))?\)", text):
+                with self.subTest(document=str(document.relative_to(ROOT)), link=link, fragment=fragment):
+                    target = (document.parent / link) if link else document
+                    self.assertTrue(target.exists(), "链接指向的文件不存在")
+                    if fragment and target.suffix == ".md":
+                        self.assertIn(f'<a id="{fragment}"></a>', target.read_text(encoding="utf-8"), "锚点不存在")
+                checked += 1
+        self.assertGreater(checked, 50)
 
     def test_numbers_drawn_on_the_loss_chart_come_from_the_record(self):
         import json

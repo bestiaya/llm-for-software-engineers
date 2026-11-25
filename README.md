@@ -14,9 +14,9 @@
 
 ## 怎样读，怎样运行
 
-课程的正文是 Markdown，在 GitHub 上直接读就行；下载到本地以后，用编辑器或任何 Markdown 预览工具读。
+课程的正文是 Markdown，在 GitHub 上直接读就行；下载到本地以后，用支持表格、折叠内容和本地 SVG 图的 Markdown 预览工具读。
 
-实验只用 Python 3.10 或更新版本的标准库，全部离线，不需要 GPU，也不需要 API key。在仓库根目录运行，例如：
+实验只用 Python 3.10 或更新版本的标准库。默认的实验全部离线，不需要 GPU，也不需要 API key。在仓库根目录运行，例如：
 
 ```bash
 python3 v2/01-request/lab.py

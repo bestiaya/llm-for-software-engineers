@@ -131,6 +131,35 @@ class WindowContrastRecordTest(unittest.TestCase):
         self.assertEqual(problems, [])
         self.assertIsNone(largest)
 
+    def test_record_check_tolerates_rounding_but_not_real_changes(self):
+        """换平台或 Python 版本时概率的末位可能不同，核对不应当因此报错；真的改了内容必须报错。"""
+        import copy
+
+        def changed(edit):
+            record = copy.deepcopy(WINDOW_RECORD)
+            edit(record["runs"][0]["outputs"][1]["next"])
+            return window_lab.check_record(record)[0]
+
+        def nudge(items):
+            items[0]["probability"] = math.nextafter(items[0]["probability"], 1.0)
+
+        def shift(items):
+            items[0]["probability"] += 1e-6
+
+        def rename(items):
+            items[0]["token"] = "EOS"
+
+        def drop(items):
+            items.pop()
+
+        def break_number(items):
+            items[0]["probability"] = float("nan")
+
+        self.assertEqual(changed(nudge), [])
+        for edit in (shift, rename, drop, break_number):
+            with self.subTest(edit=edit.__name__):
+                self.assertTrue(any("输出与记录不一致" in problem for problem in changed(edit)))
+
     def test_setup_matches_the_attention_record(self):
         attention = json.loads((COURSE / "data/tiny-lm-training-record.json").read_text(encoding="utf-8"))["config"]
         for key in ("seed", "dimension", "initial_scale", "learning_rate", "steps", "method"):

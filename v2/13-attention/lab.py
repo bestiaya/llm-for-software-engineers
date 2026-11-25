@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 import sys
 
@@ -179,6 +180,27 @@ def run_for(record, window):
     raise LabError(f"记录里没有 {window} 个槽的窗口。有的是：{'、'.join(str(item['window']) for item in record['runs'])}")
 
 
+def outputs_match(saved, fresh, tolerance=1e-12):
+    """记录里的输出与重算的输出是否一致。
+
+    前文、候选的词和条目的个数要完全相同。概率允许末位的舍入差异：换一个平台或 Python 版本，
+    同样的计算在最后一位上可能不同，这不算记录有问题。
+    """
+    if len(saved) != len(fresh):
+        return False
+    for one, two in zip(saved, fresh, strict=True):
+        if one["prefix"] != two["prefix"] or len(one["next"]) != len(two["next"]):
+            return False
+        for kept, again in zip(one["next"], two["next"], strict=True):
+            if kept["token"] != again["token"]:
+                return False
+            if not (math.isfinite(kept["probability"]) and math.isfinite(again["probability"])):
+                return False
+            if not math.isclose(kept["probability"], again["probability"], rel_tol=tolerance, abs_tol=tolerance):
+                return False
+    return True
+
+
 def check_record(record, retrain=False):
     """核对记录自己对得上。默认只重算起点、前 100 步和最后的参数；加 --retrain 才把全部步数重新训练一遍。"""
     pairs = lm.training_pairs()
@@ -199,7 +221,7 @@ def check_record(record, retrain=False):
         final = item["final_parameters"]
         if abs(wl.mean_loss(final, pairs) - saved[CONFIG["steps"]]) > 1e-9:
             problems.append(f"{name}：用记录里最后的参数重算，损失与记录不一致")
-        if item["outputs"] != outputs_for(final) or item["completions"] != completions_for(final):
+        if not outputs_match(item["outputs"], outputs_for(final)) or item["completions"] != completions_for(final):
             problems.append(f"{name}：用记录里最后的参数重算，输出与记录不一致")
         if abs(item["loss_floor"] - wl.loss_floor(pairs, window)) > 1e-12:
             problems.append(f"{name}：损失的下限与记录不一致")
